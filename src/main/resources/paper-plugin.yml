@@ -1,0 +1,13 @@
+name: $name
+version: $version
+main: $group.${name}Plugin
+api-version: "$apiVersion"
+folia-supported: true
+authors: [ Hydrolien ]
+description: $description
+website: mvndicraft.net
+dependencies:
+  server:
+    Towny:
+      required: true
+      load: BEFORE
