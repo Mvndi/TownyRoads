@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 public class RoadManager {
     private Set<Road> roads;
@@ -15,7 +16,18 @@ public class RoadManager {
         fastAccessRoads = new HashMap<>();
     }
 
-    public Road getRoadAt(ChunkCoord chunkCoord) {
-        return fastAccessRoads.get(chunkCoord);
+    public @Nullable Road getRoadAt(ChunkCoord chunkCoord) { return fastAccessRoads.get(chunkCoord); }
+
+    public void addRoad(Road road) {
+        roads.add(road);
+        for (ChunkCoord chunkCoord : road.getChunksCoordsView()) {
+            fastAccessRoads.put(chunkCoord, road);
+        }
+    }
+
+    public void addRoads(Set<Road> roads) {
+        for (Road road : roads) {
+            addRoad(road);
+        }
     }
 }

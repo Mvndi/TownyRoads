@@ -1,12 +1,62 @@
 package main.java.net.mvndicraft.townyroads;
 
 import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.TownyObject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-public class Road {
-    private UUID id;
-    private List<Town> towns;
-    private Set<ChunkCoord> chunksCoords;
+public class Road extends TownyObject {
+    private final UUID id;
+    private final List<Town> towns;
+    private final List<Town> townsView;
+    private final Set<ChunkCoord> chunksCoords;
+    private final Set<ChunkCoord> chunksCoordsView;
+
+    public Road(List<Town> towns) {
+        super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
+        id = UUID.randomUUID();
+        this.towns = new ArrayList<>(towns);
+        this.townsView = Collections.unmodifiableList(towns);
+        this.chunksCoords = new HashSet<>();
+        this.chunksCoordsView = Collections.unmodifiableSet(chunksCoords);
+    }
+
+    // Used to load from file.
+    private Road(UUID id, List<Town> towns) {
+        super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
+        this.id = id;
+        this.towns = towns;
+        this.townsView = Collections.unmodifiableList(towns);
+        this.chunksCoords = new HashSet<>();
+        this.chunksCoordsView = Collections.unmodifiableSet(chunksCoords);
+    }
+
+    public UUID getId() { return id; }
+    public List<Town> getTownsView() { return townsView; }
+    public Set<ChunkCoord> getChunksCoordsView() { return chunksCoordsView; }
+
+    @Override
+    public void save() {
+        // TODO
+    }
+
+    @Override
+    public boolean exists() { return towns.size() > 1 && chunksCoords.size() > 0; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o instanceof Road road)
+            return id.equals(road.id);
+        return false;
+    }
+
+    @Override
+    public int hashCode() { return id.hashCode(); }
 }
