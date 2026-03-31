@@ -40,6 +40,10 @@ public class TownyRoadsPlugin extends JavaPlugin {
             }
             return result;
         });
+        manager.getCommandCompletions().registerAsyncCompletion("road", c -> {
+            // Player player = c.getContextValue(Player.class, 0);
+            return roadManager.getRoads().stream().map(Road::getName).toList();
+        });
     }
 
     public static TownyRoadsPlugin getInstance() { return getPlugin(TownyRoadsPlugin.class); }

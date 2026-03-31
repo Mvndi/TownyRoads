@@ -17,7 +17,7 @@ description = "Add roads to Towny"
 java.sourceCompatibility = JavaVersion.VERSION_21
 var mainMinecraftVersion = "1.21.11"
 val supportedMinecraftVersions = "1.20 - 1.21.11"
-val townyVersion = "0.102.0.7"
+val townyVersion = "0.102.0.12"
 val coreprotectVersion = "23.1"
 
 repositories {

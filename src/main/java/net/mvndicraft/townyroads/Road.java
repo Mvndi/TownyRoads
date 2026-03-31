@@ -16,24 +16,27 @@ public class Road extends TownyObject {
     private final UUID id;
     private final List<Town> towns;
     private final List<Town> townsView;
+    private final List<Town> toConfirmTowns;
     private final Set<ChunkCoord> chunksCoords;
     private final Set<ChunkCoord> chunksCoordsView;
 
-    public Road(List<Town> towns) {
+    public Road(List<Town> towns, List<Town> toConfirmTowns) {
         super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
         id = UUID.randomUUID();
         this.towns = new ArrayList<>(towns);
         this.townsView = Collections.unmodifiableList(towns);
+        this.toConfirmTowns = new ArrayList<>(toConfirmTowns);
         this.chunksCoords = new HashSet<>();
         this.chunksCoordsView = Collections.unmodifiableSet(chunksCoords);
     }
 
     // Used to load from file.
-    private Road(UUID id, List<Town> towns) {
+    private Road(UUID id, List<Town> towns, List<Town> toConfirmTowns) {
         super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
         this.id = id;
         this.towns = towns;
         this.townsView = Collections.unmodifiableList(towns);
+        this.toConfirmTowns = new ArrayList<>(toConfirmTowns);
         this.chunksCoords = new HashSet<>();
         this.chunksCoordsView = Collections.unmodifiableSet(chunksCoords);
     }
@@ -48,7 +51,7 @@ public class Road extends TownyObject {
     }
 
     @Override
-    public boolean exists() { return towns.size() > 1 && chunksCoords.isEmpty(); }
+    public boolean exists() { return towns.size() > 1 && chunksCoords.isEmpty() && toConfirmTowns.isEmpty(); }
 
     @Override
     public boolean equals(Object o) {
@@ -63,14 +66,35 @@ public class Road extends TownyObject {
     public int hashCode() { return id.hashCode(); }
 
 
-    public boolean claim(Player player) {
+    public ChunkCoord claim(Player player) {
         if (TownyAPI.getInstance().getTownBlock(player) == null) { // not in a town.
             ChunkCoord chunkCoord = ChunkCoord.from(player.getLocation());
             if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(chunkCoord) == null) {
                 chunksCoords.add(chunkCoord);
-                return true;
+                return chunkCoord;
             }
         }
-        return false;
+        return null;
+    }
+    public boolean unclaim(Player player) { return chunksCoords.remove(ChunkCoord.from(player.getLocation())); }
+
+    public String getDescription() {
+        String description = getTownsNames(towns) + " (" + chunksCoords.size() + " chunks)";
+        if (!toConfirmTowns.isEmpty()) {
+            description += " (" + getTownsNames(toConfirmTowns) + " to confirm)";
+        }
+        return description;
+    }
+
+    // Confirm that the town want to be part of the road
+    public void confirm(Town town) { toConfirmTowns.remove(town); }
+
+    private String getTownsNames(List<Town> townList) { return townList.stream().map(Town::getName).collect(Collectors.joining(",")); }
+
+    public void removeTown(Town town) {
+        towns.remove(town);
+        if (towns.size() < 2) {
+            TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(this);
+        }
     }
 }

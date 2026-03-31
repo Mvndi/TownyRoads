@@ -1,12 +1,16 @@
 package net.mvndicraft.townyroads;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import com.palmergames.bukkit.towny.object.Town;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public class RoadManager {
     private Set<Road> roads;
@@ -14,8 +18,8 @@ public class RoadManager {
     private Map<ChunkCoord, Road> fastAccessRoads;
 
     public RoadManager() {
-        roads = new HashSet<>();
-        fastAccessRoads = new HashMap<>();
+        roads = ConcurrentHashMap.newKeySet();
+        fastAccessRoads = new ConcurrentHashMap<>();
     }
 
     public @Nullable Road getRoadAt(ChunkCoord chunkCoord) { return fastAccessRoads.get(chunkCoord); }
@@ -31,6 +35,22 @@ public class RoadManager {
         return null;
     }
 
+    public Road createRoad(List<Town> towns, List<Town> toConfirmTowns) {
+        Road road = new Road(towns, toConfirmTowns);
+        addRoad(road);
+        return road;
+    }
+
+    public boolean claimRoad(Road road, Player player) {
+        ChunkCoord chunkCoord = road.claim(player);
+
+        if (chunkCoord != null) {
+            fastAccessRoads.put(chunkCoord, road);
+            return true;
+        }
+        return false;
+    }
+
     public void addRoad(Road road) {
         roads.add(road);
         for (ChunkCoord chunkCoord : road.getChunksCoordsView()) {
@@ -42,5 +62,28 @@ public class RoadManager {
         for (Road road : roads) {
             addRoad(road);
         }
+    }
+
+    public String listRoad(int page) {
+        StringBuilder builder = new StringBuilder("List of roads:\n");
+        // long itemsToSkip = Math.max(page - 1L, 0L) * 10L;
+        long itemsToSkip = 0L;
+        roads.stream().sorted(Comparator.comparing(Road::getName, String.CASE_INSENSITIVE_ORDER)).skip(itemsToSkip).limit(10)
+                .map(Road::getDescription).forEach(name -> builder.append(name).append("\n"));
+        return builder.toString();
+    }
+
+    public Collection<Road> getRoads() { return roads; }
+
+    public void deleteRoad(Road road) {
+        roads.remove(road);
+        for (ChunkCoord chunkCoord : road.getChunksCoordsView()) {
+            fastAccessRoads.remove(chunkCoord);
+        }
+    }
+
+    public void unclaimRoad(Road road, Player player) {
+        road.unclaim(player);
+        fastAccessRoads.remove(ChunkCoord.from(player.getLocation()));
     }
 }
