@@ -1,5 +1,6 @@
-package main.java.net.mvndicraft.townyroads;
+package net.mvndicraft.townyroads;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyObject;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.bukkit.entity.Player;
 
 public class Road extends TownyObject {
     private final UUID id;
@@ -59,4 +61,16 @@ public class Road extends TownyObject {
 
     @Override
     public int hashCode() { return id.hashCode(); }
+
+
+    public boolean claim(Player player) {
+        if (TownyAPI.getInstance().getTownBlock(player) == null) { // not in a town.
+            ChunkCoord chunkCoord = ChunkCoord.from(player.getLocation());
+            if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(chunkCoord) == null) {
+                chunksCoords.add(chunkCoord);
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,4 +1,4 @@
-package main.java.net.mvndicraft.townyroads;
+package net.mvndicraft.townyroads;
 
 public interface RoadStorage {
     public void load();

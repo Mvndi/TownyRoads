@@ -1,17 +1,20 @@
-package main.java.net.mvndicraft.townyroads.commands;
+package net.mvndicraft.townyroads.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.Syntax;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.List;
-import main.java.net.mvndicraft.townyroads.Road;
-import main.java.net.mvndicraft.townyroads.TownyRoadsPlugin;
+import net.mvndicraft.townyroads.Road;
+import net.mvndicraft.townyroads.TownyRoadsPlugin;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @CommandAlias("townyroadsadmin|troadsadmin|tra")
 @CommandPermission(TownyRoadsPlugin.ADMIN_PERMISSION)
@@ -29,6 +32,8 @@ public class TownyRoadsAdminCommand extends BaseCommand {
 
     @Subcommand("create")
     @Description("Creates a road")
+    @CommandCompletion("@reachable_road_towns @reachable_road_towns @empty")
+    @Syntax("<town> <town>")
     public static void onCreate(CommandSender commandSender, String townName1, String townName2) {
         Town town1 = getTownFromNameOrNull(commandSender, townName2);
         if (town1 == null)
@@ -40,12 +45,38 @@ public class TownyRoadsAdminCommand extends BaseCommand {
         road.save();
     }
 
+    @Subcommand("claim")
+    @Description("Creates a road")
+    @CommandCompletion("@next_by_road @empty")
+    @Syntax("<road>")
+    public static void onClaim(CommandSender commandSender, String roadName) {
+        if (commandSender instanceof Player player) {
+            Road road = getRoadFromNameOrNull(commandSender, roadName);
+            if (road == null)
+                return;
+            if (road.claim(player)) {
+                commandSender.sendMessage("Claimed road " + roadName);
+            } else {
+                commandSender.sendMessage("failed to claim road " + roadName);
+            }
+        }
+    }
+
+
     private static Town getTownFromNameOrNull(CommandSender commandSender, String townName) {
         Town town = TownyAPI.getInstance().getTown(townName);
         if (town == null || town.isRuined()) {
             commandSender.sendMessage("Town " + townName + " does not exist or is ruined.");
         }
         return town;
+    }
+
+    private static Road getRoadFromNameOrNull(CommandSender commandSender, String roadName) {
+        Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadByName(roadName);
+        if (road == null) {
+            commandSender.sendMessage("Road " + roadName + " does not exist.");
+        }
+        return road;
     }
 
 }
