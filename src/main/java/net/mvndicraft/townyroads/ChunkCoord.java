@@ -15,14 +15,16 @@ public record ChunkCoord(UUID worldUuid, int x, int z) {
     }
 
     public List<ChunkCoord> getNearby(int radius) {
-        if (radius < 0) {
+        if (radius < 1) {
             return new LinkedList<>();
         }
         List<ChunkCoord> chunks = new LinkedList<>();
-        for (int x = -radius; x < radius; x++) {
+        for (int x = -radius; x <= radius; x++) {
             int remaining = radius - Math.abs(x);
-            for (int z = -remaining; z < remaining; z++) {
-                chunks.add(new ChunkCoord(worldUuid, this.x + x, this.z + z));
+            for (int z = -remaining; z <= remaining; z++) {
+                if (!(x == 0 && z == 0)) {
+                    chunks.add(new ChunkCoord(worldUuid, this.x + x, this.z + z));
+                }
             }
         }
         return chunks;

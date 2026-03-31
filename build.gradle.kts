@@ -8,7 +8,7 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.3.1" // Paper server for testing/hotloading JVM
     id("io.papermc.hangar-publish-plugin") version "0.1.3"
     id("com.modrinth.minotaur") version "2.+" // cf https://github.com/modrinth/minotaur
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
+    // id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
 }
 
 group = "net.mvndicraft.townyroads"
@@ -32,9 +32,9 @@ repositories {
 }
 
 dependencies {
-    // compileOnly("io.papermc.paper:paper-api:$mainMinecraftVersion-R0.1-SNAPSHOT")
-    paperweight.paperDevBundle("$mainMinecraftVersion-R0.1-SNAPSHOT")
-    compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0") // TODO to remove when paper weight latest version will be fixed. It's supposed to be in paperweight.
+    compileOnly("io.papermc.paper:paper-api:$mainMinecraftVersion-R0.1-SNAPSHOT")
+    // paperweight.paperDevBundle("$mainMinecraftVersion-R0.1-SNAPSHOT")
+    // compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0") // TODO to remove when paper weight latest version will be fixed. It's supposed to be in paperweight.
     
     compileOnly("com.palmergames.bukkit.towny:towny:$townyVersion")
     compileOnly("net.coreprotect:coreprotect:$coreprotectVersion")
@@ -43,6 +43,7 @@ dependencies {
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("com.github.seeseemelk:MockBukkit-v1.21:3.107.0")
 }
 
