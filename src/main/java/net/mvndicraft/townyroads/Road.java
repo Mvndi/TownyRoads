@@ -48,7 +48,7 @@ public class Road extends TownyObject {
     }
 
     @Override
-    public boolean exists() { return towns.size() > 1 && chunksCoords.size() > 0; }
+    public boolean exists() { return towns.size() > 1 && chunksCoords.isEmpty(); }
 
     @Override
     public boolean equals(Object o) {

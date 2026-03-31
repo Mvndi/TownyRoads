@@ -35,14 +35,19 @@ public class TownyRoadsAdminCommand extends BaseCommand {
     @CommandCompletion("@reachable_road_towns @reachable_road_towns @empty")
     @Syntax("<town> <town>")
     public static void onCreate(CommandSender commandSender, String townName1, String townName2) {
-        Town town1 = getTownFromNameOrNull(commandSender, townName2);
+        Town town1 = getTownFromNameOrNull(commandSender, townName1);
         if (town1 == null)
             return;
         Town town2 = getTownFromNameOrNull(commandSender, townName2);
         if (town2 == null)
             return;
+        if (town1.equals(town2)) {
+            commandSender.sendMessage("Towns must be different.");
+            return;
+        }
         Road road = new Road(List.of(town1, town2));
         road.save();
+        commandSender.sendMessage("Created road " + road.getName());
     }
 
     @Subcommand("claim")
