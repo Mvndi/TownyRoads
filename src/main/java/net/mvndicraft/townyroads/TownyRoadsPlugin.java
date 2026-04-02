@@ -2,6 +2,7 @@ package net.mvndicraft.townyroads;
 
 import co.aikar.commands.PaperCommandManager;
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Town;
 import java.util.LinkedList;
 import java.util.List;
 import net.mvndicraft.townyroads.commands.TownyRoadsAdminCommand;
@@ -43,6 +44,25 @@ public class TownyRoadsPlugin extends JavaPlugin {
         manager.getCommandCompletions().registerAsyncCompletion("road", c -> {
             // Player player = c.getContextValue(Player.class, 0);
             return roadManager.getRoads().stream().map(Road::getName).toList();
+        });
+        manager.getCommandCompletions().registerAsyncCompletion("town_in_road", c -> {
+            String roadName = c.getContextValue(String.class, 1);
+            Road road = roadManager.getRoadByName(roadName);
+            if (road == null) {
+                return List.of();
+            } else {
+                return road.getTownsView().stream().map(Town::getName).toList();
+            }
+        });
+        manager.getCommandCompletions().registerAsyncCompletion("road_player_town_is_in", c -> {
+            CommandSender commandSender = c.getContextValue(CommandSender.class, 0);
+            if (commandSender instanceof Player player) {
+                Town playerTown = TownyAPI.getInstance().getTown(player);
+                if (playerTown != null) {
+                    return roadManager.getRoadsByTown(playerTown).stream().map(Road::getName).toList();
+                }
+            }
+            return List.of();
         });
     }
 

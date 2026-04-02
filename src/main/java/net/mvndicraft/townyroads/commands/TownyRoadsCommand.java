@@ -53,36 +53,28 @@ public class TownyRoadsCommand extends BaseCommand {
 
     @Subcommand("create")
     @Description("Creates a road")
-    @CommandCompletion("@reachable_road_towns @reachable_road_towns @empty")
-    @Syntax("<town> <town>")
-    public static void onCreate(CommandSender commandSender, String townName1, String townName2) {
-        Town town1 = TownyUtil.getTownFromNameOrNull(commandSender, townName1);
-        if (town1 == null)
-            return;
-        Town town2 = TownyUtil.getTownFromNameOrNull(commandSender, townName2);
-        if (town2 == null)
-            return;
-        if (town1.equals(town2)) {
-            commandSender.sendMessage("Towns must be different.");
-            return;
-        }
+    @CommandCompletion("@reachable_road_towns @empty")
+    @Syntax("<town>")
+    public static void onCreate(CommandSender commandSender, String townName2) {
         if (commandSender instanceof Player player) {
-            if (!player.hasPermission("townyroads.create")) {
-                commandSender.sendMessage("You do not have permission to create roads.");
-                return;
-            }
             Town playerTown = TownyAPI.getInstance().getTown(player);
             if (playerTown == null || playerTown.isRuined()) {
                 commandSender.sendMessage("You must be in a town.");
                 return;
             }
-            if (!playerTown.equals(town1) && !playerTown.equals(town2)) {
-                commandSender.sendMessage("You must be in one of the towns.");
+            Town town2 = TownyUtil.getTownFromNameOrNull(commandSender, townName2);
+            if (town2 == null)
+                return;
+            if (playerTown.equals(town2)) {
+                commandSender.sendMessage("Towns must be different.");
                 return;
             }
-            List<Town> toConfirmTowns = playerTown.equals(town1) ? List.of(town2) : List.of(town1);
-            Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(List.of(town1, town2), toConfirmTowns);
-            commandSender.sendMessage("Created road " + road.getName() + " (" + toConfirmTowns.get(0).getName() + " needs to confirm).");
+            if (!player.hasPermission("townyroads.create")) {
+                commandSender.sendMessage("You do not have permission to create roads.");
+                return;
+            }
+            Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(List.of(playerTown, town2), List.of(town2));
+            commandSender.sendMessage("Created road " + road.getName() + " (" + town2.getName() + " needs to confirm).");
         } else {
             commandSender.sendMessage("You must be a player.");
         }
@@ -90,9 +82,9 @@ public class TownyRoadsCommand extends BaseCommand {
 
     @Subcommand("leave")
     @Description("Leave a road")
-    @CommandCompletion("@road @empty")
+    @CommandCompletion("@road_player_town_is_in @empty")
     @Syntax("<road>")
-    public static void onCreate(CommandSender commandSender, String roadName) {
+    public static void onLeave(CommandSender commandSender, String roadName) {
         Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
         if (road == null)
             return;

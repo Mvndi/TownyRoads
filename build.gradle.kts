@@ -42,9 +42,9 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("com.github.seeseemelk:MockBukkit-v1.21:3.107.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
+    // testImplementation("com.github.seeseemelk:MockBukkit-v1.21:3.107.0")
 }
 
 sonar {

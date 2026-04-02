@@ -66,8 +66,7 @@ public class RoadManager {
 
     public String listRoad(int page) {
         StringBuilder builder = new StringBuilder("List of roads:\n");
-        // long itemsToSkip = Math.max(page - 1L, 0L) * 10L;
-        long itemsToSkip = 0L;
+        long itemsToSkip = Math.max(page - 1L, 0L) * 10L;
         roads.stream().sorted(Comparator.comparing(Road::getName, String.CASE_INSENSITIVE_ORDER)).skip(itemsToSkip).limit(10)
                 .map(Road::getDescription).forEach(name -> builder.append(name).append("\n"));
         return builder.toString();
@@ -86,4 +85,6 @@ public class RoadManager {
         road.unclaim(player);
         fastAccessRoads.remove(ChunkCoord.from(player.getLocation()));
     }
+
+    public List<Road> getRoadsByTown(Town town) { return roads.stream().filter(r -> r.getTownsView().contains(town)).toList(); }
 }

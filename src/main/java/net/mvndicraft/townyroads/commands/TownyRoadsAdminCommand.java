@@ -69,7 +69,7 @@ public class TownyRoadsAdminCommand extends BaseCommand {
     }
 
     @Subcommand("unclaim")
-    @Description("Create a road")
+    @Description("Unclaim a chunk of a road")
     public static void onUnclaim(CommandSender commandSender) {
         if (commandSender instanceof Player player) {
             Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(player.getLocation());
@@ -88,6 +88,18 @@ public class TownyRoadsAdminCommand extends BaseCommand {
     @CommandCompletion("@road @empty")
     @Syntax("<road>")
     public static void onCreate(CommandSender commandSender, String roadName) {
+        Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+        if (road == null)
+            return;
+        TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(road);
+        commandSender.sendMessage("Deleted road " + roadName);
+    }
+
+    @Subcommand("kick")
+    @Description("Kick a town from a road")
+    @CommandCompletion("@road @town_in_road @empty")
+    @Syntax("<road> <town>")
+    public static void onKick(CommandSender commandSender, String roadName, String townName) {
         Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
         if (road == null)
             return;
