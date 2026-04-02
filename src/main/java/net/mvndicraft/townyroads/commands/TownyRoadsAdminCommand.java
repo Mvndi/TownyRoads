@@ -10,6 +10,8 @@ import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.List;
+import java.util.Optional;
+import net.kyori.adventure.text.Component;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
 import net.mvndicraft.townyroads.util.TownyUtil;
@@ -105,5 +107,54 @@ public class TownyRoadsAdminCommand extends BaseCommand {
             return;
         TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(road);
         commandSender.sendMessage("Deleted road " + roadName);
+    }
+
+    @Subcommand("validate")
+    @Description("Validate a road")
+    @CommandCompletion("@road @force @empty")
+    @Syntax("<road> <force>")
+    public static void onValidate(CommandSender commandSender, String roadName, boolean force) {
+        Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+        if (road == null)
+            return;
+
+        Optional<Component> error = road.validate(true);
+        if (error.isPresent()) {
+            commandSender.sendMessage(Component.text("Road " + road.getName() + " is invalid. ").append(error.get()));
+        } else {
+            commandSender.sendMessage("Road " + road.getName() + " have been validated.");
+        }
+    }
+    @Subcommand("validate")
+    @Description("Validate a road")
+    @CommandCompletion("@road @force @empty")
+    @Syntax("<road> <force>")
+    public static void onValidate(CommandSender commandSender, String roadName) { onValidate(commandSender, roadName, false); }
+
+    @Subcommand("merge")
+    @Description("Merge 2 roads")
+    @CommandCompletion("@road @road @force @empty")
+    @Syntax("<road> <road> <force>")
+    public static void onMerge(CommandSender commandSender, String roadName1, String roadName2, boolean force) {
+        Road road1 = TownyUtil.getRoadFromNameOrNull(commandSender, roadName1);
+        if (road1 == null)
+            return;
+        Road road2 = TownyUtil.getRoadFromNameOrNull(commandSender, roadName2);
+        if (road2 == null)
+            return;
+
+        Optional<Component> error = road1.merge(road2, force);
+        if (error.isPresent()) {
+            commandSender.sendMessage(Component.text("Merge failed. ").append(error.get()));
+        } else {
+            commandSender.sendMessage("Road " + road2.getName() + " have been merged into " + road1.getName());
+        }
+    }
+    @Subcommand("merge")
+    @Description("Merge 2 roads")
+    @CommandCompletion("@road @road @force @empty")
+    @Syntax("<road> <road> <force>")
+    public static void onMerge(CommandSender commandSender, String roadName1, String roadName2) {
+        onMerge(commandSender, roadName1, roadName2, false);
     }
 }

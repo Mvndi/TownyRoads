@@ -1,15 +1,19 @@
 package net.mvndicraft.townyroads;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
+import net.mvndicraft.townyroads.util.ChunkCoordUtil;
 import org.bukkit.entity.Player;
 
 public class Road extends TownyObject {
@@ -19,6 +23,7 @@ public class Road extends TownyObject {
     private final List<Town> toConfirmTowns;
     private final Set<ChunkCoord> chunksCoords;
     private final Set<ChunkCoord> chunksCoordsView;
+    private boolean valid;
 
     public Road(List<Town> towns, List<Town> toConfirmTowns) {
         super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
@@ -28,6 +33,7 @@ public class Road extends TownyObject {
         this.toConfirmTowns = new ArrayList<>(toConfirmTowns);
         this.chunksCoords = new HashSet<>();
         this.chunksCoordsView = Collections.unmodifiableSet(chunksCoords);
+        valid = false;
     }
 
     // Used to load from file.
@@ -39,6 +45,7 @@ public class Road extends TownyObject {
         this.toConfirmTowns = new ArrayList<>(toConfirmTowns);
         this.chunksCoords = new HashSet<>();
         this.chunksCoordsView = Collections.unmodifiableSet(chunksCoords);
+        valid = false;
     }
 
     public UUID getId() { return id; }
@@ -67,12 +74,10 @@ public class Road extends TownyObject {
 
 
     public ChunkCoord claim(Player player) {
-        if (TownyAPI.getInstance().getTownBlock(player) == null) { // not in a town.
-            ChunkCoord chunkCoord = ChunkCoord.from(player.getLocation());
-            if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(chunkCoord) == null) {
-                chunksCoords.add(chunkCoord);
-                return chunkCoord;
-            }
+        ChunkCoord chunkCoord = ChunkCoord.from(player.getLocation());
+        if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(chunkCoord) == null) {
+            chunksCoords.add(chunkCoord);
+            return chunkCoord;
         }
         return null;
     }
@@ -96,5 +101,149 @@ public class Road extends TownyObject {
         if (towns.size() < 2) {
             TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(this);
         }
+    }
+
+    public Optional<Component> merge(Road road, boolean force) {
+        if (force) {
+            // Need this road to be valid.
+            if (!isValid()) {
+                return Optional.of(Component.text(getName() + " is not valid. Use `/tr validate` first."));
+            }
+            // At least 1 town need to be common
+            if (towns.stream().noneMatch(road.towns::contains)) {
+                return Optional.of(Component.text(road.getName() + " need to have at least 1 town in common with " + road.getName()));
+            }
+            // All town of road need to have accepted to join the road.
+            if (road.toConfirmTowns.size() != 0) {
+                return Optional.of(
+                        Component.text(road.getName() + " have towns that haven't confirmed yet: " + getTownsNames(road.toConfirmTowns)));
+            }
+
+            // The new road need to be valid, doing a temporary road to check.
+            List<Town> towns = new ArrayList<>(this.towns);
+            towns.addAll(road.towns);
+            Road temp = new Road(new ArrayList<>(towns), List.of());
+            temp.chunksCoords.addAll(this.chunksCoords);
+            temp.chunksCoords.addAll(road.chunksCoords);
+            Optional<Component> error = temp.validate();
+            if (error.isPresent()) {
+                return error;
+            }
+        }
+
+        // Merge the road into this
+        this.towns.addAll(road.towns);
+        this.chunksCoords.addAll(road.chunksCoords);
+        // Remove the old road
+        TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(road);
+        return Optional.empty();
+    }
+    public Optional<Component> merge(Road road) { return merge(road, false); }
+
+    public boolean isValid() { return valid; }
+    public Optional<Component> validate(boolean force) {
+        if (towns.size() < 2) {
+            valid = false;
+            return Optional.of(Component.text(getName() + " must have at least 2 towns."));
+        } else if (!ChunkCoordUtil.areAllConnected(chunksCoords)) {
+            valid = false;
+            return Optional.of(Component.text(getName() + " must be connected."));
+        } else {
+            Optional<Town> firstNotConnectedTown = getFirstNotConnectedTown();
+            if (firstNotConnectedTown.isPresent()) {
+                valid = false;
+                return Optional.of(Component
+                        .text("All towns of " + getName() + " must be connected including " + firstNotConnectedTown.get().getName()));
+            }
+        }
+        valid = true;
+        return Optional.empty();
+    }
+    public Optional<Component> validate() { return validate(false); }
+
+    public Optional<Town> getFirstNotConnectedTown() {
+        // for each town that should be connected to the road
+        for (Town town : towns) {
+            boolean isConnected = town.getTownBlocks().stream()
+                    .map(tb -> new ChunkCoord(tb.getWorld().getBukkitWorld().getUID(), tb.getX(), tb.getZ()))
+                    .flatMap(coord -> coord.getNearby(1).stream()).anyMatch(chunksCoords::contains);
+
+            if (!isConnected) {
+                return Optional.of(town);
+            }
+        }
+        return Optional.empty();
+    }
+
+    // We allow up to 2 times more chunks that the shortest path between the 2 farthest towns.
+    public int maxChunks() { return distanceBetweenTheTwoFarthestTowns() * 2; }
+    /**
+     * @return true if the road hasn't reached the maximum number of chunks
+     */
+    public boolean canClaimMore() { return chunksCoords.size() < maxChunks(); }
+    /**
+     * @return true if the player town is part of the road
+     */
+    public boolean isAPlayerOfTheRoad(Player player) {
+        Town town = TownyAPI.getInstance().getTown(player);
+        return towns.contains(town);
+    }
+    /**
+     * @return true if not already claimed and at least one chunk is nearby or it's the first chunk of the road
+     */
+    public boolean canClaimHere(ChunkCoord chunkCoord) {
+        return chunksCoords.isEmpty()
+                || (!chunksCoords.contains(chunkCoord) && chunkCoord.getNearby(1).stream().anyMatch(chunksCoords::contains));
+    }
+    /**
+     * @return true if the chunks are still connected each other without this chunk.
+     */
+    public boolean canUnclaimHere(ChunkCoord chunkCoord) {
+        List<ChunkCoord> nearBy = chunkCoord.getNearby(1);
+        if (nearBy.size() <= 1) {
+            return true;
+        } else {
+            // All connected without this one.
+            return ChunkCoordUtil.areAllConnected(chunksCoords.stream().filter(c -> !c.equals(chunkCoord)).collect(Collectors.toSet()));
+        }
+    }
+
+    /**
+     * Calculates the distance between the 2 farthest towns
+     * 
+     * @return distance
+     */
+    public int distanceBetweenTheTwoFarthestTowns() {
+        if (towns.size() < 2) {
+            return 0;
+        }
+
+        int maxDistance = 0;
+        int x1, z1, x2, z2;
+        for (Town town1 : towns) {
+            try {
+                x1 = town1.getHomeBlock().getX();
+                z1 = town1.getHomeBlock().getZ();
+            } catch (TownyException e) {
+                continue;
+            }
+            for (Town town2 : towns) {
+                if (town1.equals(town2)) {
+                    continue;
+                }
+                try {
+                    x2 = town2.getHomeBlock().getX();
+                    z2 = town2.getHomeBlock().getZ();
+                } catch (TownyException e) {
+                    continue;
+                }
+                int distance = Math.abs(x1 - x2) + Math.abs(z1 - z2);
+                if (distance > maxDistance) {
+                    maxDistance = distance;
+                }
+            }
+        }
+
+        return maxDistance;
     }
 }

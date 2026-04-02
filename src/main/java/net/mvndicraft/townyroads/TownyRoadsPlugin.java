@@ -64,6 +64,7 @@ public class TownyRoadsPlugin extends JavaPlugin {
             }
             return List.of();
         });
+        manager.getCommandCompletions().registerCompletion("force", c -> List.of("true", "false"));
     }
 
     public static TownyRoadsPlugin getInstance() { return getPlugin(TownyRoadsPlugin.class); }
