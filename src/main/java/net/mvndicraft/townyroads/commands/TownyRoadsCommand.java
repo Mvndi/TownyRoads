@@ -24,7 +24,9 @@ public class TownyRoadsCommand extends BaseCommand {
 
     @Default
     @Description("Lists the version of the plugin")
-    public static void onTownyRoads(CommandSender commandSender) { commandSender.sendMessage(TownyRoadsPlugin.getInstance().toString()); }
+    public static void onTownyRoads(CommandSender commandSender) {
+        commandSender.sendMessage(TownyRoadsPlugin.getInstance().toString());
+    }
 
     @Subcommand("here")
     @Description("List roads")
@@ -51,7 +53,9 @@ public class TownyRoadsCommand extends BaseCommand {
     @Subcommand("list")
     @Description("List roads")
     @Syntax("<page_number>")
-    public static void onList(CommandSender commandSender) { onList(commandSender, 1); }
+    public static void onList(CommandSender commandSender) {
+        onList(commandSender, 1);
+    }
 
 
     @Subcommand("create")
@@ -76,8 +80,10 @@ public class TownyRoadsCommand extends BaseCommand {
                 commandSender.sendMessage("You do not have permission to create roads.");
                 return;
             }
-            Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(List.of(playerTown, town2), List.of(town2));
-            commandSender.sendMessage("Created road " + road.getName() + " (" + town2.getName() + " needs to confirm).");
+            Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(List.of(playerTown, town2),
+                    List.of(town2));
+            commandSender
+                    .sendMessage("Created road " + road.getName() + " (" + town2.getName() + " needs to confirm).");
         } else {
             commandSender.sendMessage("You must be a player.");
         }
@@ -112,7 +118,7 @@ public class TownyRoadsCommand extends BaseCommand {
 
     @Subcommand("claim")
     @Description("Claim a chunk of a road")
-    @CommandCompletion("@reachable_road_towns @empty")
+    @CommandCompletion("@next_by_roads_then_empty_with_player_town @empty")
     @Syntax("<road>")
     public static void onClaim(CommandSender commandSender, String roadName) {
         if (commandSender instanceof Player player) {
@@ -130,7 +136,8 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             }
             if (!road.canClaimHere(ChunkCoord.from(player.getLocation()))) {
-                commandSender.sendMessage("Can't claim here. This chunks is already claimed or to far away from the road.");
+                commandSender
+                        .sendMessage("Can't claim here. This chunks is already claimed or to far away from the road.");
                 return;
             }
             if (TownyRoadsPlugin.getInstance().getRoadManager().claimRoad(road, player)) {

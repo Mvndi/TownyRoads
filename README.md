@@ -2,7 +2,7 @@
 
 Add roads to Towny.
 
-A road connect 2 towns.
+A road connect 2 or more towns.
 
 1st version will fully protect the road from destruction except from member of the 2 town.
 Later versions will allow small destruction from other players with a cooldown.

@@ -30,7 +30,9 @@ public class TownyRoadsAdminCommand extends BaseCommand {
 
     @Subcommand("reload")
     @Description("Reloads the plugin")
-    public static void onReload(CommandSender commandSender) { TownyRoadsPlugin.getInstance().reloadConfig(); }
+    public static void onReload(CommandSender commandSender) {
+        TownyRoadsPlugin.getInstance().reloadConfig();
+    }
 
     @Subcommand("create")
     @Description("Create a road")
@@ -53,7 +55,7 @@ public class TownyRoadsAdminCommand extends BaseCommand {
 
     @Subcommand("claim")
     @Description("Claim a chunk of a road")
-    @CommandCompletion("@next_by_road @empty")
+    @CommandCompletion("@next_by_roads_then_empty @empty")
     @Syntax("<road>")
     public static void onClaim(CommandSender commandSender, String roadName) {
         if (commandSender instanceof Player player) {
@@ -129,7 +131,9 @@ public class TownyRoadsAdminCommand extends BaseCommand {
     @Description("Validate a road")
     @CommandCompletion("@road @force @empty")
     @Syntax("<road> <force>")
-    public static void onValidate(CommandSender commandSender, String roadName) { onValidate(commandSender, roadName, false); }
+    public static void onValidate(CommandSender commandSender, String roadName) {
+        onValidate(commandSender, roadName, false);
+    }
 
     @Subcommand("merge")
     @Description("Merge 2 roads")
