@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,9 +23,15 @@ public class RoadManager {
         fastAccessRoads = new ConcurrentHashMap<>();
     }
 
-    public @Nullable Road getRoadAt(ChunkCoord chunkCoord) { return fastAccessRoads.get(chunkCoord); }
-    public @Nullable Road getRoadAt(Chunk chunk) { return getRoadAt(ChunkCoord.from(chunk)); }
-    public @Nullable Road getRoadAt(Location location) { return getRoadAt(ChunkCoord.from(location)); }
+    public @Nullable Road getRoadAt(ChunkCoord chunkCoord) {
+        return fastAccessRoads.get(chunkCoord);
+    }
+    public @Nullable Road getRoadAt(Chunk chunk) {
+        return getRoadAt(ChunkCoord.from(chunk));
+    }
+    public @Nullable Road getRoadAt(Location location) {
+        return getRoadAt(ChunkCoord.from(location));
+    }
 
     public @Nullable Road getRoadByName(String roadName) {
         for (Road road : roads) {
@@ -38,6 +45,8 @@ public class RoadManager {
     public Road createRoad(List<Town> towns, List<Town> toConfirmTowns) {
         Road road = new Road(towns, toConfirmTowns);
         addRoad(road);
+        Bukkit.getOnlinePlayers().stream().filter(p -> road.canAcceptTheRoad(p))
+                .forEach(p -> TownyRoadsMessaging.sendInviteToRoadMessage(p, road));
         return road;
     }
 
@@ -67,12 +76,14 @@ public class RoadManager {
     public String listRoad(int page) {
         StringBuilder builder = new StringBuilder("List of roads:\n");
         long itemsToSkip = Math.max(page - 1L, 0L) * 10L;
-        roads.stream().sorted(Comparator.comparing(Road::getName, String.CASE_INSENSITIVE_ORDER)).skip(itemsToSkip).limit(10)
-                .map(Road::getDescription).forEach(name -> builder.append(name).append("\n"));
+        roads.stream().sorted(Comparator.comparing(Road::getName, String.CASE_INSENSITIVE_ORDER)).skip(itemsToSkip)
+                .limit(10).map(Road::getDescription).forEach(name -> builder.append(name).append("\n"));
         return builder.toString();
     }
 
-    public Collection<Road> getRoads() { return roads; }
+    public Collection<Road> getRoads() {
+        return roads;
+    }
 
     public void deleteRoad(Road road) {
         roads.remove(road);
@@ -86,5 +97,13 @@ public class RoadManager {
         fastAccessRoads.remove(ChunkCoord.from(player.getLocation()));
     }
 
-    public List<Road> getRoadsByTown(Town town) { return roads.stream().filter(r -> r.getTownsView().contains(town)).toList(); }
+    public List<Road> getRoadsByTown(Town town) {
+        return roads.stream().filter(r -> r.getTownsView().contains(town)).toList();
+    }
+    public List<Road> getAcceptableRoadByTown(Town town) {
+        return roads.stream().filter(r -> r.getToConfirmTownsView().contains(town)).toList();
+    }
+    public List<Road> getAcceptableRoad() {
+        return roads.stream().filter(r -> r.getToConfirmTownsView().size() > 0).toList();
+    }
 }

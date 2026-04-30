@@ -53,6 +53,19 @@ public class TownyRoadsAdminCommand extends BaseCommand {
         commandSender.sendMessage("Created road " + road.getName());
     }
 
+    @Subcommand("acceptall")
+    @Description("Accept for all towns to join a road")
+    @CommandCompletion("@any_acceptable_road @empty")
+    @Syntax("<road>")
+    public static void onAccept(CommandSender commandSender, String roadName) {
+        Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+        if (road == null)
+            return;
+
+        road.confirmAll();
+        commandSender.sendMessage("Confirmed all town for road " + road.getName());
+    }
+
     @Subcommand("claim")
     @Description("Claim a chunk of a road")
     @CommandCompletion("@next_by_roads_then_empty @empty")
@@ -120,7 +133,7 @@ public class TownyRoadsAdminCommand extends BaseCommand {
         if (road == null)
             return;
 
-        Optional<Component> error = road.validate(true);
+        Optional<Component> error = road.validate(force);
         if (error.isPresent()) {
             commandSender.sendMessage(Component.text("Road " + road.getName() + " is invalid. ").append(error.get()));
         } else {

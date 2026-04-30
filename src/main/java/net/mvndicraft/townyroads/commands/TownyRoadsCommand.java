@@ -8,6 +8,7 @@ import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import net.kyori.adventure.text.Component;
 import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
+import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
 import net.mvndicraft.townyroads.util.TownyUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,13 +25,25 @@ import org.bukkit.entity.Player;
 public class TownyRoadsCommand extends BaseCommand {
 
     @Default
-    @Description("Lists the version of the plugin")
+    @Description("See a road")
+    @CommandCompletion("@road @empty")
     public static void onTownyRoads(CommandSender commandSender) {
-        commandSender.sendMessage(TownyRoadsPlugin.getInstance().toString());
+        // empty
+    }
+
+    @Subcommand("road")
+    @Description("See a road")
+    @CommandCompletion("@road @empty")
+    @Syntax("<road>")
+    public static void onTownyRoads(CommandSender commandSender, String roadName) {
+        Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+        if (road != null) {
+            commandSender.sendMessage(road.getDescription());
+        }
     }
 
     @Subcommand("here")
-    @Description("List roads")
+    @Description("See road here")
     public static void onHere(CommandSender commandSender) {
         if (commandSender instanceof Player player) {
             Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(player.getLocation());
@@ -60,7 +74,7 @@ public class TownyRoadsCommand extends BaseCommand {
 
     @Subcommand("create")
     @Description("Creates a road")
-    @CommandCompletion("@reachable_road_towns @empty")
+    @CommandCompletion("@reachable_road_towns_create @empty")
     @Syntax("<town>")
     public static void onCreate(CommandSender commandSender, String townName2) {
         if (commandSender instanceof Player player) {
@@ -86,6 +100,56 @@ public class TownyRoadsCommand extends BaseCommand {
                     .sendMessage("Created road " + road.getName() + " (" + town2.getName() + " needs to confirm).");
         } else {
             commandSender.sendMessage("You must be a player.");
+        }
+    }
+
+    @Subcommand("accept")
+    @Description("Accept to join a road")
+    @CommandCompletion("@acceptable_road @empty")
+    @Syntax("<road>")
+    public static void onAccept(CommandSender commandSender, String roadName) {
+        if (commandSender instanceof Player player) {
+            Town playerTown = TownyAPI.getInstance().getTown(player);
+            if (playerTown == null || playerTown.isRuined()) {
+                commandSender.sendMessage("You must be in a town.");
+                return;
+            }
+            Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+            if (road == null) {
+                commandSender.sendMessage("Road not found.");
+                return;
+            }
+
+            if (TownyUniverse.getInstance().getPermissionSource().testPermission(player,
+                    TownyRoadsPermissionNodes.TOWNY_ROADS_ACCEPT.getNode())) {
+                road.confirm(playerTown);
+                commandSender.sendMessage("Joined the road " + road.getName());
+            }
+        }
+    }
+
+    @Subcommand("deny")
+    @Description("Deny to join a road")
+    @CommandCompletion("@acceptable_road @empty")
+    @Syntax("<road>")
+    public static void onDeny(CommandSender commandSender, String roadName) {
+        if (commandSender instanceof Player player) {
+            Town playerTown = TownyAPI.getInstance().getTown(player);
+            if (playerTown == null || playerTown.isRuined()) {
+                commandSender.sendMessage("You must be in a town.");
+                return;
+            }
+            Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+            if (road == null) {
+                commandSender.sendMessage("Road not found.");
+                return;
+            }
+
+            if (TownyUniverse.getInstance().getPermissionSource().testPermission(player,
+                    TownyRoadsPermissionNodes.TOWNY_ROADS_ACCEPT.getNode())) {
+                road.deny(playerTown);
+                commandSender.sendMessage("Denied the road " + road.getName());
+            }
         }
     }
 
