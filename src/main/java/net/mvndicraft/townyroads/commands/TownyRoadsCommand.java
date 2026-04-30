@@ -94,8 +94,12 @@ public class TownyRoadsCommand extends BaseCommand {
                 commandSender.sendMessage("You do not have permission to create roads.");
                 return;
             }
-            Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(List.of(playerTown, town2),
-                    List.of(town2));
+            List<Town> towns = List.of(playerTown, town2);
+            if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadWithEveryTown(towns) != null) {
+                commandSender.sendMessage("A road already exists connecting both towns.");
+                return;
+            }
+            Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(towns, List.of(town2));
             commandSender
                     .sendMessage("Created road " + road.getName() + " (" + town2.getName() + " needs to confirm).");
         } else {

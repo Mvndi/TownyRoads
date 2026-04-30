@@ -49,7 +49,12 @@ public class TownyRoadsAdminCommand extends BaseCommand {
             commandSender.sendMessage("Towns must be different.");
             return;
         }
-        Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(List.of(town1, town2), List.of());
+        List<Town> towns = List.of(town1, town2);
+        if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadWithEveryTown(towns) != null) {
+            commandSender.sendMessage("A road already exists connecting both towns.");
+            return;
+        }
+        Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(towns, List.of());
         commandSender.sendMessage("Created road " + road.getName());
     }
 

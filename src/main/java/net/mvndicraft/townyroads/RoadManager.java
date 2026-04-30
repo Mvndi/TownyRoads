@@ -106,4 +106,8 @@ public class RoadManager {
     public List<Road> getAcceptableRoad() {
         return roads.stream().filter(r -> r.getToConfirmTownsView().size() > 0).toList();
     }
+
+    public Road getRoadWithEveryTown(List<Town> towns) {
+        return roads.stream().filter(r -> r.getTownsView().containsAll(towns)).findFirst().orElse(null);
+    }
 }
