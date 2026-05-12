@@ -5,11 +5,16 @@ import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyObject;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -195,6 +200,9 @@ public class Road extends TownyObject {
                 }
             }
         }
+
+        removeUnusedChunks();
+
         valid = true;
         return Optional.empty();
     }
@@ -301,4 +309,90 @@ public class Road extends TownyObject {
 
         return maxDistance;
     }
+
+
+    // List all ChunkCoord are connecting 2 towns + 1 extra chunk that is allowed
+    public Set<ChunkCoord> listUsefulChunks() {
+        Set<ChunkCoord> usefulChunks = new HashSet<>();
+        for (Town town1 : towns) {
+            for (Town town2 : towns) {
+                if (!town1.equals(town2)) {
+                    usefulChunks.addAll(getPath(town1, town2));
+                }
+            }
+        }
+
+        Set<ChunkCoord> usefulWithMargin = new HashSet<>(usefulChunks);
+        for (ChunkCoord chunkCoord : chunksCoords) {
+            if (chunkCoord.getNearby(1).stream().anyMatch(usefulChunks::contains)) {
+                usefulWithMargin.add(chunkCoord);
+            }
+        }
+
+        return usefulWithMargin;
+    }
+
+    public void removeUnusedChunks() {
+        chunksCoords.retainAll(listUsefulChunks());
+    }
+
+
+    // Returns the shortest path between 2 towns
+    public List<ChunkCoord> getPath(Town from, Town to) {
+        Set<ChunkCoord> startChunks = getChunksTouchingTown(from);
+        Set<ChunkCoord> endChunks = getChunksTouchingTown(to);
+
+        if (startChunks.isEmpty() || endChunks.isEmpty()) {
+            return List.of();
+        }
+
+        for (ChunkCoord startChunk : startChunks) {
+            if (endChunks.contains(startChunk)) {
+                return List.of(startChunk);
+            }
+        }
+
+        Queue<ChunkCoord> queue = new ArrayDeque<>(startChunks);
+        Set<ChunkCoord> visited = new HashSet<>(startChunks);
+        Map<ChunkCoord, ChunkCoord> previous = new HashMap<>();
+
+        while (!queue.isEmpty()) {
+            ChunkCoord current = queue.poll();
+
+            for (ChunkCoord neighbor : current.getNearby(1)) {
+                if (!chunksCoords.contains(neighbor) || !visited.add(neighbor)) {
+                    continue;
+                }
+
+                previous.put(neighbor, current);
+                if (endChunks.contains(neighbor)) {
+                    return buildPath(previous, neighbor);
+                }
+
+                queue.add(neighbor);
+            }
+        }
+
+        return List.of();
+    }
+
+    private Set<ChunkCoord> getChunksTouchingTown(Town town) {
+        return town.getTownBlocks().stream()
+                .map(tb -> new ChunkCoord(tb.getWorld().getBukkitWorld().getUID(), tb.getX(), tb.getZ()))
+                .flatMap(coord -> coord.getNearby(1).stream()).filter(chunksCoords::contains)
+                .collect(Collectors.toSet());
+    }
+
+    private List<ChunkCoord> buildPath(Map<ChunkCoord, ChunkCoord> previous, ChunkCoord end) {
+        LinkedList<ChunkCoord> path = new LinkedList<>();
+        ChunkCoord current = end;
+
+        while (current != null) {
+            path.addFirst(current);
+            current = previous.get(current);
+        }
+
+        return path;
+    }
+
 }

@@ -2,6 +2,7 @@ package net.mvndicraft.townyroads.listeners;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.event.DeleteTownEvent;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,5 +32,10 @@ public class TownyRoadPlayersListener implements Listener {
                 TownyRoadsMessaging.sendInviteToRoadMessage(event.getPlayer(), road);
             }
         }, 1L, TimeUnit.SECONDS);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onTownDeleted(DeleteTownEvent event) {
+        // TODO remove the town from each road that contain it and remove the branch of the road that was leading to it.
     }
 }
