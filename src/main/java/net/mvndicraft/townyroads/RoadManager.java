@@ -88,13 +88,21 @@ public class RoadManager {
     public void deleteRoad(Road road) {
         roads.remove(road);
         for (ChunkCoord chunkCoord : road.getChunksCoordsView()) {
-            fastAccessRoads.remove(chunkCoord);
+            removeFromFastAccess(chunkCoord);
         }
     }
 
     public void unclaimRoad(Road road, Player player) {
         road.unclaim(player);
-        fastAccessRoads.remove(ChunkCoord.from(player.getLocation()));
+        removeFromFastAccess(ChunkCoord.from(player.getLocation()));
+    }
+    public void removeFromFastAccess(ChunkCoord chunkCoord) {
+        fastAccessRoads.remove(chunkCoord);
+    }
+    public void removeFromFastAccess(Collection<ChunkCoord> chunkCoords) {
+        for (ChunkCoord chunkCoord : chunkCoords) {
+            removeFromFastAccess(chunkCoord);
+        }
     }
 
     public List<Road> getRoadsByTown(Town town) {

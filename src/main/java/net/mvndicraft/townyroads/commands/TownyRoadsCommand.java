@@ -125,7 +125,7 @@ public class TownyRoadsCommand extends BaseCommand {
             }
 
             if (TownyUniverse.getInstance().getPermissionSource().testPermission(player,
-                    TownyRoadsPermissionNodes.TOWNY_ROADS_ACCEPT.getNode())) {
+                    TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
                 road.confirm(playerTown);
                 commandSender.sendMessage("Joined the road " + road.getName());
             }
@@ -150,7 +150,7 @@ public class TownyRoadsCommand extends BaseCommand {
             }
 
             if (TownyUniverse.getInstance().getPermissionSource().testPermission(player,
-                    TownyRoadsPermissionNodes.TOWNY_ROADS_ACCEPT.getNode())) {
+                    TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
                 road.deny(playerTown);
                 commandSender.sendMessage("Denied the road " + road.getName());
             }

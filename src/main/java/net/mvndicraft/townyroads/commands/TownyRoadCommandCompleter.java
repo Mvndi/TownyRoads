@@ -50,7 +50,7 @@ public class TownyRoadCommandCompleter {
         manager.getCommandCompletions().registerAsyncCompletion("acceptable_road", c -> {
             CommandSender commandSender = c.getContextValue(CommandSender.class, 0);
             if (commandSender instanceof Player player && TownyUniverse.getInstance().getPermissionSource()
-                    .testPermission(player, TownyRoadsPermissionNodes.TOWNY_ROADS_ACCEPT.getNode())) {
+                    .testPermission(player, TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
                 return TownyRoadsPlugin.getInstance().getRoadManager()
                         .getAcceptableRoadByTown(TownyAPI.getInstance().getTown(player)).stream().map(Road::getName)
                         .toList();
@@ -115,10 +115,10 @@ public class TownyRoadCommandCompleter {
 
     private static boolean playerCanClaim(Player player) {
         return TownyUniverse.getInstance().getPermissionSource().testPermission(player,
-                TownyRoadsPermissionNodes.TOWNY_ROADS_CLAIM.getNode());
+                TownyRoadsPermissionNodes.TOWNYROADS_CLAIM.getNode());
     }
     private static boolean playerCanCreate(Player player) {
         return TownyUniverse.getInstance().getPermissionSource().testPermission(player,
-                TownyRoadsPermissionNodes.TOWNY_ROADS_CREATE.getNode());
+                TownyRoadsPermissionNodes.TOWNYROADS_CREATE.getNode());
     }
 }

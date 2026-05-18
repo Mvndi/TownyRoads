@@ -138,6 +138,10 @@ public class Road extends TownyObject {
         if (towns.size() < 2) {
             TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(this);
         }
+
+        if (valid) {
+            validate();
+        }
     }
 
     public Optional<Component> merge(Road road, boolean force) {
@@ -152,7 +156,7 @@ public class Road extends TownyObject {
                         .text(road.getName() + " need to have at least 1 town in common with " + road.getName()));
             }
             // All town of road need to have accepted to join the road.
-            if (road.toConfirmTowns.size() != 0) {
+            if (!road.toConfirmTowns.isEmpty()) {
                 return Optional.of(Component.text(road.getName() + " have towns that haven't confirmed yet: "
                         + getTownsNames(road.toConfirmTowns)));
             }
@@ -248,7 +252,7 @@ public class Road extends TownyObject {
     public boolean canAcceptTheRoad(Player player) {
         Town town = TownyAPI.getInstance().getTown(player);
         return toConfirmTowns.contains(town) && TownyUniverse.getInstance().getPermissionSource().testPermission(player,
-                TownyRoadsPermissionNodes.TOWNY_ROADS_ACCEPT.getNode());
+                TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode());
     }
     /**
      * @return true if not already claimed and at least one chunk is nearby or it's the first chunk of the road
@@ -333,7 +337,12 @@ public class Road extends TownyObject {
     }
 
     public void removeUnusedChunks() {
-        chunksCoords.retainAll(listUsefulChunks());
+        Set<ChunkCoord> usefullChunkCoords = listUsefulChunks();
+        Set<ChunkCoord> toRemove = chunksCoords.stream().filter(c -> !usefullChunkCoords.contains(c))
+                .collect(Collectors.toSet());
+        chunksCoords.removeAll(toRemove);
+        // chunksCoords.retainAll(listUsefulChunks());
+        TownyRoadsPlugin.getInstance().getRoadManager().removeFromFastAccess(toRemove);
     }
 
 

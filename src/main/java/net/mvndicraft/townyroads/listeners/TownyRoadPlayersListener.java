@@ -23,7 +23,7 @@ public class TownyRoadPlayersListener implements Listener {
             if (playerTown == null || playerTown.isRuined())
                 return;
             if (!TownyUniverse.getInstance().getPermissionSource().testPermission(event.getPlayer(),
-                    TownyRoadsPermissionNodes.TOWNY_ROADS_ACCEPT.getNode())) {
+                    TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
                 return;
             }
 
@@ -36,6 +36,9 @@ public class TownyRoadPlayersListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onTownDeleted(DeleteTownEvent event) {
-        // TODO remove the town from each road that contain it and remove the branch of the road that was leading to it.
+        Town town = TownyAPI.getInstance().getTown(event.getTownUUID());
+        for (Road road : TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(town)) {
+            road.removeTown(town);
+        }
     }
 }

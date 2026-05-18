@@ -3,9 +3,14 @@ package net.mvndicraft.townyroads.permissions;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
 
 public enum TownyRoadsPermissionNodes {
-    TOWNY_ROADS_ADMIN(TownyRoadsPlugin.ADMIN_PERMISSION), TOWNY_ROADS_CLAIM("towny.command.townyroads.claim"),
-    TOWNY_ROADS_UNCLAIM("towny.command.townyroads.unclaim"), TOWNY_ROADS_CREATE("towny.command.townyroads.create"),
-    TOWNY_ROADS_DELETE("towny.command.townyroads.delete"), TOWNY_ROADS_ACCEPT("towny.command.townyroads.accept");
+    TOWNYROADS_ADMIN(TownyRoadsPlugin.ADMIN_PERMISSION), TOWNYROADS_CLAIM("townyroads.command.townyroads.claim"),
+    TOWNYROADS_UNCLAIM("townyroads.command.townyroads.unclaim"), TOWNYROADS_CREATE("townyroads.command.townyroads.create"),
+    TOWNYROADS_DELETE("townyroads.command.townyroads.delete"), TOWNYROADS_ACCEPT("townyroads.command.townyroads.accept"),
+    TOWNYROADS_CLAIMED_OWNROAD_ALL("townyroads.claimed.ownroad.*"),
+    TOWNYROADS_CLAIMED_OWNROAD_BLOCK_BUILD("townyroads.claimed.ownroad.build.*"),
+    TOWNYROADS_CLAIMED_OWNROAD_BLOCK_DESTROY("townyroads.claimed.ownroad.destroy.*"),
+    TOWNYROADS_CLAIMED_OWNROAD_BLOCK_SWITCH("townyroads.claimed.ownroad.switch.*"),
+    TOWNYROADS_CLAIMED_OWNROAD_BLOCK_ITEM_USE("townyroads.claimed.ownroad.item_use.*");
 
     private String value;
 
