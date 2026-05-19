@@ -12,12 +12,12 @@ plugins {
 }
 
 group = "net.mvndicraft.townyroads"
-version = "0.0.1"
+version = "0.1.0"
 description = "Add roads to Towny"
 java.sourceCompatibility = JavaVersion.VERSION_21
 var mainMinecraftVersion = "1.21.11"
 val supportedMinecraftVersions = "1.20 - 1.21.11"
-val townyVersion = "0.102.0.14"
+val townyVersion = "0.103.0.0"
 val coreprotectVersion = "23.1"
 
 repositories {
@@ -92,7 +92,7 @@ tasks {
 
     runServer {
         downloadPlugins {
-            github("TownyAdvanced", "Towny", "$townyVersion", "towny-$townyVersion.jar") // we can't use the latest release because it's inside a zip.
+            modrinth("towny", "$townyVersion")
             modrinth("coreprotect", "$coreprotectVersion")
         }
         minecraftVersion("$mainMinecraftVersion")

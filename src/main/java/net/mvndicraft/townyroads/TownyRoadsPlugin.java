@@ -5,6 +5,7 @@ import net.mvndicraft.townyroads.commands.TownyRoadCommandCompleter;
 import net.mvndicraft.townyroads.commands.TownyRoadsAdminCommand;
 import net.mvndicraft.townyroads.commands.TownyRoadsCommand;
 import net.mvndicraft.townyroads.listeners.TownyRoadPlayersListener;
+import net.mvndicraft.townyroads.settings.Settings;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TownyRoadsPlugin extends JavaPlugin {
@@ -15,6 +16,8 @@ public class TownyRoadsPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         roadManager = new RoadManager();
+
+        Settings.loadConfigAndLang();
 
         getServer().getPluginManager().registerEvents(new TownyRoadPlayersListener(), this);
 
@@ -30,5 +33,11 @@ public class TownyRoadsPlugin extends JavaPlugin {
     }
     public RoadManager getRoadManager() {
         return roadManager;
+    }
+
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+        Settings.loadConfigAndLang();
     }
 }

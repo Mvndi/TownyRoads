@@ -20,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import net.kyori.adventure.text.Component;
 import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
+import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.ChunkCoordUtil;
 import org.bukkit.entity.Player;
 
@@ -109,7 +110,8 @@ public class Road extends TownyObject {
     }
 
     public String getDescription() {
-        String description = getTownsNames(towns) + " (" + chunksCoords.size() + " chunks)";
+        String description = getTownsNames(towns) + " (" + chunksCoordsSize() + "/" + maxChunksCoordsSize()
+                + " chunks)";
         if (!toConfirmTowns.isEmpty()) {
             description += " (" + getTownsNames(toConfirmTowns) + " to confirm)";
         }
@@ -192,16 +194,27 @@ public class Road extends TownyObject {
             if (towns.size() < 2) {
                 valid = false;
                 return Optional.of(Component.text(getName() + " must have at least 2 towns."));
-            } else if (!ChunkCoordUtil.areAllConnected(chunksCoords)) {
+            }
+
+            if (!ChunkCoordUtil.areAllConnected(chunksCoords)) {
                 valid = false;
                 return Optional.of(Component.text(getName() + " must be connected."));
-            } else {
-                Optional<Town> firstNotConnectedTown = getFirstNotConnectedTown();
-                if (firstNotConnectedTown.isPresent()) {
-                    valid = false;
-                    return Optional.of(Component.text("All towns of " + getName() + " must be connected including "
-                            + firstNotConnectedTown.get().getName()));
-                }
+            }
+
+            int maxChunks = maxChunksCoordsSize();
+            int currentChunks = chunksCoordsSize();
+            if (currentChunks > maxChunks) {
+                valid = false;
+                return Optional.of(Component
+                        .text(getName() + " have too many chunks. " + currentChunks + " on a max of " + maxChunks));
+            }
+
+
+            Optional<Town> firstNotConnectedTown = getFirstNotConnectedTown();
+            if (firstNotConnectedTown.isPresent()) {
+                valid = false;
+                return Optional.of(Component.text("All towns of " + getName() + " must be connected including "
+                        + firstNotConnectedTown.get().getName()));
             }
         }
 
@@ -212,6 +225,20 @@ public class Road extends TownyObject {
     }
     public Optional<Component> validate() {
         return validate(false);
+    }
+
+    public int maxChunksCoordsSize() {
+        int max = Integer.MAX_VALUE;
+        if (TownyRoadsSettings.getMaxClaimsMultiplier() != -1) {
+            max = (int) (TownyRoadsSettings.getMaxClaimsMultiplier() * distanceBetweenTheTwoFarthestTowns()) / 16;
+        }
+        if (TownyRoadsSettings.getMaxclaims() != -1) {
+            max = Math.min(max, TownyRoadsSettings.getMaxclaims());
+        }
+        return max;
+    }
+    public int chunksCoordsSize() {
+        return chunksCoords.size();
     }
 
     public Optional<Town> getFirstNotConnectedTown() {
@@ -228,15 +255,11 @@ public class Road extends TownyObject {
         return Optional.empty();
     }
 
-    // We allow up to 2 times more chunks that the shortest path between the 2 farthest towns.
-    public int maxChunks() {
-        return distanceBetweenTheTwoFarthestTowns() * 2;
-    }
     /**
      * @return true if the road hasn't reached the maximum number of chunks
      */
     public boolean canClaimMore() {
-        return chunksCoords.size() < maxChunks();
+        return chunksCoordsSize() < maxChunksCoordsSize();
     }
     /**
      * @return true if the player town is part of the road
