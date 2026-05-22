@@ -40,9 +40,8 @@ public class PlayerCooldownManager {
     }
 
     public boolean canActThenIncreaseCooldown(Player player) {
-        TownyRoadsPlugin.getInstance().getLogger().info("Cooldowns before compute: " + cooldowns);
         return cooldowns.compute(player.getUniqueId(),
-                (uuid, value) -> value == null ? 1 : value + 1) <= getMaxAction();
+                (uuid, value) -> value == null ? 1 : Math.min(value + 1, getMaxAction() + 1)) <= getMaxAction();
     }
 
     public int getMaxAction() {
