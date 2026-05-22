@@ -11,13 +11,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class TownyRoadsPlugin extends JavaPlugin {
     public static final String ADMIN_PERMISSION = "townyroads.admin";
     private RoadManager roadManager;
+    private PlayerCooldownManager playerCooldownManager;
 
 
     @Override
     public void onEnable() {
-        roadManager = new RoadManager();
-
         Settings.loadConfigAndLang();
+        roadManager = new RoadManager();
+        playerCooldownManager = new PlayerCooldownManager();
 
         getServer().getPluginManager().registerEvents(new TownyRoadPlayersListener(), this);
 
@@ -34,10 +35,14 @@ public class TownyRoadsPlugin extends JavaPlugin {
     public RoadManager getRoadManager() {
         return roadManager;
     }
+    public PlayerCooldownManager getPlayerCooldownManager() {
+        return playerCooldownManager;
+    }
 
     @Override
     public void reloadConfig() {
         super.reloadConfig();
         Settings.loadConfigAndLang();
+        getPlayerCooldownManager().reload();
     }
 }

@@ -9,10 +9,17 @@ import java.util.concurrent.TimeUnit;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsMessaging;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
+import net.mvndicraft.townyroads.permissions.RoadPermissionHandler;
 import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class TownyRoadPlayersListener implements Listener {
@@ -40,5 +47,56 @@ public class TownyRoadPlayersListener implements Listener {
         for (Road road : TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(town)) {
             road.removeTown(town);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBuild(BlockPlaceEvent event) {
+        if (!TownyAPI.getInstance().isTownyWorld(event.getPlayer().getWorld()))
+            return;
+        Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(event.getBlock().getChunk());
+        // Player is not part of the road or does not have perms
+        if (road != null && !RoadPermissionHandler.canBuild(event.getPlayer(), road)) {
+            playNoSound(event.getPlayer());
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onDestroy(BlockBreakEvent event) {
+        if (!TownyAPI.getInstance().isTownyWorld(event.getPlayer().getWorld()))
+            return;
+        Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(event.getBlock().getChunk());
+        // Player is not part of the road or does not have perms
+        if (road != null && !RoadPermissionHandler.canDestroy(event.getPlayer(), road)) {
+            playNoSound(event.getPlayer());
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onItemUse(PlayerInteractEvent event) {
+        if (!TownyAPI.getInstance().isTownyWorld(event.getPlayer().getWorld()))
+            return;
+        if (event.hasItem()) {
+            Player player = event.getPlayer();
+            Block clickedBlock = event.getClickedBlock();
+            Location loc = null;
+            if (clickedBlock != null)
+                loc = clickedBlock.getLocation();
+            else
+                loc = player.getLocation();
+
+            Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(loc.getChunk());
+            // Player is not part of the road or does not have perms
+            if (road != null && !RoadPermissionHandler.canItemUse(event.getPlayer(), road)) {
+                playNoSound(player);
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    private void playNoSound(Player player) {
+        player.getLocation().getWorld().playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 1, 1);
+        player.sendMessage("NO");
     }
 }

@@ -11,4 +11,16 @@ public class TownyRoadsSettings {
         return Settings.getDouble(ConfigNodes.ROADS_RESTRICTIONS_MAX_CLAIMS_MULTIPLIER);
     }
 
+    public static int getCooldownMaxValue() {
+        return Settings.getInt(ConfigNodes.ROADS_COOLDOWN_MAX_VALUE);
+    }
+
+    public static int getCooldownReduceTimer() {
+        return Settings.getInt(ConfigNodes.ROADS_COOLDOWN_REDUCE_TIMER);
+    }
+
+    public static int getCooldownReduceValue() {
+        return Settings.getInt(ConfigNodes.ROADS_COOLDOWN_REDUCE_VALUE);
+    }
+
 }

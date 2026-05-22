@@ -179,4 +179,10 @@ public class TownyRoadsAdminCommand extends BaseCommand {
     public static void onMerge(CommandSender commandSender, String roadName1, String roadName2) {
         onMerge(commandSender, roadName1, roadName2, false);
     }
+
+    @Subcommand("listCooldowns")
+    @Description("List all road cooldowns")
+    public static void onListCooldowns(CommandSender commandSender) {
+        commandSender.sendMessage(TownyRoadsPlugin.getInstance().getPlayerCooldownManager().toString());
+    }
 }
