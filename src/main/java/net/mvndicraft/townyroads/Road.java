@@ -110,8 +110,13 @@ public class Road extends TownyObject {
     }
 
     public String getDescription() {
-        String description = getTownsNames(towns) + " (" + chunksCoordsSize() + "/" + maxChunksCoordsSize()
-                + " chunks)";
+        String description = getTownsNames(towns) + " ";
+        if (isValid()) {
+            description += "✔️";
+        } else {
+            description += "✖️";
+        }
+        description += " (" + chunksCoordsSize() + "/" + maxChunksCoordsSize() + " chunks)";
         if (!toConfirmTowns.isEmpty()) {
             description += " (" + getTownsNames(toConfirmTowns) + " to confirm)";
         }
@@ -191,6 +196,12 @@ public class Road extends TownyObject {
     }
     public Optional<Component> validate(boolean force) {
         if (!force) {
+            if (!toConfirmTowns.isEmpty()) {
+                valid = false;
+                return Optional.of(Component
+                        .text(getName() + " have towns that haven't confirmed yet: " + getTownsNames(toConfirmTowns)));
+            }
+
             if (towns.size() < 2) {
                 valid = false;
                 return Optional.of(Component.text(getName() + " must have at least 2 towns."));
