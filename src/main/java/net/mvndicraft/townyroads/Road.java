@@ -112,9 +112,9 @@ public class Road extends TownyObject {
     public String getDescription() {
         String description = getTownsNames(towns) + " ";
         if (isValid()) {
-            description += "✔️";
+            description += "✔";
         } else {
-            description += "✖️";
+            description += "✘";
         }
         description += " (" + chunksCoordsSize() + "/" + maxChunksCoordsSize() + " chunks)";
         if (!toConfirmTowns.isEmpty()) {
