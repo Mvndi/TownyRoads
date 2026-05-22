@@ -230,7 +230,7 @@ public class Road extends TownyObject {
     public int maxChunksCoordsSize() {
         int max = Integer.MAX_VALUE;
         if (TownyRoadsSettings.getMaxClaimsMultiplier() != -1) {
-            max = (int) (TownyRoadsSettings.getMaxClaimsMultiplier() * distanceBetweenTheTwoFarthestTowns()) / 16;
+            max = (int) (TownyRoadsSettings.getMaxClaimsMultiplier() * distanceBetweenTheTwoFarthestTowns());
         }
         if (TownyRoadsSettings.getMaxclaims() != -1) {
             max = Math.min(max, TownyRoadsSettings.getMaxclaims());
@@ -301,7 +301,7 @@ public class Road extends TownyObject {
     /**
      * Calculates the distance between the 2 farthest towns
      * 
-     * @return distance
+     * @return distance in chunks
      */
     public int distanceBetweenTheTwoFarthestTowns() {
         if (towns.size() < 2) {
