@@ -210,6 +210,10 @@ public class TownyRoadsCommand extends BaseCommand {
             }
             if (TownyRoadsPlugin.getInstance().getRoadManager().claimRoad(road, player)) {
                 commandSender.sendMessage("Claimed road " + roadName);
+                if (road.isValid()) {
+                    road.unvalidate();
+                    commandSender.sendMessage("Road " + road.getName() + " need to be validated again.");
+                }
             } else {
                 commandSender.sendMessage("failed to claim road " + roadName);
             }
