@@ -5,6 +5,8 @@ import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyObject;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +24,8 @@ import net.kyori.adventure.text.Component;
 import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.ChunkCoordUtil;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class Road extends TownyObject {
@@ -38,25 +42,25 @@ public class Road extends TownyObject {
         super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
         id = UUID.randomUUID();
         this.towns = new ArrayList<>(towns);
-        this.townsView = Collections.unmodifiableList(towns);
+        this.townsView = Collections.unmodifiableList(this.towns);
         this.toConfirmTowns = new ArrayList<>(toConfirmTowns);
-        this.toConfirmTownsView = Collections.unmodifiableList(toConfirmTowns);
+        this.toConfirmTownsView = Collections.unmodifiableList(this.toConfirmTowns);
         this.chunksCoords = new HashSet<>();
-        this.chunksCoordsView = Collections.unmodifiableSet(chunksCoords);
+        this.chunksCoordsView = Collections.unmodifiableSet(this.chunksCoords);
         valid = false;
     }
 
     // Used to load from file.
-    private Road(UUID id, List<Town> towns, List<Town> toConfirmTowns) {
+    private Road(UUID id, List<Town> towns, List<Town> toConfirmTowns, Set<ChunkCoord> chunksCoords, boolean valid) {
         super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
         this.id = id;
         this.towns = towns;
-        this.townsView = Collections.unmodifiableList(towns);
+        this.townsView = Collections.unmodifiableList(this.towns);
         this.toConfirmTowns = new ArrayList<>(toConfirmTowns);
-        this.toConfirmTownsView = Collections.unmodifiableList(toConfirmTowns);
-        this.chunksCoords = new HashSet<>();
-        this.chunksCoordsView = Collections.unmodifiableSet(chunksCoords);
-        valid = false;
+        this.toConfirmTownsView = Collections.unmodifiableList(this.toConfirmTowns);
+        this.chunksCoords = new HashSet<>(chunksCoords);
+        this.chunksCoordsView = Collections.unmodifiableSet(this.chunksCoords);
+        this.valid = valid;
     }
 
     public UUID getId() {
@@ -74,7 +78,7 @@ public class Road extends TownyObject {
 
     @Override
     public void save() {
-        // TODO
+        TownyRoadsPlugin.getInstance().getRoadStorage().save(this);
     }
 
     @Override
@@ -101,6 +105,7 @@ public class Road extends TownyObject {
         ChunkCoord chunkCoord = ChunkCoord.from(player.getLocation());
         if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(chunkCoord) == null) {
             chunksCoords.add(chunkCoord);
+            TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
             return chunkCoord;
         }
         return null;
@@ -126,13 +131,16 @@ public class Road extends TownyObject {
     // Confirm that the town want to be part of the road
     public void confirm(Town town) {
         toConfirmTowns.remove(town);
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
     }
     public void confirmAll() {
         toConfirmTowns.clear();
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
     }
 
     public void deny(Town town) {
         removeTown(town);
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
     }
 
     private String getTownsNames(List<Town> townList) {
@@ -148,6 +156,8 @@ public class Road extends TownyObject {
 
         if (valid) {
             validate();
+        } else  {
+            TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
         }
     }
 
@@ -185,6 +195,7 @@ public class Road extends TownyObject {
         this.chunksCoords.addAll(road.chunksCoords);
         // Remove the old road
         TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(road);
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
         return Optional.empty();
     }
     public Optional<Component> merge(Road road) {
@@ -195,20 +206,25 @@ public class Road extends TownyObject {
         return valid;
     }
     public Optional<Component> validate(boolean force) {
+        removeChunksInTowns();
+
         if (!force) {
             if (!toConfirmTowns.isEmpty()) {
                 valid = false;
+                TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
                 return Optional.of(Component
                         .text(getName() + " have towns that haven't confirmed yet: " + getTownsNames(toConfirmTowns)));
             }
 
             if (towns.size() < 2) {
                 valid = false;
+                TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
                 return Optional.of(Component.text(getName() + " must have at least 2 towns."));
             }
 
             if (!ChunkCoordUtil.areAllConnected(chunksCoords)) {
                 valid = false;
+                TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
                 return Optional.of(Component.text(getName() + " must be connected."));
             }
 
@@ -216,6 +232,7 @@ public class Road extends TownyObject {
             int currentChunks = chunksCoordsSize();
             if (currentChunks > maxChunks) {
                 valid = false;
+                TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
                 return Optional.of(Component
                         .text(getName() + " have too many chunks. " + currentChunks + " on a max of " + maxChunks));
             }
@@ -224,6 +241,7 @@ public class Road extends TownyObject {
             Optional<Town> firstNotConnectedTown = getFirstNotConnectedTown();
             if (firstNotConnectedTown.isPresent()) {
                 valid = false;
+                TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
                 return Optional.of(Component.text("All towns of " + getName() + " must be connected including "
                         + firstNotConnectedTown.get().getName()));
             }
@@ -232,10 +250,16 @@ public class Road extends TownyObject {
         removeUnusedChunks();
 
         valid = true;
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
         return Optional.empty();
     }
     public Optional<Component> validate() {
         return validate(false);
+    }
+
+    public void unvalidate() {
+        valid = false;
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
     }
 
     public int maxChunksCoordsSize() {
@@ -377,6 +401,15 @@ public class Road extends TownyObject {
         chunksCoords.removeAll(toRemove);
         // chunksCoords.retainAll(listUsefulChunks());
         TownyRoadsPlugin.getInstance().getRoadManager().removeFromFastAccess(toRemove);
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
+    }
+
+    public void removeChunksInTowns() {
+        Set<ChunkCoord> toRemove = chunksCoords.stream().filter(chunkCoord -> TownyAPI.getInstance().getTown(chunkCoord.toLocation()) != null)
+                .collect(Collectors.toSet());
+        chunksCoords.removeAll(toRemove);
+        TownyRoadsPlugin.getInstance().getRoadManager().removeFromFastAccess(toRemove);
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
     }
 
 
@@ -438,4 +471,30 @@ public class Road extends TownyObject {
         return path;
     }
 
+
+    public static Road fromYml(File file){
+        Configuration config = YamlConfiguration.loadConfiguration(file);
+
+        return new Road(UUID.fromString(config.getString("id")),
+            config.getStringList("towns").stream().map(UUID::fromString).map(uuid -> TownyAPI.getInstance().getTown(uuid)).toList(),
+            config.getStringList("toConfirmTowns").stream().map(UUID::fromString).map(uuid -> TownyAPI.getInstance().getTown(uuid)).toList(),
+            config.getStringList("chunksCoords").stream().map(ChunkCoord::fromString).collect(Collectors.toSet()),
+            config.getBoolean("valid")
+        );
+    }
+
+    public void toYml(File file) {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("id", this.getId().toString());
+        config.set("towns", this.towns.stream().map(Town::getUUID).map(UUID::toString).toList());
+        config.set("toConfirmTowns", this.toConfirmTowns.stream().map(Town::getUUID).map(UUID::toString).toList());
+        config.set("chunksCoords", this.chunksCoords.stream().sorted().map(ChunkCoord::toString).toList());
+        config.set("valid", this.valid);
+
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
