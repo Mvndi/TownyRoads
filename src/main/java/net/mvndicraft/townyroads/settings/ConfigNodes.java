@@ -61,7 +61,59 @@ public enum ConfigNodes {
             "1",
             "",
             "# Every reduce_timer seconds the cooldown get reduced by reduce_value.",
-            "# reduce_value need to be at least 1, else the cooldown won't be reduced.");
+            "# reduce_value need to be at least 1, else the cooldown won't be reduced."),
+    ROADS_BONUS_BLOCK(
+            "roads.bonus_block",
+            "",
+            "",
+            "############################################################",
+            "# +------------------------------------------------------+ #",
+            "# |                    Bonus Block                       | #",
+            "# +------------------------------------------------------+ #",
+            "############################################################",
+            ""),
+    ROADS_BONUS_BLOCK_ENABLED(
+            "roads.bonus_block.enabled",
+            "true",
+            "",
+            "# If enabled, the road will have a bonus block for every town that is connected to the road.",
+            "# Disabled with value of false"),
+    ROADS_BONUS_BLOCK_SAME_NATION_MULTIPLIER(
+            "roads.bonus_block.same_nation_multiplier",
+            "2.0",
+            "",
+            "# How much bonus block does a connexion to a town give if the 2 towns are in the same nation.",
+            "# It can be negative.",
+            "# Disabled with value of 0.0"),
+    ROADS_BONUS_BLOCK_ALLY_MULTIPLIER(
+            "roads.bonus_block.ally_multiplier",
+            "1.5",
+            "",
+            "# How much bonus block does a connexion to a town give if the 2 towns are ally.",
+            "# It can be negative.",
+            "# Disabled with value of 0.0"),
+    ROADS_BONUS_BLOCK_NEUTRAL_MULTIPLIER(
+            "roads.bonus_block.neutral_multiplier",
+            "1.0",
+            "",
+            "# How much bonus block does a connexion to a town give.",
+            "# It can be negative.",
+            "# Disabled with value of 0.0"),
+    ROADS_BONUS_BLOCK_ENEMY_MULTIPLIER(
+            "roads.bonus_block.enemy_multiplier",
+            "0.5",
+            "",
+            "# How much bonus block does a connexion to a town give if the 2 towns are enemy.",
+            "# It can be negative.",
+            "# Disabled with value of 0.0"),
+    ROADS_BONUS_BLOCK_MULIPLY_BY_TOWN_LEVEL(
+            "roads.bonus_block.multiply_by_town_level",
+            "true",
+            "",
+            "# If enabled, the road will have more bonus block for every level of a connected town.",
+            "# Disabled with value of false"
+        
+        );
     // @formatter:on
 
     private final String root;

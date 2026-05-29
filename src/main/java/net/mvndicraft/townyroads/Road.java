@@ -250,6 +250,7 @@ public class Road extends TownyObject {
         removeUnusedChunks();
 
         valid = true;
+        TownyRoadsPlugin.getInstance().getRoadManager().updateTownBonusBlock(this);
         TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
         return Optional.empty();
     }
@@ -259,6 +260,7 @@ public class Road extends TownyObject {
 
     public void unvalidate() {
         valid = false;
+        TownyRoadsPlugin.getInstance().getRoadManager().updateTownBonusBlock(this);
         TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
     }
 

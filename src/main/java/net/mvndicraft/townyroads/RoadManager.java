@@ -1,5 +1,7 @@
 package net.mvndicraft.townyroads;
 
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.Collection;
 import java.util.Comparator;
@@ -8,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
+import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -91,6 +94,7 @@ public class RoadManager {
         for (ChunkCoord chunkCoord : road.getChunksCoordsView()) {
             removeFromFastAccess(chunkCoord);
         }
+        updateTownBonusBlock(road);
         TownyRoadsPlugin.getInstance().getRoadStorage().delete(road);
     }
 
@@ -120,5 +124,58 @@ public class RoadManager {
 
     public Road getRoadWithEveryTown(List<Town> towns) {
         return roads.stream().filter(r -> r.getTownsView().containsAll(towns)).findFirst().orElse(null);
+    }
+
+    public void updateTownBonusBlock(Road road) {
+        if (!TownyRoadsSettings.getBonusBlockEnabled()) {
+            return;
+        }
+        for (Town town : road.getTownsView()) {
+            Nation nation = null;
+            try {
+                town.getNation();
+            } catch (NotRegisteredException e) {
+                // no nation bonus then.
+            }
+            double bonusBlock = 0;
+            Map<Town, Integer> townConnectedByRoads = getTownConnectedByRoads(town, 1);
+            for (Map.Entry<Town, Integer> entry : townConnectedByRoads.entrySet()) {
+                if (entry.getKey().equals(town)) continue;
+                // int bonus = (10 - entry.getValue()) * town.getLevelNumber();
+                double bonus = 1.0;
+                if(TownyRoadsSettings.getBonusBlockMultiplyByTownLevel()) {
+                    bonus *= town.getLevelNumber();
+                }
+                Nation townConnectedByRoadNation = null;
+                try {
+                    townConnectedByRoadNation = entry.getKey().getNation();
+                } catch (NotRegisteredException e) {
+                    // no nation bonus then.
+                }
+
+                bonus *= nationStatusMultiplierForTownClaimBonus(nation, townConnectedByRoadNation);
+                
+                bonusBlock += bonus;
+            }
+            town.setBonusBlocks((int) bonusBlock);
+        }
+    }
+
+    private double nationStatusMultiplierForTownClaimBonus(Nation nation1, Nation nation2) {
+        if (nation1 != null && nation2 != null) {
+            if(nation1.equals(nation2)) {
+                return TownyRoadsSettings.getBonusBlockSameNationMultiplier();
+            } else if (nation1.isAlliedWith(nation2)) {
+                return TownyRoadsSettings.getBonusBlockAllyMultiplier();
+            } else if (nation1.getEnemies().contains(nation2)) {
+                return TownyRoadsSettings.getBonusBlockEnemyMultiplier();
+            }
+        }
+        return TownyRoadsSettings.getBonusBlockNeutralMultiplier();
+        
+    }
+
+    public Map<Town, Integer> getTownConnectedByRoads(Town startTown, int deepness) {
+        return Map.of(); // TODO return all the towns connected to startTown with there distance. Next to startTown is 1.
     }
 }
