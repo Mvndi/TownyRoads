@@ -159,6 +159,12 @@ public class RoadManager {
                 
                 bonusBlock += bonus;
             }
+            if (TownyRoadsSettings.getBonusBlockMaxValue()!= -1) {
+                bonusBlock = Math.min(bonusBlock, TownyRoadsSettings.getBonusBlockMaxValue());
+            }
+            if (TownyRoadsSettings.getBonusBlockMaxMultiplyValue() != -1) {
+                bonusBlock = Math.min(bonusBlock, TownyRoadsSettings.getBonusBlockMaxMultiplyValue() * (town.getMaxTownBlocks()));
+            }
             town.setBonusBlocks((int) bonusBlock);
         }
     }

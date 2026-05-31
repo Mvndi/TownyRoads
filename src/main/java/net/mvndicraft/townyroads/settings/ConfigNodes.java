@@ -76,42 +76,56 @@ public enum ConfigNodes {
             "roads.bonus_block.enabled",
             "true",
             "",
-            "# If enabled, the road will have a bonus block for every town that is connected to the road.",
+            "# If enabled, the road will have a bonus blocks for every town that is connected to the road.",
             "# Disabled with value of false"),
     ROADS_BONUS_BLOCK_SAME_NATION_MULTIPLIER(
             "roads.bonus_block.same_nation_multiplier",
             "2.0",
             "",
-            "# How much bonus block does a connexion to a town give if the 2 towns are in the same nation.",
+            "# How much bonus blocks does a connexion to a town give if the 2 towns are in the same nation.",
             "# It can be negative.",
             "# Disabled with value of 0.0"),
     ROADS_BONUS_BLOCK_ALLY_MULTIPLIER(
             "roads.bonus_block.ally_multiplier",
             "1.5",
             "",
-            "# How much bonus block does a connexion to a town give if the 2 towns are ally.",
+            "# How much bonus blocks does a connexion to a town give if the 2 towns are ally.",
             "# It can be negative.",
             "# Disabled with value of 0.0"),
     ROADS_BONUS_BLOCK_NEUTRAL_MULTIPLIER(
             "roads.bonus_block.neutral_multiplier",
             "1.0",
             "",
-            "# How much bonus block does a connexion to a town give.",
+            "# How much bonus blocks does a connexion to a town give.",
             "# It can be negative.",
             "# Disabled with value of 0.0"),
     ROADS_BONUS_BLOCK_ENEMY_MULTIPLIER(
             "roads.bonus_block.enemy_multiplier",
             "0.5",
             "",
-            "# How much bonus block does a connexion to a town give if the 2 towns are enemy.",
+            "# How much bonus blocks does a connexion to a town give if the 2 towns are enemy.",
             "# It can be negative.",
             "# Disabled with value of 0.0"),
     ROADS_BONUS_BLOCK_MULIPLY_BY_TOWN_LEVEL(
             "roads.bonus_block.multiply_by_town_level",
             "true",
             "",
-            "# If enabled, the road will have more bonus block for every level of a connected town.",
-            "# Disabled with value of false"
+            "# If enabled, the road will have more bonus blocks for every level of a connected town.",
+            "# Disabled with value of false"),
+    ROADS_BONUS_BLOCK_MAX_VALUE(
+            "roads.bonus_block.max_value",
+            "1000",
+            "",
+            "# If enabled, the road will have max max_value bonus blocks.",
+            "# If max_value & max_mutliply_value are enabled, it will use the lower value of both limit.",
+            "# Disabled with value of -1"),
+    ROADS_BONUS_BLOCK_MAX_MULTIPLY_VALUE(
+            "roads.bonus_block.max_mutliply_value",
+            "1.0",
+            "",
+            "# If enabled, the road will have `max_mutliply_value * max chunks it can have (without counting bonus blocks)` bonus blocks.",
+            "# If max_value & max_mutliply_value are enabled, it will use the lower value of both limit.",
+            "# Disabled with value of -1.0"
         
         );
     // @formatter:on

@@ -47,4 +47,11 @@ public class TownyRoadsSettings {
         return Settings.getBoolean(ConfigNodes.ROADS_BONUS_BLOCK_MULIPLY_BY_TOWN_LEVEL);
     }
 
+    public static int getBonusBlockMaxValue() {
+        return Settings.getInt(ConfigNodes.ROADS_BONUS_BLOCK_MAX_VALUE);
+    }
+
+    public static double getBonusBlockMaxMultiplyValue() {
+        return Settings.getDouble(ConfigNodes.ROADS_BONUS_BLOCK_MAX_MULTIPLY_VALUE);
+    }
 }
