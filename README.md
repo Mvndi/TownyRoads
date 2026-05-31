@@ -14,10 +14,11 @@ A road connect 2 or more towns.
   - Reduce the cooldown of x every t time. -->
 <!-- - give bonus chunks for connected road to a town. -->
 - translation
+- max the number of bonus block to 1.0 * the default max plot.
+- make sure players know when they enter a road claim as when they enter a town claim.
+- display roads into the dynmap in light grey
 
 
 - Require a minimal amount of suspisous gravel or gravel or suspicious sand to be into the road chunks to validate it.
 - Fix oppening chest with an item in hand being concidered as an interact and not a switch.
 - Fix breaking block being count twice because of PlayerInteractEvent.
-- make sure players know when they enter a road claim as when they enter a town claim.
-- max the number of bonus block to 1.0 * the default max plot.
