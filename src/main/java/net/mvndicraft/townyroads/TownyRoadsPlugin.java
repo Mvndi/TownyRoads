@@ -9,6 +9,7 @@ import net.mvndicraft.townyroads.commands.TownyRoadsCommand;
 import net.mvndicraft.townyroads.data.RoadStorage;
 import net.mvndicraft.townyroads.data.RoadStorageFile;
 import net.mvndicraft.townyroads.listeners.TownyRoadPlayersListener;
+import net.mvndicraft.townyroads.listeners.TownyRoadTownAndNationListener;
 import net.mvndicraft.townyroads.settings.Settings;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +29,7 @@ public class TownyRoadsPlugin extends JavaPlugin {
         roadManager.addRoads(roadStorage.loadAll());
 
         getServer().getPluginManager().registerEvents(new TownyRoadPlayersListener(), this);
+        getServer().getPluginManager().registerEvents(new TownyRoadTownAndNationListener(), this);
 
         PaperCommandManager manager = new PaperCommandManager(this);
         manager.registerCommand(new TownyRoadsCommand());
