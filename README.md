@@ -12,12 +12,12 @@ A road connect 2 or more towns.
 <!-- - Add 1 to player cooldown value each time a player that does not have TOWNYROADS_CLAIMED_OWNROAD_BLOCK_BUILD permission break or build on a road chunk.
   - If the player reach max value y, then cancel build & break event & inform the player about the next time he will be able to break and how many block he already break.
   - Reduce the cooldown of x every t time. -->
-- give bonus chunks for connected road to a town.
+<!-- - give bonus chunks for connected road to a town. -->
 - translation
 
 
 - Require a minimal amount of suspisous gravel or gravel or suspicious sand to be into the road chunks to validate it.
 - Fix oppening chest with an item in hand being concidered as an interact and not a switch.
 - Fix breaking block being count twice because of PlayerInteractEvent.
-- towny connected by road get bonus claim.
 - make sure players know when they enter a road claim as when they enter a town claim.
+- max the number of bonus block to 1.0 * the default max plot.

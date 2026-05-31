@@ -3,7 +3,6 @@ package net.mvndicraft.townyroads.listeners;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownySettings;
 import com.palmergames.bukkit.towny.TownyUniverse;
-import com.palmergames.bukkit.towny.event.DeleteTownEvent;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -43,13 +42,6 @@ public class TownyRoadPlayersListener implements Listener {
         }, 1L, TimeUnit.SECONDS);
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onTownDeleted(DeleteTownEvent event) {
-        Town town = TownyAPI.getInstance().getTown(event.getTownUUID());
-        for (Road road : TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(town)) {
-            road.removeTown(town);
-        }
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onBuild(BlockPlaceEvent event) {

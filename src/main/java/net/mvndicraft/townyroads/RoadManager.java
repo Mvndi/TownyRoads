@@ -3,10 +3,13 @@ package net.mvndicraft.townyroads;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
@@ -138,9 +141,8 @@ public class RoadManager {
                 // no nation bonus then.
             }
             double bonusBlock = 0;
-            Map<Town, Integer> townConnectedByRoads = getTownConnectedByRoads(town, 1);
+            Map<Town, Integer> townConnectedByRoads = getTownConnectedByRoads(town, Integer.MAX_VALUE);
             for (Map.Entry<Town, Integer> entry : townConnectedByRoads.entrySet()) {
-                if (entry.getKey().equals(town)) continue;
                 // int bonus = (10 - entry.getValue()) * town.getLevelNumber();
                 double bonus = 1.0;
                 if(TownyRoadsSettings.getBonusBlockMultiplyByTownLevel()) {
@@ -176,6 +178,41 @@ public class RoadManager {
     }
 
     public Map<Town, Integer> getTownConnectedByRoads(Town startTown, int deepness) {
-        return Map.of(); // TODO return all the towns connected to startTown with there distance. Next to startTown is 1.
+        if (startTown == null || deepness < 1) {
+            return Map.of();
+        }
+
+        Map<Town, Integer> distances = new LinkedHashMap<>();
+        Queue<Town> queue = new ArrayDeque<>();
+
+        distances.put(startTown, 0);
+        queue.add(startTown);
+
+        while (!queue.isEmpty()) {
+            Town currentTown = queue.poll();
+            int currentDistance = distances.get(currentTown);
+            if (currentDistance >= deepness) {
+                continue;
+            }
+
+            int nextDistance = currentDistance + 1;
+            for (Road road : getRoadsByTown(currentTown)) {
+                for (Town connectedTown : road.getTownsView()) {
+                    if (connectedTown.equals(startTown) || distances.containsKey(connectedTown)) {
+                        continue;
+                    }
+
+                    distances.put(connectedTown, nextDistance);
+                    queue.add(connectedTown);
+                }
+            }
+        }
+
+        distances.remove(startTown);
+        return distances;
+    }
+
+    public void revalidateAllValidatedRoads() {
+        roads.stream().filter(Road::isValid).forEach(Road::validate);
     }
 }
