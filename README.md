@@ -22,3 +22,4 @@ A road connect 2 or more towns.
 - Require a minimal amount of suspisous gravel or gravel or suspicious sand to be into the road chunks to validate it.
 - Fix oppening chest with an item in hand being concidered as an interact and not a switch.
 - Fix breaking block being count twice because of PlayerInteractEvent.
+- reduce town taxes if connected to the capital.

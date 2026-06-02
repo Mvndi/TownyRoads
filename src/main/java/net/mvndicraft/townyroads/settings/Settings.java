@@ -1,18 +1,15 @@
 package net.mvndicraft.townyroads.settings;
 
 import com.palmergames.bukkit.config.CommentedConfiguration;
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.TranslationLoader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
 
 public class Settings {
     private static CommentedConfiguration config, newConfig;
 
-    public static void loadConfigAndLang() {
+    public static void loadConfig() {
         final Path path = TownyRoadsPlugin.getInstance().getDataFolder().toPath().resolve("config.yml");
 
         if (!Files.exists(path)) {
@@ -32,17 +29,6 @@ public class Settings {
 
         setDefaults(path);
         config.save();
-
-
-        try {
-            Path langFolderPath = Paths.get(TownyRoadsPlugin.getInstance().getDataFolder().getPath()).resolve("lang");
-            TranslationLoader loader = new TranslationLoader(langFolderPath, TownyRoadsPlugin.getInstance(),
-                    TownyRoadsPlugin.class);
-            loader.load();
-            TownyAPI.getInstance().addTranslations(TownyRoadsPlugin.getInstance(), loader.getTranslations());
-        } catch (Exception e) {
-            TownyRoadsPlugin.getInstance().getLogger().severe("Language file failed to load! Disabling!");
-        }
     }
 
     public static void addComment(String root, String... comments) {
@@ -54,10 +40,6 @@ public class Settings {
             value = "";
 
         newConfig.set(root.toLowerCase(), value.toString());
-    }
-
-    private static void setProperty(String root, Object value) {
-        config.set(root.toLowerCase(), value.toString());
     }
 
     /**

@@ -17,6 +17,7 @@ import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
 import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
+import net.mvndicraft.townyroads.util.Messaging;
 import net.mvndicraft.townyroads.util.TownyUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,10 +51,10 @@ public class TownyRoadsCommand extends BaseCommand {
             if (road != null) {
                 commandSender.sendMessage(road.getDescription());
             } else {
-                commandSender.sendMessage("You are not on a road.");
+                commandSender.sendMessage(Messaging.translate("player_not_in_town"));
             }
         } else {
-            commandSender.sendMessage("You must be a player.");
+            commandSender.sendMessage(Messaging.translate("command_sender_not_a_player"));
         }
     }
 

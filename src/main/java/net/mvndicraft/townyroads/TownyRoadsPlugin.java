@@ -11,6 +11,7 @@ import net.mvndicraft.townyroads.data.RoadStorageFile;
 import net.mvndicraft.townyroads.listeners.TownyRoadPlayersListener;
 import net.mvndicraft.townyroads.listeners.TownyRoadTownAndNationListener;
 import net.mvndicraft.townyroads.settings.Settings;
+import net.mvndicraft.townyroads.util.Translations;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TownyRoadsPlugin extends JavaPlugin {
@@ -18,11 +19,16 @@ public class TownyRoadsPlugin extends JavaPlugin {
     private RoadManager roadManager;
     private PlayerCooldownManager playerCooldownManager;
     private RoadStorage roadStorage;
+    private Translations translations;
 
 
     @Override
     public void onEnable() {
-        Settings.loadConfigAndLang();
+        Settings.loadConfig();
+
+        this.translations = new Translations();
+        translations.reload();
+
         roadStorage = new RoadStorageFile();
         roadManager = new RoadManager();
         playerCooldownManager = new PlayerCooldownManager();
@@ -54,7 +60,8 @@ public class TownyRoadsPlugin extends JavaPlugin {
     @Override
     public void reloadConfig() {
         super.reloadConfig();
-        Settings.loadConfigAndLang();
+        Settings.loadConfig();
+        translations.reload();
         getPlayerCooldownManager().reload();
     }
 
