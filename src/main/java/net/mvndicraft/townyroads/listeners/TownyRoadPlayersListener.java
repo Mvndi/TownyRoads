@@ -1,14 +1,25 @@
 package net.mvndicraft.townyroads.listeners;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.TownySettings;
 import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.event.PlayerChangePlotEvent;
+import com.palmergames.bukkit.towny.event.TitleNotificationEvent;
+import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.WorldCoord;
+import com.palmergames.bukkit.towny.object.notification.TitleNotification;
+import com.palmergames.bukkit.util.BukkitTools;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsMessaging;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
+import net.mvndicraft.townyroads.events.PlayerEntersIntoRoadBorderEvent;
+import net.mvndicraft.townyroads.events.PlayerExitsFromRoadBorderEvent;
+import net.mvndicraft.townyroads.events.TitleNotificationRoad;
 import net.mvndicraft.townyroads.permissions.RoadPermissionHandler;
 import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
 import org.bukkit.Bukkit;
@@ -16,6 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -94,6 +106,79 @@ public class TownyRoadPlayersListener implements Listener {
             }
         }
     }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerMoveChunkBeforeDefault(PlayerChangePlotEvent event) {
+        if (!TownyUniverse.getInstance().hasResident(event.getPlayer().getUniqueId())) {
+			return;
+        }
+		ChunkCoord from = ChunkCoord.from(event.getFrom());
+		ChunkCoord to = ChunkCoord.from(event.getTo());
+		Road fromRoad = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(from);
+        Road toRoad = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(to);
+        if (fromRoad != null && !fromRoad.equals(toRoad)) {
+            BukkitTools.fireEvent(new PlayerExitsFromRoadBorderEvent(event.getPlayer(), to, from, fromRoad));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerMoveChunkAfterDefault(PlayerChangePlotEvent event) {
+        if (!TownyUniverse.getInstance().hasResident(event.getPlayer().getUniqueId())) {
+			return;
+        }
+		ChunkCoord from = ChunkCoord.from(event.getFrom());
+		ChunkCoord to = ChunkCoord.from(event.getTo());
+        Road fromRoad = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(from);
+        Road toRoad = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(to);
+        if (toRoad != null && !toRoad.equals(fromRoad)) {
+            BukkitTools.fireEvent(new PlayerEntersIntoRoadBorderEvent(event.getPlayer(), to, from, toRoad));
+        }
+    }
+
+    // Allow wilderness to be display as the road name, but it won't switch back to wilderness when you leave the road.
+    // So we are using title notifications only for now.
+    // @EventHandler(priority = EventPriority.HIGH)
+    // public void onChunkNotification(ChunkNotificationEvent event) {
+    //     ChunkCoord to = ChunkCoord.from(event.getToCoord());
+    //     Road toRoad = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(to);
+
+    //     if (toRoad != null) {
+    //         event.setMessage(event.getMessage().replace("Wilderness", toRoad.getShortName()));
+    //     }
+    // }
+    
+    @EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerEnterRoad(PlayerEntersIntoRoadBorderEvent event) {
+		Resident resident = event.getResident();
+		Road road = event.getEnteredRoad();
+		if (resident == null || road == null)
+			return;
+
+		if (TownySettings.isNotificationUsingTitles() && resident.isSeeingBorderTitles()) {
+			TitleNotificationEvent tne = new TitleNotificationEvent(new TitleNotificationRoad(road, event.getTo()), event.getPlayer());
+			BukkitTools.fireEvent(tne);
+			String title = tne.getTitleNotification().getTitleNotification();
+			String subtitle = tne.getTitleNotification().getSubtitleNotification();
+			TownyMessaging.sendTitleMessageToResident(resident, title, subtitle, TownySettings.getNotificationTitlesDurationTicks());
+		}
+	}
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerExitsFromRoadBorderEvent(PlayerExitsFromRoadBorderEvent event) {
+        Resident resident = event.getResident();
+        WorldCoord to = event.getTo().toWorldCoord();
+		if (resident == null || !TownyAPI.getInstance().isWilderness(to))
+			return;
+        
+        if (TownySettings.isNotificationUsingTitles() && resident.isSeeingBorderTitles()) {
+			TitleNotificationEvent tne = new TitleNotificationEvent(new TitleNotification(null, to), event.getPlayer());
+			BukkitTools.fireEvent(tne);
+			String title = tne.getTitleNotification().getTitleNotification();
+			String subtitle = tne.getTitleNotification().getSubtitleNotification();
+			TownyMessaging.sendTitleMessageToResident(resident, title, subtitle, TownySettings.getNotificationTitlesDurationTicks());
+		}
+    }
+
 
     private void playNoSound(Player player) {
         player.getLocation().getWorld().playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 1, 1);

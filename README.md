@@ -15,7 +15,7 @@ A road connect 2 or more towns.
 <!-- - give bonus chunks for connected road to a town. -->
 - translation
 <!-- - max the number of bonus block to 1.0 * the default max plot & to brut value. -->
-- make sure players know when they enter a road claim as when they enter a town claim.
+<!-- - make sure players know when they enter a road claim as when they enter a town claim. -->
 - display roads into the dynmap in light grey
 
 

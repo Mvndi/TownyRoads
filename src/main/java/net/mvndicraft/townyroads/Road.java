@@ -143,6 +143,10 @@ public class Road extends TownyObject {
         TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
     }
 
+    public String getShortName() {
+        return getTownsNames(towns);
+    }
+
     private String getTownsNames(List<Town> townList) {
         return townList.stream().map(Town::getName).collect(Collectors.joining(","));
     }

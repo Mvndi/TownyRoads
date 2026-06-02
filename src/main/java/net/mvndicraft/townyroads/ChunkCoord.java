@@ -1,5 +1,6 @@
 package net.mvndicraft.townyroads;
 
+import com.palmergames.bukkit.towny.object.WorldCoord;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +13,10 @@ public record ChunkCoord(UUID worldUuid, int x, int z) implements Comparable<Chu
 
     public static ChunkCoord from(Location loc) {
         return new ChunkCoord(loc.getWorld().getUID(), loc.getBlockX() >> 4, loc.getBlockZ() >> 4);
+    }
+
+    public static ChunkCoord from(WorldCoord worldCoord) {
+        return new ChunkCoord(worldCoord.getBukkitWorld().getUID(), worldCoord.getCoord().getX(), worldCoord.getCoord().getZ());
     }
 
     public List<ChunkCoord> getNearby(int radius) {
@@ -39,6 +44,10 @@ public record ChunkCoord(UUID worldUuid, int x, int z) implements Comparable<Chu
 
     public Location toLocation() {
         return new Location(TownyRoadsPlugin.getInstance().getServer().getWorld(worldUuid), x << 4, 0, z << 4);
+    }
+
+    public WorldCoord toWorldCoord() {
+        return new WorldCoord(TownyRoadsPlugin.getInstance().getServer().getWorld(worldUuid), x, z);
     }
 
     @Override
