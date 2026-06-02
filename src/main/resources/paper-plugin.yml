@@ -14,3 +14,9 @@ dependencies:
     CoreProtect:
       required: false
       load: BEFORE
+    MapTowny:
+      required: false
+      load: BEFORE
+    squaremap:
+      required: false
+      load: BEFORE

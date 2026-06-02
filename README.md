@@ -4,6 +4,9 @@ Add roads to Towny.
 
 A road connect 2 or more towns.
 
+Towny is required.
+MapTowny & squaremap are supported as optional dependencies.
+
 # TODO
 
 <!-- - Limit the number of chunks of the road based on the distance between the 2 towns: minimal_distance * 1.5 (1.5 being configurable) -->

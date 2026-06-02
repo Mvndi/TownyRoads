@@ -18,7 +18,9 @@ java.sourceCompatibility = JavaVersion.VERSION_21
 var mainMinecraftVersion = "1.21.11"
 val supportedMinecraftVersions = "1.20 - 1.21.11"
 val townyVersion = "0.103.0.0"
+val mapTownyVersion = "2.2.0" // "v3.0.0-alpha-4"
 val coreprotectVersion = "23.1"
+val squaremapVersion = "1.3.12"
 
 repositories {
     mavenLocal()
@@ -29,6 +31,8 @@ repositories {
     maven("https://repo.aikar.co/content/groups/aikar/")
     maven("https://repo.glaremasters.me/repository/towny/")
     maven("https://maven.playpro.com")
+
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -37,7 +41,9 @@ dependencies {
     // compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0") // TODO to remove when paper weight latest version will be fixed. It's supposed to be in paperweight.
     
     compileOnly("com.palmergames.bukkit.towny:towny:$townyVersion")
+    compileOnly("me.silverwolfg11:MapTowny:$mapTownyVersion")
     compileOnly("net.coreprotect:coreprotect:$coreprotectVersion")
+    compileOnly("xyz.jpenilla:squaremap-api:$squaremapVersion")
 
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
@@ -94,6 +100,8 @@ tasks {
         downloadPlugins {
             modrinth("towny", "$townyVersion")
             modrinth("coreprotect", "$coreprotectVersion")
+            url("https://github.com/jpenilla/squaremap/releases/download/v${squaremapVersion}/squaremap-paper-mc${mainMinecraftVersion}-${squaremapVersion}.jar")
+            url("https://github.com/TownyAdvanced/MapTowny/releases/download/v3.0.0-alpha-4/maptowny-3.0.0-ALPHA-4.jar")
         }
         minecraftVersion("$mainMinecraftVersion")
     }
