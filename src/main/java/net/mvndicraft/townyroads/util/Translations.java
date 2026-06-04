@@ -59,7 +59,8 @@ public class Translations {
                 String localeName = FileUtils.basename(name, ".yml");
 
                 Locale locale = Locale.forLanguageTag(localeName);
-                if (locale != null) load(locale);
+                if (locale != null)
+                    load(locale);
                 registered.add(locale);
                 TownyRoadsPlugin.getInstance().getLogger().info("Loaded locale: " + localeName);
             });
@@ -79,7 +80,7 @@ public class Translations {
             }
 
             // Do not save language for each country, just save the country less version.
-            if(!locale.getLanguage().equals(locale.toString())) {
+            if (!locale.getLanguage().equals(locale.toString())) {
                 return;
             }
 
@@ -96,7 +97,7 @@ public class Translations {
 
     public Component translate(TranslatableComponent component, Locale locale) {
         Component c = storage.translate(component, locale);
-        TownyRoadsPlugin.getInstance().getLogger().info("Translated: " + component.toString() + " -> " + c.toString());
+        TownyRoadsPlugin.getInstance().getLogger().debug("Translated: " + component.toString() + " -> " + c.toString());
         return c == null ? storage.translate(component, Locale.ENGLISH) : c;
     }
 

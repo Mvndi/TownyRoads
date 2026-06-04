@@ -145,7 +145,7 @@ public class RoadManager {
             for (Map.Entry<Town, Integer> entry : townConnectedByRoads.entrySet()) {
                 // int bonus = (10 - entry.getValue()) * town.getLevelNumber();
                 double bonus = 1.0;
-                if(TownyRoadsSettings.getBonusBlockMultiplyByTownLevel()) {
+                if (TownyRoadsSettings.getBonusBlockMultiplyByTownLevel()) {
                     bonus *= town.getLevelNumber();
                 }
                 Nation townConnectedByRoadNation = null;
@@ -156,14 +156,15 @@ public class RoadManager {
                 }
 
                 bonus *= nationStatusMultiplierForTownClaimBonus(nation, townConnectedByRoadNation);
-                
+
                 bonusBlock += bonus;
             }
-            if (TownyRoadsSettings.getBonusBlockMaxValue()!= -1) {
+            if (TownyRoadsSettings.getBonusBlockMaxValue() != -1) {
                 bonusBlock = Math.min(bonusBlock, TownyRoadsSettings.getBonusBlockMaxValue());
             }
             if (TownyRoadsSettings.getBonusBlockMaxMultiplyValue() != -1) {
-                bonusBlock = Math.min(bonusBlock, TownyRoadsSettings.getBonusBlockMaxMultiplyValue() * (town.getMaxTownBlocks()));
+                bonusBlock = Math.min(bonusBlock,
+                        TownyRoadsSettings.getBonusBlockMaxMultiplyValue() * (town.getMaxTownBlocks()));
             }
             town.setBonusBlocks((int) bonusBlock);
         }
@@ -171,7 +172,7 @@ public class RoadManager {
 
     private double nationStatusMultiplierForTownClaimBonus(Nation nation1, Nation nation2) {
         if (nation1 != null && nation2 != null) {
-            if(nation1.equals(nation2)) {
+            if (nation1.equals(nation2)) {
                 return TownyRoadsSettings.getBonusBlockSameNationMultiplier();
             } else if (nation1.isAlliedWith(nation2)) {
                 return TownyRoadsSettings.getBonusBlockAllyMultiplier();
@@ -180,7 +181,7 @@ public class RoadManager {
             }
         }
         return TownyRoadsSettings.getBonusBlockNeutralMultiplier();
-        
+
     }
 
     public Map<Town, Integer> getTownConnectedByRoads(Town startTown, int deepness) {
@@ -216,6 +217,18 @@ public class RoadManager {
 
         distances.remove(startTown);
         return distances;
+    }
+
+    public boolean areConnected(Town town1, Town town2) {
+        return countConnected(town1, List.of(town2)) > 0;
+    }
+
+    public int countConnected(Town town, Collection<Town> towns) {
+        if (towns.isEmpty()) {
+            return 0;
+        }
+        Collection<Town> connectedTowns = getTownConnectedByRoads(town, Integer.MAX_VALUE).keySet();
+        return (int) towns.stream().filter(connectedTowns::contains).count();
     }
 
     public void revalidateAllValidatedRoads() {

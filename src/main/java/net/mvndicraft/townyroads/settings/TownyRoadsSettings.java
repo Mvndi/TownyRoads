@@ -74,4 +74,12 @@ public class TownyRoadsSettings {
     public static double getDynmapRoadFillOpacity() {
         return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_ROAD_FILL_OPACITY);
     }
+
+    public static double getTownUpkeepReductionForNationConnectedTowns() {
+        return Settings.getDouble(ConfigNodes.ROADS_TOWN_UPKEEP_REDUCTION_FOR_NATION_CONNECTED_TOWNS);
+    }
+
+    public static double getNationUpkeepReductionForNationConnectedTowns() {
+        return Settings.getDouble(ConfigNodes.ROADS_NATION_UPKEEP_REDUCTION_FOR_NATION_CONNECTED_TOWNS);
+    }
 }

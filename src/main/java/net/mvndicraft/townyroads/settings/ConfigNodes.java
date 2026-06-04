@@ -164,7 +164,35 @@ public enum ConfigNodes {
             "0.22",
             "",
             "# The fill opacity used to draw roads on Dynmap.",
-            "# Value should be between 0.0 and 1.0.");
+            "# Value should be between 0.0 and 1.0."),
+    UPKEEP(
+            "roads.upkeep",
+            "",
+            "",
+            "############################################################",
+            "# +------------------------------------------------------+ #",
+            "# |                        Upkeep                        | #",
+            "# +------------------------------------------------------+ #",
+            "############################################################",
+            ""),
+    ROADS_TOWN_UPKEEP_REDUCTION_FOR_NATION_CONNECTED_TOWNS(
+        "roads.upkeep.town.nation_connected_towns",
+            "0.5",
+            "",
+            "# How much the town upkeep is reduced if a town is connected to it's capital or a capital to all his towns.",
+            "# If 2/3 of the town are connected to the captial, the upkeep of the capital will be reduced by nation_connected_towns * 2/3;",
+            "# nation_connected_towns need to be between 0.0 and 1.0.",
+            "# Disabled with value of 0.0"),
+    ROADS_NATION_UPKEEP_REDUCTION_FOR_NATION_CONNECTED_TOWNS(
+        "roads.upkeep.nation.nation_connected_towns",
+            "0.5",
+            "",
+            "# How much the nation upkeep is reduced if a town is connected to it's capital.",
+            "# If 2/3 of the town are connected to the captial, the upkeep of the nation will be reduced by nation_connected_towns * 2/3;",
+            "# nation_connected_towns need to be between 0.0 and 1.0.",
+            "# Disabled with value of 0.0"
+        
+    );
     // @formatter:on
 
     private final String root;
