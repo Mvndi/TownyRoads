@@ -66,4 +66,12 @@ public class TownyRoadsSettings {
     public static int getDynmapRefreshFrequency() {
         return Settings.getInt(ConfigNodes.ROADS_DYNMAP_REFRESH_FREQUENCY);
     }
+
+    public static int getDynmapRoadStrokeWeight() {
+        return Settings.getInt(ConfigNodes.ROADS_DYNMAP_ROAD_STROKE_WEIGHT);
+    }
+
+    public static double getDynmapRoadFillOpacity() {
+        return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_ROAD_FILL_OPACITY);
+    }
 }

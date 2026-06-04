@@ -152,7 +152,19 @@ public enum ConfigNodes {
             "",
             "# Every refresh_frequency seconds the dynmap will be refreshed.",
             "# refresh_frequency need to be at least 1, else the dynmap won't be refreshed."
-        );
+        ),
+    ROADS_DYNMAP_ROAD_STROKE_WEIGHT(
+            "roads.dynmap.road_stroke_weight",
+            "3",
+            "",
+            "# The stroke weight used to draw roads on Dynmap.",
+            "# Lower values make the road thinner."),
+    ROADS_DYNMAP_ROAD_FILL_OPACITY(
+            "roads.dynmap.road_fill_opacity",
+            "0.22",
+            "",
+            "# The fill opacity used to draw roads on Dynmap.",
+            "# Value should be between 0.0 and 1.0.");
     // @formatter:on
 
     private final String root;

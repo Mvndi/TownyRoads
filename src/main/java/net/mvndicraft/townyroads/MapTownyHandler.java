@@ -86,8 +86,9 @@ public class MapTownyHandler {
 
     private MarkerOptions roadMarkerOptions(Road road) {
         Color color = new Color(Integer.parseInt(TownyRoadsSettings.getDynmapRoadColor(), 16));
-        return MarkerOptions.builder().name(road.getName()).stroke(true).strokeColor(color).strokeWeight(3)
-                .strokeOpacity(1.0).fill(true).fillColor(color).fillOpacity(0.22)
+        return MarkerOptions.builder().name(road.getName()).stroke(true).strokeColor(color)
+                .strokeWeight(TownyRoadsSettings.getDynmapRoadStrokeWeight()).strokeOpacity(1.0).fill(true)
+                .fillColor(color).fillOpacity(TownyRoadsSettings.getDynmapRoadFillOpacity())
                 .fillRule(MarkerOptions.FillRule.EVENODD).clickTooltip(road.getDescription())
                 .hoverTooltip(road.getDescription()).build();
     }
