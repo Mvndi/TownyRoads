@@ -160,7 +160,7 @@ public class Road extends TownyObject {
 
         if (valid) {
             validate();
-        } else  {
+        } else {
             TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
         }
     }
@@ -411,7 +411,8 @@ public class Road extends TownyObject {
     }
 
     public void removeChunksInTowns() {
-        Set<ChunkCoord> toRemove = chunksCoords.stream().filter(chunkCoord -> TownyAPI.getInstance().getTown(chunkCoord.toLocation()) != null)
+        Set<ChunkCoord> toRemove = chunksCoords.stream()
+                .filter(chunkCoord -> TownyAPI.getInstance().getTown(chunkCoord.toLocation()) != null)
                 .collect(Collectors.toSet());
         chunksCoords.removeAll(toRemove);
         TownyRoadsPlugin.getInstance().getRoadManager().removeFromFastAccess(toRemove);
@@ -477,16 +478,21 @@ public class Road extends TownyObject {
         return path;
     }
 
+    public void updateRoadName() {
+        setName(getShortName());
+    }
 
-    public static Road fromYml(File file){
+
+    public static Road fromYml(File file) {
         Configuration config = YamlConfiguration.loadConfiguration(file);
 
         return new Road(UUID.fromString(config.getString("id")),
-            config.getStringList("towns").stream().map(UUID::fromString).map(uuid -> TownyAPI.getInstance().getTown(uuid)).toList(),
-            config.getStringList("toConfirmTowns").stream().map(UUID::fromString).map(uuid -> TownyAPI.getInstance().getTown(uuid)).toList(),
-            config.getStringList("chunksCoords").stream().map(ChunkCoord::fromString).collect(Collectors.toSet()),
-            config.getBoolean("valid")
-        );
+                config.getStringList("towns").stream().map(UUID::fromString)
+                        .map(uuid -> TownyAPI.getInstance().getTown(uuid)).toList(),
+                config.getStringList("toConfirmTowns").stream().map(UUID::fromString)
+                        .map(uuid -> TownyAPI.getInstance().getTown(uuid)).toList(),
+                config.getStringList("chunksCoords").stream().map(ChunkCoord::fromString).collect(Collectors.toSet()),
+                config.getBoolean("valid"));
     }
 
     public void toYml(File file) {
