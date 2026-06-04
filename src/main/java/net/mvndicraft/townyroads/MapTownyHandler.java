@@ -3,15 +3,17 @@ package net.mvndicraft.townyroads;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
+import com.palmergames.bukkit.towny.object.Coord;
 import me.silverwolfg11.maptowny.MapTownyPlugin;
 import me.silverwolfg11.maptowny.objects.LayerOptions;
 import me.silverwolfg11.maptowny.objects.MarkerOptions;
-import me.silverwolfg11.maptowny.objects.Point2D;
 import me.silverwolfg11.maptowny.objects.Polygon;
 import me.silverwolfg11.maptowny.platform.MapLayer;
 import me.silverwolfg11.maptowny.platform.MapPlatform;
 import me.silverwolfg11.maptowny.platform.MapWorld;
+import me.silverwolfg11.maptowny.util.TownyUtil;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -20,9 +22,9 @@ import org.bukkit.plugin.Plugin;
 public class MapTownyHandler {
     private static final String ROAD_LAYER_KEY = "townyroads_roads";
     private static final String ROAD_MARKER_PREFIX = "townyroads_road_";
-    private static final int CHUNK_SIZE = 16;
 
     private MapPlatform mapPlatform;
+    private final TownyUtil townyUtil = new TownyUtil();
 
     public boolean init(Plugin mapTowny) {
         if (mapTowny instanceof MapTownyPlugin mapTownyPlugin) {
@@ -68,20 +70,11 @@ public class MapTownyHandler {
                     .getChunksCoordsView().stream().anyMatch(chunk -> chunk.worldUuid().equals(world.getUID())))
                     .toList();
             roadsFiltered.forEach(road -> layer.addMultiPolyMarker(ROAD_MARKER_PREFIX + road.getId(),
-                    road.getChunksCoordsView().stream().filter(chunk -> chunk.worldUuid().equals(world.getUID()))
-                            .map(this::chunkToPolygon).toList(),
-                    roadMarkerOptions(road)));
+                    roadPolygons(road, world), roadMarkerOptions(road)));
 
             TownyRoadsPlugin.debug(
                     () -> "Display " + roadsFiltered.size() + " roads into the dynmap for world " + world.getName());
         }
-    }
-
-    private Polygon chunkToPolygon(ChunkCoord chunkCoord) {
-        double x = chunkCoord.x() * (double) CHUNK_SIZE;
-        double z = chunkCoord.z() * (double) CHUNK_SIZE;
-        return new Polygon(List.of(Point2D.of(x, z), Point2D.of(x + CHUNK_SIZE, z),
-                Point2D.of(x + CHUNK_SIZE, z + CHUNK_SIZE), Point2D.of(x, z + CHUNK_SIZE)), List.of());
     }
 
     private MarkerOptions roadMarkerOptions(Road road) {
@@ -91,5 +84,12 @@ public class MapTownyHandler {
                 .fillColor(color).fillOpacity(TownyRoadsSettings.getDynmapRoadFillOpacity())
                 .fillRule(MarkerOptions.FillRule.EVENODD).clickTooltip(road.getDescription())
                 .hoverTooltip(road.getDescription()).build();
+    }
+
+    private List<Polygon> roadPolygons(Road road, World world) {
+        return townyUtil.coordsToPolys(
+                road.getChunksCoordsView().stream().filter(chunk -> chunk.worldUuid().equals(world.getUID()))
+                        .map(chunk -> new Coord(chunk.x(), chunk.z())).collect(Collectors.toList()),
+                false, 16);
     }
 }
