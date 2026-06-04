@@ -41,7 +41,7 @@ dependencies {
     // compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0") // TODO to remove when paper weight latest version will be fixed. It's supposed to be in paperweight.
     
     compileOnly("com.palmergames.bukkit.towny:towny:$townyVersion")
-    compileOnly("me.silverwolfg11:MapTowny:$mapTownyVersion")
+    compileOnly("me.silverwolfg11:maptowny-api:$mapTownyVersion")
     compileOnly("net.coreprotect:coreprotect:$coreprotectVersion")
     compileOnly("xyz.jpenilla:squaremap-api:$squaremapVersion")
 

@@ -12,6 +12,7 @@ import net.mvndicraft.townyroads.listeners.TownyRoadPlayersListener;
 import net.mvndicraft.townyroads.listeners.TownyRoadTownAndNationListener;
 import net.mvndicraft.townyroads.settings.Settings;
 import net.mvndicraft.townyroads.util.Translations;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TownyRoadsPlugin extends JavaPlugin {
@@ -20,6 +21,7 @@ public class TownyRoadsPlugin extends JavaPlugin {
     private PlayerCooldownManager playerCooldownManager;
     private RoadStorage roadStorage;
     private Translations translations;
+    private static boolean mapTownyInstalled;
 
 
     @Override
@@ -42,6 +44,12 @@ public class TownyRoadsPlugin extends JavaPlugin {
         manager.registerCommand(new TownyRoadsAdminCommand());
 
         TownyRoadCommandCompleter.registerCommandCompletion(manager);
+
+        Plugin mapTowny = getServer().getPluginManager().getPlugin("MapTowny");
+        if (mapTowny != null && mapTowny.isEnabled()) {
+            MapTownyHandler mapTownyHandler = new MapTownyHandler();
+            mapTownyInstalled = mapTownyHandler.init(mapTowny);
+        }
     }
 
     public static TownyRoadsPlugin getInstance() {
@@ -63,6 +71,10 @@ public class TownyRoadsPlugin extends JavaPlugin {
         Settings.loadConfig();
         translations.reload();
         getPlayerCooldownManager().reload();
+    }
+
+    public boolean isMapTownyInstalled() {
+        return mapTownyInstalled;
     }
 
     // Usual log with debug level
