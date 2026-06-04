@@ -14,7 +14,6 @@ plugins {
 group = "net.mvndicraft.townyroads"
 version = "0.4.0"
 description = "Add roads to Towny"
-java.sourceCompatibility = JavaVersion.VERSION_21
 var mainMinecraftVersion = "1.21.11"
 val supportedMinecraftVersions = "1.20 - 1.21.11"
 val townyVersion = "0.103.0.0"
@@ -51,6 +50,10 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
     // testImplementation("com.github.seeseemelk:MockBukkit-v1.21:3.107.0")
+}
+
+java {
+  toolchain.languageVersion.set(JavaLanguageVersion.of(21)) // 25
 }
 
 sonar {
@@ -110,15 +113,6 @@ tasks {
     test {
         useJUnitPlatform()
     }
-}
-
-@Suppress("UnstableApiUsage")
-tasks.withType(xyz.jpenilla.runtask.task.AbstractRun::class) {
-    javaLauncher = javaToolchains.launcherFor {
-        vendor = JvmVendorSpec.JETBRAINS
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-    jvmArgs("-XX:+AllowEnhancedClassRedefinition")
 }
 
 tasks.register("echoVersion") {
