@@ -1,11 +1,11 @@
 package net.mvndicraft.townyroads;
 
+import com.palmergames.bukkit.towny.object.Coord;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
-import com.palmergames.bukkit.towny.object.Coord;
+import java.util.stream.Collectors;
 import me.silverwolfg11.maptowny.MapTownyPlugin;
 import me.silverwolfg11.maptowny.objects.LayerOptions;
 import me.silverwolfg11.maptowny.objects.MarkerOptions;
@@ -82,8 +82,8 @@ public class MapTownyHandler {
         return MarkerOptions.builder().name(road.getName()).stroke(true).strokeColor(color)
                 .strokeWeight(TownyRoadsSettings.getDynmapRoadStrokeWeight()).strokeOpacity(1.0).fill(true)
                 .fillColor(color).fillOpacity(TownyRoadsSettings.getDynmapRoadFillOpacity())
-                .fillRule(MarkerOptions.FillRule.EVENODD).clickTooltip(road.getDescription())
-                .hoverTooltip(road.getDescription()).build();
+                .fillRule(MarkerOptions.FillRule.EVENODD).clickTooltip(road.getDescription().toString())
+                .hoverTooltip(road.getDescription().toString()).build();
     }
 
     private List<Polygon> roadPolygons(Road road, World world) {

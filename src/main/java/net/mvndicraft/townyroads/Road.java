@@ -114,16 +114,19 @@ public class Road extends TownyObject {
         return chunksCoords.remove(ChunkCoord.from(player.getLocation()));
     }
 
-    public String getDescription() {
-        String description = getTownsNames(towns) + " ";
+    public Component getDescription() {
+        Component description = Component.translatable(getTownsNames(towns)).appendSpace();
         if (isValid()) {
-            description += "✔";
+            description.append(Component.text("✔"));
         } else {
-            description += "✘";
+            description.append(Component.text("✘"));
         }
-        description += " (" + chunksCoordsSize() + "/" + maxChunksCoordsSize() + " chunks)";
+        description.appendSpace().append(Component.text("(")).append(Component.text(chunksCoordsSize()))
+                .append(Component.text("/")).append(Component.text(maxChunksCoordsSize()))
+                .append(Component.text("chunks")).append(Component.text(")"));
         if (!toConfirmTowns.isEmpty()) {
-            description += " (" + getTownsNames(toConfirmTowns) + " to confirm)";
+            description.appendSpace().append(Component.text("(")).append(Component.text(getTownsNames(toConfirmTowns)))
+                    .appendSpace().append(Component.translatable("to_confirm")).append(Component.text(")"));
         }
         return description;
     }

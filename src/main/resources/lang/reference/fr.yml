@@ -10,5 +10,14 @@ description: >
 
 townyroads_plugin_prefix: "[TownyRoads]"
 
-player_not_in_town: "Vous n'êtes pas sur une route."
-command_sender_not_a_player: "Vous devez être un joueur."
+":": " :"
+roads_list: "Liste des routes"
+chunks: "chunks"
+to_confirm: "à confirmer"
+
+err_command_sender_not_a_player: "Vous devez être un joueur."
+err_player_not_in_road: "Vous n'êtes pas sur une route."
+err_player_not_in_town: "Vous n'êtes pas dans une ville."
+err_same_town: "Les villes doivent être différentes."
+err_no_permission_to_create_road: "Vous n'avez pas la permission de créer des routes."
+err_road_exists: "Une route existe déjà connectant les deux villes."

@@ -97,7 +97,7 @@ public class Translations {
 
     public Component translate(TranslatableComponent component, Locale locale) {
         Component c = storage.translate(component, locale);
-        TownyRoadsPlugin.getInstance().getLogger().debug("Translated: " + component.toString() + " -> " + c.toString());
+        TownyRoadsPlugin.debug("Translated: " + component.toString() + " -> " + c.toString());
         return c == null ? storage.translate(component, Locale.ENGLISH) : c;
     }
 

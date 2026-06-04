@@ -13,7 +13,9 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
+import net.kyori.adventure.text.Component;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
+import net.mvndicraft.townyroads.util.Messaging;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -80,12 +82,12 @@ public class RoadManager {
         }
     }
 
-    public String listRoad(int page) {
-        StringBuilder builder = new StringBuilder("List of roads:\n");
+    public Component listRoad(int page) {
+        Component builder = Messaging.translate("roads_list").append(Component.translatable((":"))).appendNewline();
         long itemsToSkip = Math.max(page - 1L, 0L) * 10L;
         roads.stream().sorted(Comparator.comparing(Road::getName, String.CASE_INSENSITIVE_ORDER)).skip(itemsToSkip)
-                .limit(10).map(Road::getDescription).forEach(name -> builder.append(name).append("\n"));
-        return builder.toString();
+                .limit(10).map(Road::getDescription).forEach(name -> builder.append(name).appendNewline());
+        return builder;
     }
 
     public Collection<Road> getRoads() {

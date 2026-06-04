@@ -86,7 +86,7 @@ public class TownyRoadsAdminCommand extends BaseCommand {
                 commandSender.sendMessage("failed to claim road " + roadName);
             }
         } else {
-            commandSender.sendMessage("You must be a player.");
+            TownyRoadsCommand.notAPlayer(commandSender);
         }
     }
 
@@ -101,7 +101,7 @@ public class TownyRoadsAdminCommand extends BaseCommand {
             }
             TownyRoadsPlugin.getInstance().getRoadManager().unclaimRoad(road, player);
         } else {
-            commandSender.sendMessage("You must be a player.");
+            TownyRoadsCommand.notAPlayer(commandSender);
         }
     }
 

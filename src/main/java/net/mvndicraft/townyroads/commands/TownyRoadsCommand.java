@@ -51,10 +51,10 @@ public class TownyRoadsCommand extends BaseCommand {
             if (road != null) {
                 commandSender.sendMessage(road.getDescription());
             } else {
-                commandSender.sendMessage(Messaging.translate("player_not_in_town"));
+                Messaging.sendError(commandSender, "err_player_not_in_road");
             }
         } else {
-            commandSender.sendMessage(Messaging.translate("command_sender_not_a_player"));
+            notAPlayer(commandSender);
         }
     }
 
@@ -81,7 +81,7 @@ public class TownyRoadsCommand extends BaseCommand {
         if (commandSender instanceof Player player) {
             Town playerTown = TownyAPI.getInstance().getTown(player);
             if (playerTown == null || playerTown.isRuined()) {
-                commandSender.sendMessage("You must be in a town.");
+                Messaging.sendError(commandSender, "err_player_not_in_town");
                 return;
             }
             Town town2 = TownyUtil.getTownFromNameOrNull(commandSender, townName2);
@@ -89,22 +89,23 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             if (playerTown.equals(town2)) {
                 commandSender.sendMessage("Towns must be different.");
+                Messaging.sendError(commandSender, "err_same_town");
                 return;
             }
             if (!player.hasPermission("townyroads.create")) {
-                commandSender.sendMessage("You do not have permission to create roads.");
+                Messaging.sendError(commandSender, "err_no_permission_to_create_road");
                 return;
             }
             List<Town> towns = List.of(playerTown, town2);
             if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadWithEveryTown(towns) != null) {
-                commandSender.sendMessage("A road already exists connecting both towns.");
+                Messaging.sendError(commandSender, "err_road_exists");
                 return;
             }
             Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(towns, List.of(town2));
             commandSender
                     .sendMessage("Created road " + road.getName() + " (" + town2.getName() + " needs to confirm).");
         } else {
-            commandSender.sendMessage("You must be a player.");
+            notAPlayer(commandSender);
         }
     }
 
@@ -219,7 +220,7 @@ public class TownyRoadsCommand extends BaseCommand {
                 commandSender.sendMessage("failed to claim road " + roadName);
             }
         } else {
-            commandSender.sendMessage("You must be a player.");
+            notAPlayer(commandSender);
         }
     }
 
@@ -244,7 +245,7 @@ public class TownyRoadsCommand extends BaseCommand {
             commandSender.sendMessage("Unclaimed road " + road.getName());
 
         } else {
-            commandSender.sendMessage("You must be a player.");
+            notAPlayer(commandSender);
         }
     }
 
@@ -298,7 +299,11 @@ public class TownyRoadsCommand extends BaseCommand {
                 commandSender.sendMessage("Road " + road2.getName() + " have been merged into " + road1.getName());
             }
         } else {
-            commandSender.sendMessage("You must be a player.");
+            notAPlayer(commandSender);
         }
+    }
+
+    public static void notAPlayer(CommandSender commandSender) {
+        Messaging.sendError(commandSender, "err_command_sender_not_a_player");
     }
 }
