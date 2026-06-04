@@ -11,6 +11,7 @@ import net.mvndicraft.townyroads.data.RoadStorageFile;
 import net.mvndicraft.townyroads.listeners.TownyRoadPlayersListener;
 import net.mvndicraft.townyroads.listeners.TownyRoadTownAndNationListener;
 import net.mvndicraft.townyroads.settings.Settings;
+import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.Translations;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -83,17 +84,18 @@ public class TownyRoadsPlugin extends JavaPlugin {
     public static void log(Level level, Supplier<String> messageProvider) { getInstance().getLogger().log(level, messageProvider); }
     public static void log(Level level, String message, Throwable e) { getInstance().getLogger().log(level, message, e); }
     public static void debug(String message) {
-        if (getInstance().getConfig().getBoolean("debug", false)) {
+        if (TownyRoadsSettings.getDebug()) {
             log(Level.INFO, message);
         }
     }
     public static void debug(Supplier<String> messageProvider) {
-        if (getInstance().getConfig().getBoolean("debug", false)) {
+        if (TownyRoadsSettings.getDebug()) {
             log(Level.INFO, messageProvider);
         }
     }
     public static void info(String message) { log(Level.INFO, message); }
     public static void info(String message, Throwable e) { log(Level.INFO, message, e); }
+    public static void info(Supplier<String> messageProvider) { log(Level.INFO, messageProvider); }
     public static void warning(String message) { log(Level.WARNING, message); }
     public static void warning(String message, Throwable e) { log(Level.WARNING, message, e); }
     public static void error(String message) { log(Level.SEVERE, message); }

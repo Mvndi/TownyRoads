@@ -2,6 +2,10 @@ package net.mvndicraft.townyroads.settings;
 
 public enum ConfigNodes {
     // @formatter:off
+    DEBUG(
+            "debug",
+            "false",
+            ""),
     VERSION(
             "version",
             "",
@@ -125,8 +129,29 @@ public enum ConfigNodes {
             "",
             "# If enabled, the road will have `max_mutliply_value * max chunks it can have (without counting bonus blocks)` bonus blocks.",
             "# If max_value & max_mutliply_value are enabled, it will use the lower value of both limit.",
-            "# Disabled with value of -1.0"
-        
+            "# Disabled with value of -1.0"),
+    ROADS_DYNMAP(
+            "roads.dynmap",
+            "",
+            "",
+            "############################################################",
+            "# +------------------------------------------------------+ #",
+            "# |                        Dynmap                        | #",
+            "# +------------------------------------------------------+ #",
+            "############################################################",
+            ""),
+    ROADS_DYNMAP_ROAD_COLOR(
+            "roads.dynmap.road_color",
+            "4B4B4B",
+            "",
+            "# The color of the road in the dynmap.",
+            "# Need to be a hex code."),
+    ROADS_DYNMAP_REFRESH_FREQUENCY(
+            "roads.dynmap.refresh_frequency",
+            "60",
+            "",
+            "# Every refresh_frequency seconds the dynmap will be refreshed.",
+            "# refresh_frequency need to be at least 1, else the dynmap won't be refreshed."
         );
     // @formatter:on
 

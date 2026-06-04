@@ -3,6 +3,10 @@ package net.mvndicraft.townyroads.settings;
 public class TownyRoadsSettings {
     private TownyRoadsSettings() {}
 
+    public static boolean getDebug() {
+        return Settings.getBoolean(ConfigNodes.DEBUG);
+    }
+
     public static int getMaxclaims() {
         return Settings.getInt(ConfigNodes.ROADS_RESTRICTIONS_MAX_CLAIMS);
     }
@@ -53,5 +57,13 @@ public class TownyRoadsSettings {
 
     public static double getBonusBlockMaxMultiplyValue() {
         return Settings.getDouble(ConfigNodes.ROADS_BONUS_BLOCK_MAX_MULTIPLY_VALUE);
+    }
+
+    public static String getDynmapRoadColor() {
+        return Settings.getString(ConfigNodes.ROADS_DYNMAP_ROAD_COLOR);
+    }
+
+    public static int getDynmapRefreshFrequency() {
+        return Settings.getInt(ConfigNodes.ROADS_DYNMAP_REFRESH_FREQUENCY);
     }
 }
