@@ -19,7 +19,7 @@ MapTowny & squaremap are supported as optional dependencies.
 - translation
 <!-- - max the number of bonus block to 1.0 * the default max plot & to brut value. -->
 <!-- - make sure players know when they enter a road claim as when they enter a town claim. -->
-- display roads into the dynmap in light grey
+<!-- - display roads into the dynmap in light grey -->
 
 
 - Require a minimal amount of suspisous gravel or gravel or suspicious sand to be into the road chunks to validate it.

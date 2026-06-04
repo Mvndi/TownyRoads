@@ -12,14 +12,17 @@ import net.mvndicraft.townyroads.TownyRoadsPlugin;
 
 public class RoadStorageFile implements RoadStorage {
     private File dataDir;
+    private File roadDataDir;
     public RoadStorageFile() {
         dataDir = new File(TownyRoadsPlugin.getInstance().getDataFolder(), "data");
         dataDir.mkdirs();
+        roadDataDir = new File(dataDir, "roads");
+        roadDataDir.mkdirs();
     }
     @Override
     public Set<Road> loadAll() {
         Set<Road> roads = ConcurrentHashMap.newKeySet();
-        for (File file : dataDir.listFiles()) {
+        for (File file : roadDataDir.listFiles()) {
             if (file.getName().endsWith(".yml")) {
                 roads.add(load(file));
             }
@@ -28,7 +31,7 @@ public class RoadStorageFile implements RoadStorage {
     }
     @Override
     public Road load(UUID id) {
-        File file = new File(dataDir, id + ".yml");
+        File file = new File(roadDataDir, id + ".yml");
         if (file.exists()) {
             return load(file);
         }
@@ -39,7 +42,7 @@ public class RoadStorageFile implements RoadStorage {
         TownyRoadsPlugin.debug("Loaded road " + existingFile.getName());
         return Road.fromYml(existingFile);
     }
-    
+
     @Override
     public void saveAll(Road... roads) {
         for (Road road : roads) {
@@ -49,7 +52,7 @@ public class RoadStorageFile implements RoadStorage {
 
     @Override
     public void save(Road road) {
-        File docFile = new File(dataDir, road.getId() + ".yml");
+        File docFile = new File(roadDataDir, road.getId() + ".yml");
         road.toYml(docFile);
         TownyRoadsPlugin.debug("Saved road " + road.getId());
     }
@@ -57,7 +60,7 @@ public class RoadStorageFile implements RoadStorage {
     @Override
     public void delete(Road road) {
         try {
-            if (!Files.deleteIfExists(Path.of(dataDir.getAbsolutePath(), road.getId() + ".yml"))) {
+            if (!Files.deleteIfExists(Path.of(roadDataDir.getAbsolutePath(), road.getId() + ".yml"))) {
                 TownyRoadsPlugin.error("Fail to delete road " + road.getId() + " because file can't be deleted.");
             }
         } catch (IOException e) {
