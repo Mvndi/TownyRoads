@@ -33,5 +33,11 @@ public class Messaging {
     public static void sendError(Audience audience, String translationKey) {
         sendError(audience, translate(translationKey));
     }
+    public static void sendSuccess(Audience audience, Component message) {
+        audience.sendMessage(message.color(NamedTextColor.GREEN));
+    }
+    public static void sendSuccess(Audience audience, String translationKey) {
+        sendSuccess(audience, translate(translationKey));
+    }
 }
 

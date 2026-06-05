@@ -147,7 +147,7 @@ public class Road extends TownyObject {
     }
 
     public String getShortName() {
-        return getTownsNames(towns);
+        return getName();
     }
 
     private String getTownsNames(List<Town> townList) {
@@ -219,20 +219,22 @@ public class Road extends TownyObject {
             if (!toConfirmTowns.isEmpty()) {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component
-                        .text(getName() + " have towns that haven't confirmed yet: " + getTownsNames(toConfirmTowns)));
+                return Optional.of(Component.translatable("validate_not_confirmed",
+                        List.of(Component.text(getName()), Component.text(getTownsNames(toConfirmTowns)))));
             }
 
             if (towns.size() < 2) {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component.text(getName() + " must have at least 2 towns."));
+                return Optional
+                        .of(Component.translatable("validate_at_least_2_towns", List.of(Component.text(getName()))));
             }
 
             if (!ChunkCoordUtil.areAllConnected(chunksCoords)) {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component.text(getName() + " must be connected."));
+                return Optional
+                        .of(Component.translatable("validate_connected_chunks", List.of(Component.text(getName()))));
             }
 
             int maxChunks = maxChunksCoordsSize();
@@ -240,8 +242,8 @@ public class Road extends TownyObject {
             if (currentChunks > maxChunks) {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component
-                        .text(getName() + " have too many chunks. " + currentChunks + " on a max of " + maxChunks));
+                return Optional.of(Component.translatable("validate_to_many_chunks",
+                        List.of(Component.text(getName()), Component.text(currentChunks), Component.text(maxChunks))));
             }
 
 
@@ -249,8 +251,8 @@ public class Road extends TownyObject {
             if (firstNotConnectedTown.isPresent()) {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component.text("All towns of " + getName() + " must be connected including "
-                        + firstNotConnectedTown.get().getName()));
+                return Optional.of(Component.translatable("validate_connected_towns",
+                        List.of(Component.text(getName()), Component.text(firstNotConnectedTown.get().getName()))));
             }
         }
 
