@@ -13,6 +13,7 @@ import com.palmergames.bukkit.towny.object.Town;
 import java.util.List;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
@@ -39,7 +40,7 @@ public class TownyRoadsCommand extends BaseCommand {
     public static void onTownyRoads(CommandSender commandSender, String roadName) {
         Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
         if (road != null) {
-            commandSender.sendMessage(road.getDescription());
+            Messaging.sendMessage(commandSender, road.getDescription());
         }
     }
 
@@ -49,9 +50,9 @@ public class TownyRoadsCommand extends BaseCommand {
         if (commandSender instanceof Player player) {
             Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(player.getLocation());
             if (road != null) {
-                commandSender.sendMessage(road.getDescription());
+                Messaging.sendMessage(commandSender, road.getDescription());
             } else {
-                Messaging.sendError(commandSender, "err_player_not_in_road");
+                notInRoad(commandSender);
             }
         } else {
             notAPlayer(commandSender);
@@ -62,7 +63,7 @@ public class TownyRoadsCommand extends BaseCommand {
     @Description("List roads")
     @Syntax("<page_number>")
     public static void onList(CommandSender commandSender, int page) {
-        commandSender.sendMessage(TownyRoadsPlugin.getInstance().getRoadManager().listRoad(page));
+        Messaging.sendMessage(commandSender, TownyRoadsPlugin.getInstance().getRoadManager().listRoad(page));
     }
 
     @Subcommand("list")
@@ -88,7 +89,6 @@ public class TownyRoadsCommand extends BaseCommand {
             if (town2 == null)
                 return;
             if (playerTown.equals(town2)) {
-                commandSender.sendMessage("Towns must be different.");
                 Messaging.sendError(commandSender, "err_same_town");
                 return;
             }
@@ -122,14 +122,15 @@ public class TownyRoadsCommand extends BaseCommand {
             }
             Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
             if (road == null) {
-                commandSender.sendMessage("Road not found.");
+                roadNotFound(commandSender, roadName);
                 return;
             }
 
             if (TownyUniverse.getInstance().getPermissionSource().testPermission(player,
                     TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
                 road.confirm(playerTown);
-                commandSender.sendMessage("Joined the road " + road.getName());
+                Messaging.sendAccept(commandSender, Component.translatable("success_road_join",
+                        Argument.component("road", Component.text(road.getName()))));
             }
         }
     }
@@ -147,14 +148,15 @@ public class TownyRoadsCommand extends BaseCommand {
             }
             Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
             if (road == null) {
-                commandSender.sendMessage("Road not found.");
+                roadNotFound(commandSender, roadName);
                 return;
             }
 
             if (TownyUniverse.getInstance().getPermissionSource().testPermission(player,
                     TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
                 road.deny(playerTown);
-                commandSender.sendMessage("Denied the road " + road.getName());
+                Messaging.sendDeny(commandSender, Component.translatable("denied_road_join",
+                        Argument.component("road", Component.text(road.getName()))));
             }
         }
     }
@@ -167,8 +169,8 @@ public class TownyRoadsCommand extends BaseCommand {
         Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
         if (road == null)
             return;
-        if (!commandSender.hasPermission("townyroads.delete")) {
-            commandSender.sendMessage("You do not have permission to delete roads.");
+        if (!commandSender.hasPermission("townyroads.leave")) {
+            Messaging.sendError(commandSender, "err_no_permission_to_delete_road");
             return;
         }
         if (commandSender instanceof Player player) {
@@ -178,11 +180,12 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             }
             if (road.getTownsView().stream().noneMatch(playerTown::equals)) {
-                commandSender.sendMessage("You must be in one of the towns.");
+                Messaging.sendError(commandSender, "err_not_in_road_towns");
                 return;
             }
             road.removeTown(playerTown);
-            commandSender.sendMessage("Leaving the road " + roadName);
+            Messaging.sendSuccess(player,
+                    Component.translatable("success_leave_road", Argument.component("road", Component.text(roadName))));
         }
     }
 
@@ -194,30 +197,34 @@ public class TownyRoadsCommand extends BaseCommand {
         if (commandSender instanceof Player player) {
             Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
             if (road == null) {
-                commandSender.sendMessage("Road not found.");
+                roadNotFound(commandSender, roadName);
                 return;
             }
             if (!road.isAPlayerOfTheRoad(player)) {
-                commandSender.sendMessage("You must be in one of the towns.");
+                Messaging.sendError(commandSender, "err_not_in_road_towns");
                 return;
             }
             if (!road.canClaimMore()) {
-                commandSender.sendMessage("Can't claim more chunks.");
+                Messaging.sendError(commandSender, "err_road_can_t_claim_more");
                 return;
             }
             if (!road.canClaimHere(ChunkCoord.from(player.getLocation()))) {
-                commandSender
-                        .sendMessage("Can't claim here. This chunks is already claimed or to far away from the road.");
+                Messaging.sendError(commandSender, "err_road_cant_claim_here");
                 return;
             }
             if (TownyRoadsPlugin.getInstance().getRoadManager().claimRoad(road, player)) {
-                commandSender.sendMessage("Claimed road " + roadName);
+                Messaging.sendSuccess(commandSender,
+                        Component.translatable("success_road_claim",
+                                Argument.component("number_of_claim", Component.text(1)),
+                                Argument.component("road", Component.text(roadName))));
                 if (road.isValid()) {
                     road.unvalidate();
-                    commandSender.sendMessage("Road " + road.getName() + " need to be validated again.");
+                    Messaging.sendMessage(commandSender, Component.translatable("info_road_need_to_be_revalidated",
+                            Argument.component("road", Component.text(roadName))));
                 }
             } else {
-                commandSender.sendMessage("failed to claim road " + roadName);
+                Messaging.sendError(commandSender, Component.translatable("err_road_claim_failed",
+                        Argument.component("road", Component.text(roadName))));
             }
         } else {
             notAPlayer(commandSender);
@@ -230,19 +237,23 @@ public class TownyRoadsCommand extends BaseCommand {
         if (commandSender instanceof Player player) {
             Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(player.getLocation());
             if (road == null) {
-                commandSender.sendMessage("Road not found.");
+                notInRoad(commandSender);
                 return;
             }
             if (!road.isAPlayerOfTheRoad(player)) {
-                commandSender.sendMessage("You must be in one of the towns.");
+                Messaging.sendError(commandSender, "err_not_in_road_towns");
                 return;
             }
             if (!road.canUnclaimHere(ChunkCoord.from(player.getLocation()))) {
-                commandSender.sendMessage("Can't unclaim here. The road would be split in two.");
+                Messaging.sendError(commandSender, Component.translatable("err_road_unclaim_failed_because_split",
+                        Argument.component("road", (Component.text(road.getName())))));
                 return;
             }
             TownyRoadsPlugin.getInstance().getRoadManager().unclaimRoad(road, player);
-            commandSender.sendMessage("Unclaimed road " + road.getName());
+            Messaging.sendAccept(commandSender,
+                    Component.translatable("success_road_unclaim",
+                            Argument.component("number_of_unclaim", Component.text(1)),
+                            Argument.component("road", Component.text(road.getName()))));
 
         } else {
             notAPlayer(commandSender);
@@ -263,17 +274,18 @@ public class TownyRoadsCommand extends BaseCommand {
         }
         Optional<Component> error = road.validate();
         if (error.isPresent()) {
-            Messaging.sendError(commandSender,
-                    Component.translatable("err_road_invalid").appendSpace().append(error.get()));
+            Messaging.sendError(commandSender, Component
+                    .translatable("err_road_invalid", Argument.component("road", Component.text(road.getName())))
+                    .appendSpace().append(error.get()));
         } else {
-            Messaging.sendSuccess(commandSender,
-                    Component.translatable("success_road_validate", List.of(Component.text(road.getName()))));
+            Messaging.sendSuccess(commandSender, Component.translatable("success_road_validate",
+                    Argument.component("road", Component.text(road.getName()))));
         }
     }
 
     @Subcommand("merge")
     @Description("Merge 2 roads")
-    @CommandCompletion("@road_player_town_is_in @roat @empty")
+    @CommandCompletion("@road_player_town_is_in @road @empty")
     @Syntax("<road> <road>")
     public static void onMerge(CommandSender commandSender, String roadName1, String roadName2) {
         if (commandSender instanceof Player player) {
@@ -283,6 +295,11 @@ public class TownyRoadsCommand extends BaseCommand {
             Road road2 = TownyUtil.getRoadFromNameOrNull(commandSender, roadName2);
             if (road2 == null)
                 return;
+
+            if (road1.equals(road2)) {
+                Messaging.sendError(commandSender, "err_same_road");
+                return;
+            }
 
             if (!commandSender.hasPermission("townyroads.merge")) {
                 Messaging.sendError(commandSender, "err_no_permission_to_merge_road");
@@ -299,8 +316,10 @@ public class TownyRoadsCommand extends BaseCommand {
                 Messaging.sendError(commandSender,
                         Component.translatable("err_merge_failed").appendSpace().append(error.get()));
             } else {
-                Messaging.sendSuccess(commandSender, Component.translatable("success_road_merge",
-                        List.of(Component.text(road1.getName()), Component.text(road2.getName()))));
+                Messaging.sendSuccess(commandSender,
+                        Component.translatable("success_road_merge",
+                                Argument.component("road1", Component.text(road1.getName())),
+                                Argument.component("road2", Component.text(road2.getName()))));
             }
         } else {
             notAPlayer(commandSender);
@@ -313,5 +332,14 @@ public class TownyRoadsCommand extends BaseCommand {
 
     public static void notInTown(CommandSender commandSender) {
         Messaging.sendError(commandSender, "err_player_not_in_town");
+    }
+
+    public static void notInRoad(CommandSender commandSender) {
+        Messaging.sendError(commandSender, "err_player_not_in_road");
+    }
+
+    public static void roadNotFound(CommandSender commandSender, String roadName) {
+        Messaging.sendError(commandSender,
+                Component.translatable("err_road_not_found", Argument.component("road", Component.text(roadName))));
     }
 }

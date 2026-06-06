@@ -6,7 +6,6 @@ description: >
   Language file for all game messages.  Do not alter this file. If you wish to change any of the entries, make a copy named something else. Alternate language files can be enabled by altering the [language] entry in config.yml
 #You MUST retain spacing in the texts.
 #If a text begins or ends with a space, it must remain that way.
-#%s = data to be supplied by the plugin.
 
 townyroads_plugin_prefix: "[TownyRoads]"
 
@@ -15,9 +14,42 @@ roads_list: "Liste des routes"
 chunks: "chunks"
 to_confirm: "à confirmer"
 
-err_command_sender_not_a_player: "Vous devez être un joueur."
-err_player_not_in_road: "Vous n'êtes pas sur une route."
-err_player_not_in_town: "Vous n'êtes pas dans une ville."
-err_same_town: "Les villes doivent être différentes."
-err_no_permission_to_create_road: "Vous n'avez pas la permission de créer des routes."
-err_road_exists: "Une route existe déjà connectant les deux villes."
+err_command_sender_not_a_player: "Vous devez être un joueur."
+err_player_not_in_road: "Vous n'êtes pas sur une route."
+err_player_not_in_town: "Vous n'êtes pas dans une ville."
+err_same_town: "Les villes doivent être différentes."
+err_same_road: "Les routes doivent être différentes."
+err_no_permission_to_create_road: "Vous n'avez pas la permission de créer des routes."
+err_no_permission_to_delete_road: "Vous n'avez pas la permission de quitter des routes."
+err_no_permission_to_merge_road: "Vous n'avez pas la permission de fusionner des routes."
+err_no_permission_to_validate_road: "Vous n'avez pas la permission de valider des routes."
+err_road_exists: "Une route existe déjà connectant les deux villes."
+err_not_in_both_roads: "Vous devez être dans une des villes des deux routes."
+err_merge_failed: "Fusion échouée."
+err_road_invalid: "La route <road> est invalide."
+err_road_not_found: "La route <road> n'a pas été trouvée."
+err_not_in_road_towns: "Vous devez être dans une des villes de la route."
+err_road_can_t_claim_more: "Vous ne pouvez pas revendiquer plus de chunks sur cette route."
+err_road_cant_claim_here: "Impossible de revendiquer ici. Ce chunks est déjà revendiqué ou trop loin de la route."
+err_road_claim_failed: "Le nouveau claim de la route <road> n'a pas pu être revendiqué."
+err_road_unclaim_failed_because_split: "Impossible de dérevendiquer ici. La route <road> serait séparée en deux."
+err_town_does_not_exist: "La ville <town> n'existe pas."
+err_town_is_ruined: "La ville <town> est en ruine."
+err_road_does_not_exist: "La route <road> n'existe pas."
+
+validate_not_confirmed: "<road> a des villes qui n'ont pas encore confirmé: <to_confirm_towns>."
+validate_at_least_2_towns: "<road> doit avoir au moins 2 villes."
+validate_connected_chunks: "Tout les chunks de <road> doivent être connectés."
+validate_to_many_chunks: "<road> a trop de chunks: <current_chunks>/<max_chunks>."
+validate_connected_towns: "Toutes les villes de <road> doivent être connectées."
+
+success_road_merge: "La route <road2> a été fusionnée dans la route <road1>."
+success_road_validate: "<road> a été validée."
+success_road_join: "<road> rejoin."
+denied_road_join: "<road> déclinée."
+success_leave_road: "<road> quittée."
+success_road_claim: "<number_of_claim> chunk(s) de plus revendiqué sur la route <road>."
+success_road_unclaim: "<number_of_unclaim> chunk(s) de plus dérevendiqué sur la route <road>."
+
+info_road_need_to_be_revalidated: "<road> doit être validée à nouveau."
+info_invite_to_road: "Vous avez été invité à la route <road>."

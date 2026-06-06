@@ -5,7 +5,15 @@ Add roads to Towny.
 A road connect 2 or more towns.
 
 Towny is required.
-MapTowny & squaremap are supported as optional dependencies.
+MapTowny, squaremap & RoadSpeedMounts are supported as optional dependencies.
+
+## MapTowny
+
+MapTowny allow the road to be displayed into the dynmap.
+
+## RoadSpeedMounts
+
+RoadSpeedMounts allow for different speed in roads and outside roads.
 
 # TODO
 
@@ -26,3 +34,4 @@ MapTowny & squaremap are supported as optional dependencies.
 - Fix oppening chest with an item in hand being concidered as an interact and not a switch.
 - Fix breaking block being count twice because of PlayerInteractEvent.
 <!-- - reduce town taxes if connected to the capital. -->
+- make speed higher on road in RoadSpeedMounts.

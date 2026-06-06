@@ -54,7 +54,7 @@ public class RoadManager {
         Road road = new Road(towns, toConfirmTowns);
         addRoad(road);
         Bukkit.getOnlinePlayers().stream().filter(p -> road.canAcceptTheRoad(p))
-                .forEach(p -> TownyRoadsMessaging.sendInviteToRoadMessage(p, road));
+                .forEach(p -> Messaging.sendInviteToRoadMessage(p, road));
         return road;
     }
 

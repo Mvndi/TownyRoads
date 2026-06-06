@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.ChunkCoordUtil;
@@ -220,21 +221,22 @@ public class Road extends TownyObject {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
                 return Optional.of(Component.translatable("validate_not_confirmed",
-                        List.of(Component.text(getName()), Component.text(getTownsNames(toConfirmTowns)))));
+                        Argument.component("road", Component.text(getName())),
+                        Argument.component("to_confirm_towns", Component.text(getTownsNames(toConfirmTowns)))));
             }
 
             if (towns.size() < 2) {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional
-                        .of(Component.translatable("validate_at_least_2_towns", List.of(Component.text(getName()))));
+                return Optional.of(Component.translatable("validate_at_least_2_towns",
+                        Argument.component("road", Component.text(getName()))));
             }
 
             if (!ChunkCoordUtil.areAllConnected(chunksCoords)) {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional
-                        .of(Component.translatable("validate_connected_chunks", List.of(Component.text(getName()))));
+                return Optional.of(Component.translatable("validate_connected_chunks",
+                        Argument.component("road", Component.text(getName()))));
             }
 
             int maxChunks = maxChunksCoordsSize();
@@ -243,7 +245,9 @@ public class Road extends TownyObject {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
                 return Optional.of(Component.translatable("validate_to_many_chunks",
-                        List.of(Component.text(getName()), Component.text(currentChunks), Component.text(maxChunks))));
+                        Argument.component("road", Component.text(getName())),
+                        Argument.component("current_chunks", Component.text(currentChunks)),
+                        Argument.component("max_chunks", Component.text(maxChunks))));
             }
 
 
@@ -252,7 +256,8 @@ public class Road extends TownyObject {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
                 return Optional.of(Component.translatable("validate_connected_towns",
-                        List.of(Component.text(getName()), Component.text(firstNotConnectedTown.get().getName()))));
+                        Argument.component("road", Component.text(getName())),
+                        Argument.component("town", Component.text(firstNotConnectedTown.get().getName()))));
             }
         }
 

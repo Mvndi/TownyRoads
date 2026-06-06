@@ -5,8 +5,7 @@ import net.mvndicraft.townyroads.TownyRoadsPlugin;
 public enum TownyRoadsPermissionNodes {
     TOWNYROADS_ADMIN(TownyRoadsPlugin.ADMIN_PERMISSION), TOWNYROADS_CLAIM("townyroads.command.townyroads.claim"),
     TOWNYROADS_UNCLAIM("townyroads.command.townyroads.unclaim"),
-    TOWNYROADS_CREATE("townyroads.command.townyroads.create"),
-    TOWNYROADS_DELETE("townyroads.command.townyroads.delete"),
+    TOWNYROADS_CREATE("townyroads.command.townyroads.create"), TOWNYROADS_LEAVE("townyroads.command.townyroads.leave"),
     TOWNYROADS_ACCEPT("townyroads.command.townyroads.accept"),
     TOWNYROADS_CLAIMED_OWNROAD_ALL("townyroads.claimed.ownroad.*"),
     TOWNYROADS_CLAIMED_OWNROAD_BLOCK_BUILD("townyroads.claimed.ownroad.build"),
