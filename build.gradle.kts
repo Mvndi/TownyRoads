@@ -1,15 +1,14 @@
 plugins {
-    `java-library`
+    id("java")
     id("com.gradleup.shadow") version "9.3.1"
     `maven-publish`
     signing // Add ./gradlew signArchives
     // checkstyle // Ensures correctly formatted code
     // pmd // Code quality checks
-    id("org.sonarqube") version "7.2.2.6593" // Advanced code quality checks
-    id("xyz.jpenilla.run-paper") version "2.3.1" // Paper server for testing/hotloading JVM
-    id("io.papermc.hangar-publish-plugin") version "0.1.3"
+    id("xyz.jpenilla.run-paper") version "3.0.2" // Paper server for testing/hotloading JVM
+    id("org.sonarqube") version "7.3.0.8198" // Advanced code quality checks
+    id("io.papermc.hangar-publish-plugin") version "0.1.4"
     id("com.modrinth.minotaur") version "2.+" // cf https://github.com/modrinth/minotaur
-    // id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
     id("org.jreleaser") version "1.24.0"
 }
 
@@ -55,7 +54,9 @@ dependencies {
 }
 
 java {
-  toolchain.languageVersion.set(JavaLanguageVersion.of(21)) // 25
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21)) // 25
+    withJavadocJar()
+    withSourcesJar()
 }
 
 sonar {
@@ -120,13 +121,13 @@ publishing {
       pom {
         name.set(project.name.lowercase())
         packaging = "jar"
-        url.set("https://github.com/HydrolienF/${project.name}")
+        url.set("https://github.com/Mvndi/${project.name}")
         inceptionYear.set("2024")
         description = project.description
         licenses {
           license {
             name.set("MIT license")
-            url.set("https://github.com/HydrolienF/${project.name}/blob/master/LICENSE.md")
+            url.set("https://github.com/Mvndi/${project.name}/blob/master/LICENSE.md")
           }
         }
         developers {
@@ -137,9 +138,9 @@ publishing {
           }
         }
         scm {
-          connection.set("scm:git:git@github.com:HydrolienF/${project.name}.git")
-          developerConnection.set("scm:git:ssh:git@github.com:HydrolienF/${project.name}.git")
-          url.set("https://github.com/HydrolienF/${project.name}")
+          connection.set("scm:git:git@github.com:Mvndi/${project.name}.git")
+          developerConnection.set("scm:git:ssh:git@github.com:Mvndi/${project.name}.git")
+          url.set("https://github.com/Mvndi/${project.name}")
         }
       }
     }
@@ -368,7 +369,7 @@ jreleaser {
         name.set("${project.name}")
         copyright.set("Hydrolien")
         description.set(findProperty("description")?.toString() ?: "Default description")
-        website.set("https://github.com/HydrolienF/${project.name}")
+        website.set("https://github.com/Mvndi/${project.name}")
     }
 
     deploy {

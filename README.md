@@ -24,7 +24,7 @@ RoadSpeedMounts allow for different speed in roads and outside roads.
   - If the player reach max value y, then cancel build & break event & inform the player about the next time he will be able to break and how many block he already break.
   - Reduce the cooldown of x every t time. -->
 <!-- - give bonus chunks for connected road to a town. -->
-- translation
+<!-- - translation -->
 <!-- - max the number of bonus block to 1.0 * the default max plot & to brut value. -->
 <!-- - make sure players know when they enter a road claim as when they enter a town claim. -->
 <!-- - display roads into the dynmap in light grey -->
