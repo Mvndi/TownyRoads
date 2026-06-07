@@ -15,7 +15,7 @@ MapTowny allow the road to be displayed into the dynmap.
 
 RoadSpeedMounts allow for different speed in roads and outside roads.
 
-# Usage
+# Use
 
 TownyRoads add roads to a Towny world.
 
