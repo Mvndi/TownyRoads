@@ -187,9 +187,9 @@ public class Road extends TownyObject {
             }
 
             // The new road need to be valid, doing a temporary road to check.
-            List<Town> towns = new ArrayList<>(this.towns);
-            towns.addAll(road.towns);
-            Road temp = new Road(new ArrayList<>(towns), List.of());
+            List<Town> allTowns = new ArrayList<>(this.towns);
+            allTowns.addAll(road.towns);
+            Road temp = new Road(allTowns, List.of());
             temp.chunksCoords.addAll(this.chunksCoords);
             temp.chunksCoords.addAll(road.chunksCoords);
             Optional<Component> error = temp.validate();
