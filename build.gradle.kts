@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "9.3.1"
+    id("com.gradleup.shadow") version "9.4.1"
     `maven-publish`
     signing // Add ./gradlew signArchives
     // checkstyle // Ensures correctly formatted code
@@ -33,6 +33,7 @@ repositories {
     maven("https://maven.playpro.com")
 
     maven("https://jitpack.io")
+    maven("https://repo.faststats.dev/releases")
 }
 
 dependencies {
@@ -45,7 +46,8 @@ dependencies {
     compileOnly("net.coreprotect:coreprotect:$coreprotectVersion")
     compileOnly("xyz.jpenilla:squaremap-api:$squaremapVersion")
 
-    implementation("org.bstats:bstats-bukkit:3.1.0")
+    implementation("org.bstats:bstats-bukkit:3.2.1")
+    implementation("dev.faststats.metrics:bukkit:0.25.1")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

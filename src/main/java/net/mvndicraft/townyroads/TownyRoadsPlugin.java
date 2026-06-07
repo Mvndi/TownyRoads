@@ -1,6 +1,8 @@
 package net.mvndicraft.townyroads;
 
 import co.aikar.commands.PaperCommandManager;
+import dev.faststats.Metrics.Factory;
+import dev.faststats.bukkit.BukkitContext;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import net.mvndicraft.townyroads.commands.TownyRoadCommandCompleter;
@@ -13,10 +15,14 @@ import net.mvndicraft.townyroads.listeners.TownyRoadTownAndNationListener;
 import net.mvndicraft.townyroads.settings.Settings;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.Translations;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TownyRoadsPlugin extends JavaPlugin {
+    private final BukkitContext context = new BukkitContext.Factory(this, "5997f7c35decd14e8333d90abe5aa119")
+            .metrics(Factory::create).create();
+
     public static final String ADMIN_PERMISSION = "townyroads.admin";
     private RoadManager roadManager;
     private PlayerCooldownManager playerCooldownManager;
@@ -27,6 +33,9 @@ public class TownyRoadsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new Metrics(this, 31859);
+        context.ready();
+
         Settings.loadConfig();
 
         this.translations = new Translations();
@@ -72,6 +81,11 @@ public class TownyRoadsPlugin extends JavaPlugin {
         Settings.loadConfig();
         translations.reload();
         getPlayerCooldownManager().reload();
+    }
+
+    @Override
+    public void onDisable() {
+        context.shutdown();
     }
 
     public boolean isMapTownyInstalled() {

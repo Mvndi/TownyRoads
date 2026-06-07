@@ -35,3 +35,42 @@ RoadSpeedMounts allow for different speed in roads and outside roads.
 - Fix breaking block being count twice because of PlayerInteractEvent.
 <!-- - reduce town taxes if connected to the capital. -->
 - make speed higher on road in RoadSpeedMounts.
+
+## Statistics
+[![bStats Graph Data](https://bstats.org/signatures/bukkit/TownyRoads.svg)](https://bstats.org/plugin/bukkit/TownyRoads/31859)
+
+# Build, Test & deploy
+
+Feature requests or pull requests are welcome. Concider creating an issue first to talk about your new feature before sending a pull request.
+
+## Build
+
+Clone the [repo](https://github.com/Mvndi/TownyRoads) `git clone git@github.com:Mvndi/TownyRoads.git`
+
+Build with `./gradlew assemble`. The plugin .jar file will be in `build/libs/`.
+
+## Test
+
+You can test the plugin directly in a Minecraft server with `./gradlew runServer`.
+You can also try it on an other server by placing the .jar in `plugins/`.
+You might want to update the plugin config to fit your needs.
+
+## Deploy
+
+### To Github releases, Hangar & Modrinth
+
+Push tag to git to trigger a github action release that will create a new Github release and publish to Hangar & Modrinth.
+```sh
+git tag 1.2.3
+git push --tags
+```
+
+### to Maven central
+
+*Require ossrhUsername & ossrhPassword in ~/.gradle/gradle.properties*
+
+```sh
+./gradlew clean publish
+./gradlew jreleaserDeploy
+```
+The published lib will be available [on maven central](https://central.sonatype.com/artifact/net.mvndicraft.townyroads/townyroads).
