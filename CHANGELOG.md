@@ -1,4 +1,5 @@
-
+# 0.5.1
+Most of the features are now in place.
 
 # 0.0.1
 Init project
