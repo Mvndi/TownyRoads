@@ -76,9 +76,9 @@ jobs:
           # prerelease: ${{ !startsWith(github.ref, 'refs/tags/') }} #Always release for now
           skipIfReleaseExists: true
       
-      - name: Publish to hangar & modrinth
-        env:
-          # Make sure you have added the repository secrets in the repository's settings
-          HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-        run: ./gradlew assemble publishPluginPublicationToHangar modrinth
+      # - name: Publish to hangar & modrinth
+      #   env:
+      #     # Make sure you have added the repository secrets in the repository's settings
+      #     HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
+      #     MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      #   run: ./gradlew assemble publishPluginPublicationToHangar modrinth
