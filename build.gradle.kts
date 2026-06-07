@@ -43,7 +43,7 @@ dependencies {
     
     compileOnly("com.palmergames.bukkit.towny:towny:$townyVersion")
     compileOnly("me.silverwolfg11:maptowny-api:$mapTownyVersion")
-    compileOnly("net.coreprotect:coreprotect:$coreprotectVersion")
+    // compileOnly("net.coreprotect:coreprotect:$coreprotectVersion")
     compileOnly("xyz.jpenilla:squaremap-api:$squaremapVersion")
 
     implementation("org.bstats:bstats-bukkit:3.2.1")
@@ -101,7 +101,7 @@ tasks {
     runServer {
         downloadPlugins {
             modrinth("towny", "$townyVersion")
-            modrinth("coreprotect", "$coreprotectVersion")
+            // modrinth("coreprotect", "$coreprotectVersion")
             url("https://github.com/jpenilla/squaremap/releases/download/v${squaremapVersion}/squaremap-paper-mc${mainMinecraftVersion}-${squaremapVersion}.jar")
             url("https://github.com/TownyAdvanced/MapTowny/releases/download/v3.0.0-alpha-4/maptowny-3.0.0-ALPHA-4.jar")
         }

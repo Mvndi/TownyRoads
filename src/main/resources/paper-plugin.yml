@@ -11,9 +11,9 @@ dependencies:
     Towny:
       required: true
       load: BEFORE
-    CoreProtect:
-      required: false
-      load: BEFORE
+    # CoreProtect:
+    #   required: false
+    #   load: BEFORE
     MapTowny:
       required: false
       load: BEFORE
