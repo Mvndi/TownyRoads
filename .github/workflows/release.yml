@@ -25,14 +25,7 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew assemble
-        env:
-          MVNDI_MVN_USER: ${{ secrets.MVNDI_MVN_USER }}
-          MVNDI_MVN_KEY: ${{ secrets.MVNDI_MVN_KEY }}
-      - name: Publish to Remote
-        run: ./gradlew publish
-        env:
-          MVNDI_MVN_USER: ${{ secrets.MVNDI_MVN_USER }}
-          MVNDI_MVN_KEY: ${{ secrets.MVNDI_MVN_KEY }}
+      # - name: TODO Publish to Maven Central
       
       - name: Get version & release name
         id: version
