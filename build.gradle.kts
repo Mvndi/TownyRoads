@@ -48,7 +48,7 @@ dependencies {
 
     implementation("org.bstats:bstats-bukkit:3.2.1")
     implementation("dev.faststats.metrics:bukkit:0.25.1")
-    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
+    implementation("co.aikar:acf-paper:0.5.1-20260511.221425-52") // 0.5.1-SNAPSHOT is not an OK version for Maven Central.
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
