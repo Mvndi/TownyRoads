@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -126,8 +127,9 @@ public class Road extends TownyObject {
                 .append(Component.text("/")).append(Component.text(maxChunksCoordsSize()))
                 .append(Component.translatable("chunks")).append(Component.text(")"));
         if (!toConfirmTowns.isEmpty()) {
-            description = description.appendSpace().append(Component.text("(")).append(Component.text(getTownsNames(toConfirmTowns)))
-                    .appendSpace().append(Component.translatable("to_confirm")).append(Component.text(")"));
+            description = description.appendSpace().append(Component.text("("))
+                    .append(Component.text(getTownsNames(toConfirmTowns))).appendSpace()
+                    .append(Component.translatable("to_confirm")).append(Component.text(")"));
         }
         return description;
     }
@@ -170,7 +172,7 @@ public class Road extends TownyObject {
     }
 
     public Optional<Component> merge(Road road, boolean force) {
-        if (force) {
+        if (!force) {
             // Need this road to be valid.
             if (!isValid()) {
                 return Optional.of(Component.text(getName() + " is not valid. Use `/tr validate` first."));
@@ -187,9 +189,8 @@ public class Road extends TownyObject {
             }
 
             // The new road need to be valid, doing a temporary road to check.
-            List<Town> allTowns = new ArrayList<>(this.towns);
-            allTowns.addAll(road.towns);
-            Road temp = new Road(allTowns, List.of());
+            Road temp = new Road(this.towns, List.of());
+            temp.addTowns(road.towns);
             temp.chunksCoords.addAll(this.chunksCoords);
             temp.chunksCoords.addAll(road.chunksCoords);
             Optional<Component> error = temp.validate();
@@ -199,8 +200,9 @@ public class Road extends TownyObject {
         }
 
         // Merge the road into this
-        this.towns.addAll(road.towns);
+        this.addTowns(road.towns);
         this.chunksCoords.addAll(road.chunksCoords);
+        this.updateRoadName();
         // Remove the old road
         TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(road);
         TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
@@ -208,6 +210,17 @@ public class Road extends TownyObject {
     }
     public Optional<Component> merge(Road road) {
         return merge(road, false);
+    }
+
+    /**
+     * Add towns without duplication
+     */
+    public void addTowns(Collection<Town> townsToAdd) {
+        for (Town town : townsToAdd) {
+            if (!this.towns.contains(town)) {
+                this.towns.add(town);
+            }
+        }
     }
 
     public boolean isValid() {
@@ -489,7 +502,7 @@ public class Road extends TownyObject {
     }
 
     public void updateRoadName() {
-        setName(getShortName());
+        setName(getTownsNames(towns));
     }
 
 
