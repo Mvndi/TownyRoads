@@ -42,10 +42,10 @@ Chest or doors can be open without limitation, do not use roads as an extension 
 
 Make sure to give comayor or roadbuilder rank to your resident that are supposed to build the roads.
 
-### Taxes
+### Upkeep
 
-A town connected to it's captial pay 50% taxes less.
-A capital connected to other nation towns pay less taxes, up to 50% if all nation towns are connected. It also make the nation pay up to 50% less taxes.
+A town connected to it's captial pay 50% upkeep less.
+A capital connected to other nation towns pay less upkeep, up to 50% if all nation towns are connected. It also make the nation pay up to 50% less upkeep.
 
 ### TownyWaypoints
 
