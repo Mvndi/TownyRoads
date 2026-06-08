@@ -85,8 +85,12 @@ public class RoadManager {
     public Component listRoad(int page) {
         Component builder = Messaging.translate("roads_list").append(Component.translatable((":"))).appendNewline();
         long itemsToSkip = Math.max(page - 1L, 0L) * 10L;
-        roads.stream().sorted(Comparator.comparing(Road::getName, String.CASE_INSENSITIVE_ORDER)).skip(itemsToSkip)
-                .limit(10).map(Road::getDescription).forEach(name -> builder.append(name).appendNewline());
+        List<Component> roadDescriptions = roads.stream()
+                .sorted(Comparator.comparing(Road::getName, String.CASE_INSENSITIVE_ORDER)).skip(itemsToSkip).limit(10)
+                .map(Road::getDescription).toList();
+        for (Component roadDescription : roadDescriptions) {
+            builder = builder.append(roadDescription).appendNewline();
+        }
         return builder;
     }
 

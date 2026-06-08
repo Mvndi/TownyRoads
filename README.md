@@ -94,10 +94,11 @@ Translations in English & in French are done by me (Hydrolien), feel free to ope
 <!-- - make sure players know when they enter a road claim as when they enter a town claim. -->
 <!-- - display roads into the dynmap in light grey -->
 - Fix upkeed making /t Medina undisplabable because of null or infinite value.
-- Fix road display on mvndi map "TranslatableComponentImp..."
+<!-- - Fix road display on mvndi map "TranslatableComponentImp..." -->
 - Fix merging road naming and duplicate town in the list.
-- Fix road display that does not show to validate road, if it's validated etc.
+<!-- - Fix road display that does not show to validate road, if it's validated etc. -->
 - Fix roads being unvalidated on new days even if they are OK.
+<!-- - Fix /tr list not displaying any. -->
 
 
 - Require a minimal amount of suspisous gravel or gravel or suspicious sand or water to be into the road chunks to validate it.

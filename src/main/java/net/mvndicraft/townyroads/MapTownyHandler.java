@@ -4,8 +4,8 @@ import com.palmergames.bukkit.towny.object.Coord;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import me.silverwolfg11.maptowny.MapTownyPlugin;
 import me.silverwolfg11.maptowny.objects.LayerOptions;
 import me.silverwolfg11.maptowny.objects.MarkerOptions;
@@ -14,6 +14,9 @@ import me.silverwolfg11.maptowny.platform.MapLayer;
 import me.silverwolfg11.maptowny.platform.MapPlatform;
 import me.silverwolfg11.maptowny.platform.MapWorld;
 import me.silverwolfg11.maptowny.util.TownyUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.kyori.adventure.translation.GlobalTranslator;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -79,17 +82,22 @@ public class MapTownyHandler {
 
     private MarkerOptions roadMarkerOptions(Road road) {
         Color color = new Color(Integer.parseInt(TownyRoadsSettings.getDynmapRoadColor(), 16));
+        String description = plainText(road.getDescription());
         return MarkerOptions.builder().name(road.getName()).stroke(true).strokeColor(color)
                 .strokeWeight(TownyRoadsSettings.getDynmapRoadStrokeWeight()).strokeOpacity(1.0).fill(true)
                 .fillColor(color).fillOpacity(TownyRoadsSettings.getDynmapRoadFillOpacity())
-                .fillRule(MarkerOptions.FillRule.EVENODD).clickTooltip(road.getDescription().toString())
-                .hoverTooltip(road.getDescription().toString()).build();
+                .fillRule(MarkerOptions.FillRule.EVENODD).clickTooltip(description).hoverTooltip(description).build();
+    }
+
+    private String plainText(Component component) {
+        Component rendered = GlobalTranslator.render(component, Locale.ENGLISH);
+        return PlainTextComponentSerializer.plainText().serialize(rendered);
     }
 
     private List<Polygon> roadPolygons(Road road, World world) {
         return townyUtil.coordsToPolys(
                 road.getChunksCoordsView().stream().filter(chunk -> chunk.worldUuid().equals(world.getUID()))
-                        .map(chunk -> new Coord(chunk.x(), chunk.z())).collect(Collectors.toList()),
+                        .map(chunk -> new Coord(chunk.x(), chunk.z())).toList(),
                 false, 16);
     }
 }

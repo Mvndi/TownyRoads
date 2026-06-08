@@ -116,17 +116,17 @@ public class Road extends TownyObject {
     }
 
     public Component getDescription() {
-        Component description = Component.translatable(getTownsNames(towns)).appendSpace();
+        Component description = Component.text(getTownsNames(towns)).appendSpace();
         if (isValid()) {
-            description.append(Component.text("✔"));
+            description = description.append(Component.text("\u2714"));
         } else {
-            description.append(Component.text("✘"));
+            description = description.append(Component.text("\u2718"));
         }
-        description.appendSpace().append(Component.text("(")).append(Component.text(chunksCoordsSize()))
+        description = description.appendSpace().append(Component.text("(")).append(Component.text(chunksCoordsSize()))
                 .append(Component.text("/")).append(Component.text(maxChunksCoordsSize()))
-                .append(Component.text("chunks")).append(Component.text(")"));
+                .append(Component.translatable("chunks")).append(Component.text(")"));
         if (!toConfirmTowns.isEmpty()) {
-            description.appendSpace().append(Component.text("(")).append(Component.text(getTownsNames(toConfirmTowns)))
+            description = description.appendSpace().append(Component.text("(")).append(Component.text(getTownsNames(toConfirmTowns)))
                     .appendSpace().append(Component.translatable("to_confirm")).append(Component.text(")"));
         }
         return description;
