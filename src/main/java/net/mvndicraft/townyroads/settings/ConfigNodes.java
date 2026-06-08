@@ -165,7 +165,7 @@ public enum ConfigNodes {
             "",
             "# The fill opacity used to draw roads on Dynmap.",
             "# Value should be between 0.0 and 1.0."),
-    UPKEEP(
+    ROADS_UPKEEP(
             "roads.upkeep",
             "",
             "",
@@ -175,6 +175,11 @@ public enum ConfigNodes {
             "# +------------------------------------------------------+ #",
             "############################################################",
             ""),
+     ROADS_UPKEEP_ENABLED(
+        "roads.upkeep.enabled",
+            "true",
+            "",
+            "# Disabled with value of false"),
     ROADS_TOWN_UPKEEP_REDUCTION_FOR_NATION_CONNECTED_TOWNS(
         "roads.upkeep.town.nation_connected_towns",
             "0.5",

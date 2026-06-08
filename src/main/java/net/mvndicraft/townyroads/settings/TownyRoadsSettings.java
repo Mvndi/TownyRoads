@@ -75,6 +75,10 @@ public class TownyRoadsSettings {
         return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_ROAD_FILL_OPACITY);
     }
 
+    public static boolean getUpkeepEnabled() {
+        return Settings.getBoolean(ConfigNodes.ROADS_UPKEEP_ENABLED);
+    }
+
     public static double getTownUpkeepReductionForNationConnectedTowns() {
         return Settings.getDouble(ConfigNodes.ROADS_TOWN_UPKEEP_REDUCTION_FOR_NATION_CONNECTED_TOWNS);
     }

@@ -38,6 +38,9 @@ public class TownyRoadTownAndNationListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onTownUpkeepCalculationEvent(TownUpkeepCalculationEvent event) {
+        if (!TownyRoadsSettings.getUpkeepEnabled()) {
+            return;
+        }
         Town town = event.getTown();
         Collection<Town> townsThatShouldBeConnected;
         if (town.hasNation()) {
@@ -65,6 +68,9 @@ public class TownyRoadTownAndNationListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onTownUpkeepCalculationEvent(NationUpkeepCalculationEvent event) {
+        if (!TownyRoadsSettings.getUpkeepEnabled()) {
+            return;
+        }
         Town town = event.getNation().getCapital();
         Collection<Town> townsThatShouldBeConnected = event.getNation().getTowns().stream().filter(t -> !t.equals(town))
                 .toList();

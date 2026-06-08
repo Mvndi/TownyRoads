@@ -53,7 +53,7 @@ TownyWaypoints can be configured to allow players to travel, only if there is ro
 
 ### RoadSpeedMounts
 
-If RoadSpeedMounts is on the server, horse, donkey, mule, camel and player will be faster. Default config make them 2 time faster on roads than on wilderness for the same blocks they are moving on.
+If RoadSpeedMounts is on the server, horse, donkey, mule, camel and player will be faster. Default config make them 2 time faster on roads than on wilderness for the same blocks they are moving on (from +30% to +60% on suspicious gravel for horses for example).
 
 ## Extending a road
 
