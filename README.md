@@ -93,6 +93,7 @@ Translations in English & in French are done by me (Hydrolien), feel free to ope
 <!-- - max the number of bonus block to 1.0 * the default max plot & to brut value. -->
 <!-- - make sure players know when they enter a road claim as when they enter a town claim. -->
 <!-- - display roads into the dynmap in light grey -->
+- Fix upkeed making /t Medina undisplabable because of null or infinite value.
 
 
 - Require a minimal amount of suspisous gravel or gravel or suspicious sand or water to be into the road chunks to validate it.
