@@ -92,7 +92,8 @@ public class TownyRoadsCommand extends BaseCommand {
                 Messaging.sendError(commandSender, "err_same_town");
                 return;
             }
-            if (!player.hasPermission("townyroads.create")) {
+            if (TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
+                    TownyRoadsPermissionNodes.TOWNYROADS_CREATE.getNode())) {
                 Messaging.sendError(commandSender, "err_no_permission_to_create_road");
                 return;
             }
@@ -169,7 +170,8 @@ public class TownyRoadsCommand extends BaseCommand {
         Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
         if (road == null)
             return;
-        if (!commandSender.hasPermission("townyroads.leave")) {
+        if (TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
+                    TownyRoadsPermissionNodes.TOWNYROADS_LEAVE.getNode())) {
             Messaging.sendError(commandSender, "err_no_permission_to_delete_road");
             return;
         }
@@ -268,7 +270,8 @@ public class TownyRoadsCommand extends BaseCommand {
         Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
         if (road == null)
             return;
-        if (!commandSender.hasPermission("townyroads.validate")) {
+        if (TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
+                    TownyRoadsPermissionNodes.TOWNYROADS_VALIDATE.getNode())) {
             Messaging.sendError(commandSender, "err_no_permission_to_validate_road");
             return;
         }
@@ -301,7 +304,8 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             }
 
-            if (!commandSender.hasPermission("townyroads.merge")) {
+            if (TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
+                    TownyRoadsPermissionNodes.TOWNYROADS_MERGE.getNode())) {
                 Messaging.sendError(commandSender, "err_no_permission_to_merge_road");
                 return;
             }

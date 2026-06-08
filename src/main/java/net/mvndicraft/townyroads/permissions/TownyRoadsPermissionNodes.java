@@ -7,6 +7,8 @@ public enum TownyRoadsPermissionNodes {
     TOWNYROADS_UNCLAIM("townyroads.command.townyroads.unclaim"),
     TOWNYROADS_CREATE("townyroads.command.townyroads.create"), TOWNYROADS_LEAVE("townyroads.command.townyroads.leave"),
     TOWNYROADS_ACCEPT("townyroads.command.townyroads.accept"),
+    TOWNYROADS_VALIDATE("townyroads.command.townyroads.validate"),
+    TOWNYROADS_MERGE("townyroads.command.townyroads.merge"),
     TOWNYROADS_CLAIMED_OWNROAD_ALL("townyroads.claimed.ownroad.*"),
     TOWNYROADS_CLAIMED_OWNROAD_BLOCK_BUILD("townyroads.claimed.ownroad.build"),
     TOWNYROADS_CLAIMED_OWNROAD_BLOCK_DESTROY("townyroads.claimed.ownroad.destroy"),
