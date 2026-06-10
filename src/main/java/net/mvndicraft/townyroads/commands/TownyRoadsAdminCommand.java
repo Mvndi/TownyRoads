@@ -14,6 +14,7 @@ import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
+import net.mvndicraft.townyroads.util.Messaging;
 import net.mvndicraft.townyroads.util.TownyUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -46,7 +47,7 @@ public class TownyRoadsAdminCommand extends BaseCommand {
         if (town2 == null)
             return;
         if (town1.equals(town2)) {
-            commandSender.sendMessage("Towns must be different.");
+            Messaging.sendError(commandSender, "err_same_town");
             return;
         }
         List<Town> towns = List.of(town1, town2);

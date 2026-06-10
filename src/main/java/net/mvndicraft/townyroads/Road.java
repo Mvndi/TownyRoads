@@ -56,7 +56,7 @@ public class Road extends TownyObject {
     private Road(UUID id, List<Town> towns, List<Town> toConfirmTowns, Set<ChunkCoord> chunksCoords, boolean valid) {
         super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
         this.id = id;
-        this.towns = towns;
+        this.towns = new ArrayList<>(towns);
         this.townsView = Collections.unmodifiableList(this.towns);
         this.toConfirmTowns = new ArrayList<>(toConfirmTowns);
         this.toConfirmTownsView = Collections.unmodifiableList(this.toConfirmTowns);
