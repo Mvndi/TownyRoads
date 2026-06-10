@@ -171,7 +171,7 @@ public class TownyRoadsCommand extends BaseCommand {
         if (road == null)
             return;
         if (TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
-                    TownyRoadsPermissionNodes.TOWNYROADS_LEAVE.getNode())) {
+                TownyRoadsPermissionNodes.TOWNYROADS_LEAVE.getNode())) {
             Messaging.sendError(commandSender, "err_no_permission_to_delete_road");
             return;
         }
@@ -271,7 +271,7 @@ public class TownyRoadsCommand extends BaseCommand {
         if (road == null)
             return;
         if (TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
-                    TownyRoadsPermissionNodes.TOWNYROADS_VALIDATE.getNode())) {
+                TownyRoadsPermissionNodes.TOWNYROADS_VALIDATE.getNode())) {
             Messaging.sendError(commandSender, "err_no_permission_to_validate_road");
             return;
         }

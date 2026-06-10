@@ -59,7 +59,11 @@ public class RoadManager {
     }
 
     public boolean claimRoad(Road road, Player player) {
-        ChunkCoord chunkCoord = road.claim(player);
+        return claimRoad(road, ChunkCoord.from(player.getLocation()));
+    }
+
+    public boolean claimRoad(Road road, ChunkCoord chunkCoordToClaim) {
+        ChunkCoord chunkCoord = road.claim(chunkCoordToClaim);
 
         if (chunkCoord != null) {
             fastAccessRoads.put(chunkCoord, road);
@@ -108,9 +112,9 @@ public class RoadManager {
     }
 
     public void unclaimRoad(Road road, Player player) {
-        road.unclaim(player);
-        removeFromFastAccess(ChunkCoord.from(player.getLocation()));
-        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(road);
+        ChunkCoord chunkCoord = ChunkCoord.from(player.getLocation());
+        road.unclaim(chunkCoord);
+        removeFromFastAccess(chunkCoord);
     }
     public void removeFromFastAccess(ChunkCoord chunkCoord) {
         fastAccessRoads.remove(chunkCoord);

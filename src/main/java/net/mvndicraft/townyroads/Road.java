@@ -103,8 +103,7 @@ public class Road extends TownyObject {
     }
 
 
-    public ChunkCoord claim(Player player) {
-        ChunkCoord chunkCoord = ChunkCoord.from(player.getLocation());
+    public ChunkCoord claim(ChunkCoord chunkCoord) {
         if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(chunkCoord) == null) {
             chunksCoords.add(chunkCoord);
             TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
@@ -112,8 +111,10 @@ public class Road extends TownyObject {
         }
         return null;
     }
-    public boolean unclaim(Player player) {
-        return chunksCoords.remove(ChunkCoord.from(player.getLocation()));
+    public boolean unclaim(ChunkCoord chunkCoord) {
+        boolean b = chunksCoords.remove(chunkCoord);
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
+        return b;
     }
 
     public Component getDescription() {
@@ -199,12 +200,16 @@ public class Road extends TownyObject {
             }
         }
 
-        // Merge the road into this
-        this.addTowns(road.towns);
-        this.chunksCoords.addAll(road.chunksCoords);
-        this.updateRoadName();
         // Remove the old road
         TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(road);
+
+        // Merge the road into this
+        this.addTowns(road.towns);
+        // Use RoadManager to update fast access to.
+        for (ChunkCoord chunkCoord : road.chunksCoords) {
+            TownyRoadsPlugin.getInstance().getRoadManager().claimRoad(this, chunkCoord);
+        }
+        this.updateRoadName();
         TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
         return Optional.empty();
     }
