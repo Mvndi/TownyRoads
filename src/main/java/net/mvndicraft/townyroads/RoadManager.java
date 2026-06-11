@@ -109,6 +109,7 @@ public class RoadManager {
         }
         updateTownBonusBlock(road);
         TownyRoadsPlugin.getInstance().getRoadStorage().delete(road);
+        TownyRoadsPlugin.debug("Deleted road " + road.getId());
     }
 
     public void unclaimRoad(Road road, Player player) {

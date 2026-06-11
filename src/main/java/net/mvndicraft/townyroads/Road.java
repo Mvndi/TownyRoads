@@ -195,12 +195,15 @@ public class Road extends TownyObject {
                         + getTownsNames(road.toConfirmTowns)));
             }
 
+            this.removeChunksInTowns();
+            road.removeChunksInTowns();
+
             // The new road need to be valid, doing a temporary road to check.
             Road temp = new Road(this.towns, List.of());
             temp.addTowns(road.towns);
             temp.chunksCoords.addAll(this.chunksCoords);
             temp.chunksCoords.addAll(road.chunksCoords);
-            Optional<Component> error = temp.validate();
+            Optional<Component> error = temp.wouldBeValid();
             if (error.isPresent()) {
                 return error;
             }
@@ -216,6 +219,7 @@ public class Road extends TownyObject {
             TownyRoadsPlugin.getInstance().getRoadManager().claimRoad(this, chunkCoord);
         }
         this.updateRoadName();
+        this.validate();
         TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
         return Optional.empty();
     }
@@ -234,6 +238,42 @@ public class Road extends TownyObject {
         }
     }
 
+    public Optional<Component> wouldBeValid() {
+        if (!toConfirmTowns.isEmpty()) {
+            return Optional.of(Component.translatable("validate_not_confirmed",
+                    Argument.component("road", Component.text(getName())),
+                    Argument.component("to_confirm_towns", Component.text(getTownsNames(toConfirmTowns)))));
+        }
+
+        if (towns.size() < 2) {
+            return Optional.of(Component.translatable("validate_at_least_2_towns",
+                    Argument.component("road", Component.text(getName()))));
+        }
+
+        if (!ChunkCoordUtil.areAllConnected(chunksCoords)) {
+            return Optional.of(Component.translatable("validate_connected_chunks",
+                    Argument.component("road", Component.text(getName()))));
+        }
+
+        int maxChunks = maxChunksCoordsSize();
+        int currentChunks = chunksCoordsSize();
+        if (currentChunks > maxChunks) {
+            return Optional.of(Component.translatable("validate_to_many_chunks",
+                    Argument.component("road", Component.text(getName())),
+                    Argument.component("current_chunks", Component.text(currentChunks)),
+                    Argument.component("max_chunks", Component.text(maxChunks))));
+        }
+
+
+        Optional<Town> firstNotConnectedTown = getFirstNotConnectedTown();
+        if (firstNotConnectedTown.isPresent()) {
+            return Optional.of(Component.translatable("validate_connected_towns",
+                    Argument.component("road", Component.text(getName())),
+                    Argument.component("town", Component.text(firstNotConnectedTown.get().getName()))));
+        }
+        return Optional.empty();
+    }
+
     public boolean isValid() {
         return valid;
     }
@@ -241,47 +281,11 @@ public class Road extends TownyObject {
         removeChunksInTowns();
 
         if (!force) {
-            if (!toConfirmTowns.isEmpty()) {
+            Optional<Component> error = wouldBeValid();
+            if (error.isPresent()) {
                 valid = false;
                 TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component.translatable("validate_not_confirmed",
-                        Argument.component("road", Component.text(getName())),
-                        Argument.component("to_confirm_towns", Component.text(getTownsNames(toConfirmTowns)))));
-            }
-
-            if (towns.size() < 2) {
-                valid = false;
-                TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component.translatable("validate_at_least_2_towns",
-                        Argument.component("road", Component.text(getName()))));
-            }
-
-            if (!ChunkCoordUtil.areAllConnected(chunksCoords)) {
-                valid = false;
-                TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component.translatable("validate_connected_chunks",
-                        Argument.component("road", Component.text(getName()))));
-            }
-
-            int maxChunks = maxChunksCoordsSize();
-            int currentChunks = chunksCoordsSize();
-            if (currentChunks > maxChunks) {
-                valid = false;
-                TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component.translatable("validate_to_many_chunks",
-                        Argument.component("road", Component.text(getName())),
-                        Argument.component("current_chunks", Component.text(currentChunks)),
-                        Argument.component("max_chunks", Component.text(maxChunks))));
-            }
-
-
-            Optional<Town> firstNotConnectedTown = getFirstNotConnectedTown();
-            if (firstNotConnectedTown.isPresent()) {
-                valid = false;
-                TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
-                return Optional.of(Component.translatable("validate_connected_towns",
-                        Argument.component("road", Component.text(getName())),
-                        Argument.component("town", Component.text(firstNotConnectedTown.get().getName()))));
+                return error;
             }
         }
 

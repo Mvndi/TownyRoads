@@ -97,7 +97,7 @@ Translations in English & in French are done by me (Hydrolien), feel free to ope
 <!-- - Fix road display on mvndi map "TranslatableComponentImp..." -->
 <!-- - Fix merging road naming and duplicate town in the list. -->
 <!-- - Fix road display that does not show to validate road, if it's validated etc. -->
-- Fix roads being unvalidated on new days even if they are OK.
+<!-- - Fix roads being unvalidated on new days even if they are OK. -->
 <!-- - Fix /tr list not displaying any. -->
 
 
