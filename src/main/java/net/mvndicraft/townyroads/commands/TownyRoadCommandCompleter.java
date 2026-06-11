@@ -25,11 +25,13 @@ public class TownyRoadCommandCompleter {
         manager.getCommandCompletions().registerAsyncCompletion("reachable_road_towns_create", c -> {
             CommandSender commandSender = c.getContextValue(CommandSender.class, 0);
             if (commandSender instanceof Player player && playerCanCreate(player)) {
-                return TownyAPI.getInstance().getTowns().stream().filter(t -> !t.isRuined())
-                        .filter(t -> !TownyAPI.getInstance().getTown(player).equals(t)).map(t -> t.getName()).toList();
-            } else {
-                return List.of();
+                Town playerTown = TownyAPI.getInstance().getTown(player);
+                if (playerTown != null) {
+                    return TownyAPI.getInstance().getTowns().stream().filter(t -> !t.isRuined())
+                            .filter(t -> !playerTown.equals(t)).map(t -> t.getName()).toList();
+                }
             }
+            return List.of();
         });
 
         manager.getCommandCompletions().registerAsyncCompletion("next_by_roads_then_empty", c -> {
@@ -51,12 +53,13 @@ public class TownyRoadCommandCompleter {
             CommandSender commandSender = c.getContextValue(CommandSender.class, 0);
             if (commandSender instanceof Player player && TownyUniverse.getInstance().getPermissionSource()
                     .testPermission(player, TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
-                return TownyRoadsPlugin.getInstance().getRoadManager()
-                        .getAcceptableRoadByTown(TownyAPI.getInstance().getTown(player)).stream().map(Road::getName)
-                        .toList();
-            } else {
-                return List.of();
+                Town playerTown = TownyAPI.getInstance().getTown(player);
+                if (playerTown != null) {
+                    return TownyRoadsPlugin.getInstance().getRoadManager().getAcceptableRoadByTown(playerTown).stream()
+                            .map(Road::getName).toList();
+                }
             }
+            return List.of();
         });
 
         manager.getCommandCompletions().registerAsyncCompletion("any_acceptable_road", c -> {
