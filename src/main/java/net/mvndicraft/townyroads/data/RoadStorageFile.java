@@ -24,7 +24,10 @@ public class RoadStorageFile implements RoadStorage {
         Set<Road> roads = ConcurrentHashMap.newKeySet();
         for (File file : roadDataDir.listFiles()) {
             if (file.getName().endsWith(".yml")) {
-                roads.add(load(file));
+                Road road = load(file);
+                if (road != null) {
+                    roads.add(road);
+                }
             }
         }
         return roads;

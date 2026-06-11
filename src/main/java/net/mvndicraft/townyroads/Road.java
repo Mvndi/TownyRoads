@@ -523,14 +523,19 @@ public class Road extends TownyObject {
 
     public static Road fromYml(File file) {
         Configuration config = YamlConfiguration.loadConfiguration(file);
-
-        return new Road(UUID.fromString(config.getString("id")),
-                config.getStringList("towns").stream().map(UUID::fromString)
-                        .map(uuid -> TownyAPI.getInstance().getTown(uuid)).toList(),
-                config.getStringList("toConfirmTowns").stream().map(UUID::fromString)
-                        .map(uuid -> TownyAPI.getInstance().getTown(uuid)).toList(),
-                config.getStringList("chunksCoords").stream().map(ChunkCoord::fromString).collect(Collectors.toSet()),
-                config.getBoolean("valid"));
+        try {
+            return new Road(UUID.fromString(config.getString("id")),
+                    config.getStringList("towns").stream().map(UUID::fromString)
+                            .map(uuid -> TownyAPI.getInstance().getTown(uuid)).filter(t -> t != null).toList(),
+                    config.getStringList("toConfirmTowns").stream().map(UUID::fromString)
+                            .map(uuid -> TownyAPI.getInstance().getTown(uuid)).filter(t -> t != null).toList(),
+                    config.getStringList("chunksCoords").stream().map(ChunkCoord::fromString)
+                            .collect(Collectors.toSet()),
+                    config.getBoolean("valid"));
+        } catch (Exception e) {
+            TownyRoadsPlugin.error("Error while loading road " + file.getName(), e);
+            return null;
+        }
     }
 
     public void toYml(File file) {
