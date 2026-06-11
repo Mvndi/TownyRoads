@@ -38,7 +38,7 @@ public class TownyRoadTownAndNationListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onTownUpkeepCalculationEvent(TownUpkeepCalculationEvent event) {
-        if (!TownyRoadsSettings.getUpkeepEnabled()) {
+        if (!TownyRoadsSettings.getUpkeepEnabled() || event.getUpkeep() == 0.0D) {
             return;
         }
         Town town = event.getTown();
@@ -55,8 +55,12 @@ public class TownyRoadTownAndNationListener implements Listener {
                 TownyRoadsPlugin.warning("onTownUpkeepCalculationEvent " + e.getMessage());
                 townsThatShouldBeConnected = Set.of();
             }
+            int townsThatShouldBeConnectedSize = townsThatShouldBeConnected.size();
+            if (townsThatShouldBeConnectedSize == 0) {
+                return;
+            }
             double connectionScore = TownyRoadsPlugin.getInstance().getRoadManager().countConnected(town,
-                    townsThatShouldBeConnected) / ((double) townsThatShouldBeConnected.size());
+                    townsThatShouldBeConnected) / ((double) townsThatShouldBeConnectedSize);
             double reduction = 1.0D
                     - (connectionScore * TownyRoadsSettings.getTownUpkeepReductionForNationConnectedTowns());
             double newUpkeed = event.getUpkeep() * reduction;
@@ -67,15 +71,19 @@ public class TownyRoadTownAndNationListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onTownUpkeepCalculationEvent(NationUpkeepCalculationEvent event) {
-        if (!TownyRoadsSettings.getUpkeepEnabled()) {
+    public void onNationUpkeepCalculationEvent(NationUpkeepCalculationEvent event) {
+        if (!TownyRoadsSettings.getUpkeepEnabled() || event.getUpkeep() == 0.0D) {
             return;
         }
         Town town = event.getNation().getCapital();
         Collection<Town> townsThatShouldBeConnected = event.getNation().getTowns().stream().filter(t -> !t.equals(town))
                 .toList();
+        int townsThatShouldBeConnectedSize = townsThatShouldBeConnected.size();
+        if (townsThatShouldBeConnectedSize == 0) {
+            return;
+        }
         double connectionScore = TownyRoadsPlugin.getInstance().getRoadManager().countConnected(town,
-                townsThatShouldBeConnected) / ((double) townsThatShouldBeConnected.size());
+                townsThatShouldBeConnected) / ((double) townsThatShouldBeConnectedSize);
         double reduction = 1.0D
                 - (connectionScore * TownyRoadsSettings.getNationUpkeepReductionForNationConnectedTowns());
         double newUpkeed = event.getUpkeep() * reduction;
