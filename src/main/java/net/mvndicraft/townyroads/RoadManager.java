@@ -129,6 +129,9 @@ public class RoadManager {
     public List<Road> getRoadsByTown(Town town) {
         return roads.stream().filter(r -> r.getTownsView().contains(town)).toList();
     }
+    public List<Road> getValidRoadsByTown(Town town) {
+        return roads.stream().filter(r -> r.getTownsView().contains(town) && r.isValid()).toList();
+    }
     public List<Road> getAcceptableRoadByTown(Town town) {
         return roads.stream().filter(r -> r.getToConfirmTownsView().contains(town)).toList();
     }
@@ -214,7 +217,7 @@ public class RoadManager {
             }
 
             int nextDistance = currentDistance + 1;
-            for (Road road : getRoadsByTown(currentTown)) {
+            for (Road road : getValidRoadsByTown(currentTown)) {
                 for (Town connectedTown : road.getTownsView()) {
                     if (connectedTown.equals(startTown) || distances.containsKey(connectedTown)) {
                         continue;
