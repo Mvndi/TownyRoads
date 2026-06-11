@@ -117,12 +117,15 @@ public class Road extends TownyObject {
         return b;
     }
 
-    public Component getDescription() {
+    public Component getDescription(boolean isAdmin) {
         Component description = Component.text(getTownsNames(towns)).appendSpace();
         if (isValid()) {
             description = description.append(Component.text("\u2714"));
         } else {
             description = description.append(Component.text("\u2718"));
+        }
+        if (isAdmin) {
+            description = description.appendSpace().append(Component.text(id.toString())).appendSpace();
         }
         description = description.appendSpace().append(Component.text("(")).append(Component.text(chunksCoordsSize()))
                 .append(Component.text("/")).append(Component.text(maxChunksCoordsSize()))
@@ -133,6 +136,9 @@ public class Road extends TownyObject {
                     .append(Component.translatable("to_confirm")).append(Component.text(")"));
         }
         return description;
+    }
+    public Component getDescription() {
+        return getDescription(false);
     }
 
     // Confirm that the town want to be part of the road

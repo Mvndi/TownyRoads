@@ -40,7 +40,7 @@ public class TownyRoadsCommand extends BaseCommand {
     public static void onTownyRoads(CommandSender commandSender, String roadName) {
         Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
         if (road != null) {
-            Messaging.sendMessage(commandSender, road.getDescription());
+            Messaging.sendMessage(commandSender, road.getDescription(isAdmin(commandSender)));
         }
     }
 
@@ -50,7 +50,7 @@ public class TownyRoadsCommand extends BaseCommand {
         if (commandSender instanceof Player player) {
             Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(player.getLocation());
             if (road != null) {
-                Messaging.sendMessage(commandSender, road.getDescription());
+                Messaging.sendMessage(commandSender, road.getDescription(isAdmin(commandSender)));
             } else {
                 notInRoad(commandSender);
             }
@@ -59,11 +59,17 @@ public class TownyRoadsCommand extends BaseCommand {
         }
     }
 
+    private static boolean isAdmin(CommandSender commandSender) {
+        return TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
+                TownyRoadsPlugin.ADMIN_PERMISSION);
+    }
+
     @Subcommand("list")
     @Description("List roads")
     @Syntax("<page_number>")
     public static void onList(CommandSender commandSender, int page) {
-        Messaging.sendMessage(commandSender, TownyRoadsPlugin.getInstance().getRoadManager().listRoad(page));
+        Messaging.sendMessage(commandSender,
+                TownyRoadsPlugin.getInstance().getRoadManager().listRoad(page, isAdmin(commandSender)));
     }
 
     @Subcommand("list")
