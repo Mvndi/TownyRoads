@@ -32,6 +32,11 @@ If something is wrong with the road, you will have an explanation of what is wro
 
 Until then the road had no effect, once the road is validated, it start having effects.
 
+### Limits
+
+Roads can't be more than 1000 chunk long.
+Roads can't be longer than 2 times the distance of the shortest path between the 2 towns.
+
 ## Roads effects
 
 ### Claim protection
@@ -40,7 +45,7 @@ The player that are not part of the road towns won't be able to break or build m
 This make ambush still possible but make major grief to time consuming.
 Chest or doors can be open without limitation, do not use roads as an extension of a town.
 
-Make sure to give comayor or roadbuilder rank to your resident that are supposed to build the roads.
+Make sure to give `comayor` or a rank with `townyroads.claimed.ownroad.*` permission to your resident that are supposed to build the roads.
 
 ### Upkeep
 
@@ -54,6 +59,17 @@ TownyWaypoints can be configured to allow players to travel, only if there is ro
 ### RoadSpeedMounts
 
 If RoadSpeedMounts is on the server, horse, donkey, mule, camel and player will be faster. Default config make them 2 time faster on roads than on wilderness for the same blocks they are moving on (from +30% to +60% on suspicious gravel for horses for example).
+
+### Bonus chunks
+
+Each connected town provide some bonus chunk to the road.
+It provide 1 chunks per town level of each town connected to the road.
+Same nation towns provide 2 times more bonus chunks.
+Ally nation towns provide 1.5 times more bonus chunks.
+Enemy nation towns provide 0.5 times more bonus chunks.
+
+A town can't have more than 1000 bonus chunks from all connected towns.
+A town can't have more bonus chunks than regular chunks.
 
 ## Extending a road
 
@@ -82,30 +98,9 @@ Translations in English & in French are done by me (Hydrolien), feel free to ope
 
 # TODO
 
-<!-- - Limit the number of chunks of the road based on the distance between the 2 towns: minimal_distance * 1.5 (1.5 being configurable) -->
-<!-- - Implement perms for members of the 2 town. -->
-<!-- - save roads to .yml files or .json files. 1 file per road so that it is fast to save each time a road is being edited. -->
-<!-- - Add 1 to player cooldown value each time a player that does not have TOWNYROADS_CLAIMED_OWNROAD_BLOCK_BUILD permission break or build on a road chunk.
-  - If the player reach max value y, then cancel build & break event & inform the player about the next time he will be able to break and how many block he already break.
-  - Reduce the cooldown of x every t time. -->
-<!-- - give bonus chunks for connected road to a town. -->
-<!-- - translation -->
-<!-- - max the number of bonus block to 1.0 * the default max plot & to brut value. -->
-<!-- - make sure players know when they enter a road claim as when they enter a town claim. -->
-<!-- - display roads into the dynmap in light grey -->
-<!-- - Fix upkeed making /t Medina undisplabable because of null or infinite value. -->
-<!-- - Fix road display on mvndi map "TranslatableComponentImp..." -->
-<!-- - Fix merging road naming and duplicate town in the list. -->
-<!-- - Fix road display that does not show to validate road, if it's validated etc. -->
-<!-- - Fix roads being unvalidated on new days even if they are OK. -->
-<!-- - Fix /tr list not displaying any. -->
-
-
 - Require a minimal amount of suspisous gravel or gravel or suspicious sand or water to be into the road chunks to validate it.
 - Fix oppening chest with an item in hand being concidered as an interact and not a switch.
 - Fix breaking block being count twice because of PlayerInteractEvent.
-<!-- - reduce town taxes if connected to the capital. -->
-<!-- - make speed higher on road in RoadSpeedMounts. -->
 
 ## Statistics
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/TownyRoads.svg)](https://bstats.org/plugin/bukkit/TownyRoads/31859)
