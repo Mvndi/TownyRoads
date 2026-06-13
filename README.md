@@ -101,6 +101,9 @@ Translations in English & in French are done by me (Hydrolien), feel free to ope
 - Require a minimal amount of suspisous gravel or gravel or suspicious sand or water to be into the road chunks to validate it.
 - Fix oppening chest with an item in hand being concidered as an interact and not a switch.
 - Fix breaking block being count twice because of PlayerInteractEvent.
+- Settings to auto accept to join same nation road.
+- Settings to give king & coking the permission to accept roads for town in there nation.
+- command to toggle auto claim for a road that claim a new chunk each time the player enter a new chunks. It stops when the road have max out it's chunks or if the player leave the server.
 
 ## Statistics
 [![bStats Graph Data](https://bstats.org/signatures/bukkit/TownyRoads.svg)](https://bstats.org/plugin/bukkit/TownyRoads/31859)
