@@ -160,7 +160,7 @@ public class RoadManager {
                 // int bonus = (10 - entry.getValue()) * town.getLevelNumber();
                 double bonus = 1.0;
                 if (TownyRoadsSettings.getBonusBlockMultiplyByTownLevel()) {
-                    bonus *= town.getLevelNumber();
+                    bonus *= entry.getKey().getLevelNumber();
                 }
                 Nation townConnectedByRoadNation = null;
                 try {
