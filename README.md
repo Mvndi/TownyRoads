@@ -49,7 +49,7 @@ Make sure to give `comayor` or a rank with `townyroads.claimed.ownroad.*` permis
 
 ### Upkeep
 
-A town connected to it's captial pay 50% upkeep less.
+A town connected to it's capital pay 50% upkeep less.
 A capital connected to other nation towns pay less upkeep, up to 50% if all nation towns are connected. It also make the nation pay up to 50% less upkeep.
 
 ### TownyWaypoints
