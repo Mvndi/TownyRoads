@@ -44,6 +44,8 @@ validate_to_many_chunks: "<road> a trop de chunks: <current_chunks>/<max_chunks>
 validate_connected_towns: "Toutes les villes de <road> doivent être connectées."
 
 success_road_merge: "La route <road2> a été fusionnée dans la route <road1>."
+success_road_create_auto_accepted: "La route <road> a été créée (acceptée automatiquement)."
+success_road_create_need_confirm: "La route <road> a été créée (<town> doit confirmer)."
 success_road_validate: "<road> a été validée."
 success_road_join: "<road> rejoin."
 denied_road_join: "<road> déclinée."

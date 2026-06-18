@@ -44,6 +44,8 @@ validate_to_many_chunks: "<road> have too many chunks: <current_chunks>/<max_chu
 validate_connected_towns: "<road> must have all towns connected including <town>"
 
 success_road_merge: "Road <road2> have been merged into <road1>."
+success_road_create_auto_accepted: "Created road <road> (automatically accepted)."
+success_road_create_need_confirm: "Created road <road> (<town> needs to confirm)."
 success_road_validate: "<road> have been validated."
 success_road_join: "Joined <road>."
 denied_road_join: "Denied <road>."

@@ -86,4 +86,8 @@ public class TownyRoadsSettings {
     public static double getNationUpkeepReductionForNationConnectedTowns() {
         return Settings.getDouble(ConfigNodes.ROADS_NATION_UPKEEP_REDUCTION_FOR_NATION_CONNECTED_TOWNS);
     }
+
+    public static String getRoadsPermissionAutoAccept() {
+        return Settings.getString(ConfigNodes.ROADS_PERMISSION_AUTO_ACCEPT).toLowerCase();
+    }
 }

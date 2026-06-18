@@ -195,8 +195,24 @@ public enum ConfigNodes {
             "# How much the nation upkeep is reduced if a town is connected to it's capital.",
             "# If 2/3 of the town are connected to the captial, the upkeep of the nation will be reduced by nation_connected_towns * 2/3;",
             "# nation_connected_towns need to be between 0.0 and 1.0.",
-            "# Disabled with value of 0.0"
-        
+            "# Disabled with value of 0.0"),
+    ROADS_PERMISSION(
+            "roads.permission",
+            "",
+            "",
+            "############################################################",
+            "# +------------------------------------------------------+ #",
+            "# |                      Permission                      | #",
+            "# +------------------------------------------------------+ #",
+            "############################################################",
+            ""),
+    ROADS_PERMISSION_AUTO_ACCEPT(
+        "roads.permission.auto_accept",
+        "same_nation",
+        "",
+        "# Should a new road be automatically accepted by the other town or not.",
+        "# Possible value: all, neutral, ally, same_nation, none.",
+        "# Disabled with value of none"
     );
     // @formatter:on
 

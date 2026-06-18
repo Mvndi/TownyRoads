@@ -9,6 +9,7 @@ import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
 import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
+import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.Messaging;
 import net.mvndicraft.townyroads.util.TownyUtil;
 import org.bukkit.command.CommandSender;
@@ -108,12 +110,47 @@ public class TownyRoadsCommand extends BaseCommand {
                 Messaging.sendError(commandSender, "err_road_exists");
                 return;
             }
-            Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(towns, List.of(town2));
-            commandSender
-                    .sendMessage("Created road " + road.getName() + " (" + town2.getName() + " needs to confirm).");
+            List<Town> toConfirmTowns = shouldAutoAcceptRoad(playerTown, town2) ? List.of() : List.of(town2);
+            Road road = TownyRoadsPlugin.getInstance().getRoadManager().createRoad(towns, toConfirmTowns);
+            if (toConfirmTowns.isEmpty()) {
+                Messaging.sendSuccess(commandSender, Component.translatable("success_road_create_auto_accepted",
+                        Argument.component("road", Component.text(road.getName()))));
+            } else {
+                Messaging.sendSuccess(commandSender,
+                        Component.translatable("success_road_create_need_confirm",
+                                Argument.component("road", Component.text(road.getName())),
+                                Argument.component("town", Component.text(town2.getName()))));
+            }
         } else {
             notAPlayer(commandSender);
         }
+    }
+
+    private static boolean shouldAutoAcceptRoad(Town town1, Town town2) {
+        return switch (TownyRoadsSettings.getRoadsPermissionAutoAccept()) {
+            case "all" -> true;
+            case "none" -> false;
+            case "same_nation" -> areSameNation(town1, town2);
+            case "ally" -> town1.isAlliedWith(town2);
+            case "neutral" -> !areEnemies(town1, town2);
+            default -> areSameNation(town1, town2);
+        };
+    }
+
+    private static boolean areSameNation(Town town1, Town town2) {
+        Nation nation1 = town1.getNationOrNull();
+        Nation nation2 = town2.getNationOrNull();
+        return nation1 != null && nation1.equals(nation2);
+    }
+
+    private static boolean areEnemies(Town town1, Town town2) {
+        if (town1.hasEnemy(town2) || town2.hasEnemy(town1)) {
+            return true;
+        }
+
+        Nation nation1 = town1.getNationOrNull();
+        Nation nation2 = town2.getNationOrNull();
+        return nation1 != null && nation2 != null && (nation1.hasEnemy(nation2) || nation2.hasEnemy(nation1));
     }
 
     @Subcommand("accept")
