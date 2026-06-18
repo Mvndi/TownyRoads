@@ -10,6 +10,7 @@ import java.util.Objects;
 import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
+import net.mvndicraft.townyroads.permissions.RoadPermissionHandler;
 import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,13 +52,10 @@ public class TownyRoadCommandCompleter {
 
         manager.getCommandCompletions().registerAsyncCompletion("acceptable_road", c -> {
             CommandSender commandSender = c.getContextValue(CommandSender.class, 0);
-            if (commandSender instanceof Player player && TownyUniverse.getInstance().getPermissionSource()
-                    .testPermission(player, TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
-                Town playerTown = TownyAPI.getInstance().getTown(player);
-                if (playerTown != null) {
-                    return TownyRoadsPlugin.getInstance().getRoadManager().getAcceptableRoadByTown(playerTown).stream()
-                            .map(Road::getName).toList();
-                }
+            if (commandSender instanceof Player player) {
+                return TownyRoadsPlugin.getInstance().getRoadManager().getAcceptableRoad().stream()
+                        .filter(road -> RoadPermissionHandler.canAcceptTheRoad(player, road)).map(Road::getName)
+                        .toList();
             }
             return List.of();
         });

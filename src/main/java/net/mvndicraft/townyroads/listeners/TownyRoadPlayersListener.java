@@ -20,7 +20,6 @@ import net.mvndicraft.townyroads.events.PlayerEntersIntoRoadBorderEvent;
 import net.mvndicraft.townyroads.events.PlayerExitsFromRoadBorderEvent;
 import net.mvndicraft.townyroads.events.TitleNotificationRoad;
 import net.mvndicraft.townyroads.permissions.RoadPermissionHandler;
-import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
 import net.mvndicraft.townyroads.util.Messaging;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -42,12 +41,9 @@ public class TownyRoadPlayersListener implements Listener {
             Town playerTown = TownyAPI.getInstance().getTown(event.getPlayer());
             if (playerTown == null || playerTown.isRuined())
                 return;
-            if (!TownyUniverse.getInstance().getPermissionSource().testPermission(event.getPlayer(),
-                    TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
-                return;
-            }
 
-            List<Road> roads = TownyRoadsPlugin.getInstance().getRoadManager().getAcceptableRoadByTown(playerTown);
+            List<Road> roads = TownyRoadsPlugin.getInstance().getRoadManager().getAcceptableRoad().stream()
+                    .filter(road -> RoadPermissionHandler.canAcceptTheRoad(event.getPlayer(), road)).toList();
             for (Road road : roads) {
                 Messaging.sendInviteToRoadMessage(event.getPlayer(), road);
             }

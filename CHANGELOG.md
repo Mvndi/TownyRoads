@@ -1,3 +1,10 @@
+# 0.7.0
+- Make road acceptable by nation leader.
+- Auto accept roads in the same nation (configurable).
+- fix bonus block calculation.
+- Only count valid roads for bonuses.
+etc
+
 # 0.5.1
 Most of the features are now in place.
 

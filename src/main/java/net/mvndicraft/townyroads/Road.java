@@ -1,7 +1,6 @@
 package net.mvndicraft.townyroads;
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyObject;
@@ -23,7 +22,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.translation.Argument;
-import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
+import net.mvndicraft.townyroads.permissions.RoadPermissionHandler;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.ChunkCoordUtil;
 import org.bukkit.configuration.Configuration;
@@ -352,9 +351,7 @@ public class Road extends TownyObject {
      *         confirm.
      */
     public boolean canAcceptTheRoad(Player player) {
-        Town town = TownyAPI.getInstance().getTown(player);
-        return toConfirmTowns.contains(town) && TownyUniverse.getInstance().getPermissionSource().testPermission(player,
-                TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode());
+        return RoadPermissionHandler.canAcceptTheRoad(player, this);
     }
     /**
      * @return true if not already claimed and at least one chunk is nearby or it's the first chunk of the road

@@ -212,7 +212,13 @@ public enum ConfigNodes {
         "",
         "# Should a new road be automatically accepted by the other town or not.",
         "# Possible value: all, neutral, ally, same_nation, none.",
-        "# Disabled with value of none"
+        "# Disabled with value of none"),
+    ROADS_PERMISSION_NATION_LEADERS_CAN_ACCEPT(
+        "roads.permission.nation_leaders_can_accept",
+        "true",
+        "",
+        "# If enabled, kings and co-kings can accept roads for towns in their nation.",
+        "# Disabled with value of false"
     );
     // @formatter:on
 

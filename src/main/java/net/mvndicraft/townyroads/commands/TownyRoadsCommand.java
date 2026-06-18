@@ -18,6 +18,7 @@ import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
+import net.mvndicraft.townyroads.permissions.RoadPermissionHandler;
 import net.mvndicraft.townyroads.permissions.TownyRoadsPermissionNodes;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.Messaging;
@@ -170,9 +171,9 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             }
 
-            if (TownyUniverse.getInstance().getPermissionSource().testPermission(player,
-                    TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
-                road.confirm(playerTown);
+            List<Town> acceptableTowns = RoadPermissionHandler.getAcceptableTowns(player, road);
+            if (!acceptableTowns.isEmpty()) {
+                acceptableTowns.forEach(road::confirm);
                 Messaging.sendAccept(commandSender, Component.translatable("success_road_join",
                         Argument.component("road", Component.text(road.getName()))));
             }
@@ -196,9 +197,9 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             }
 
-            if (TownyUniverse.getInstance().getPermissionSource().testPermission(player,
-                    TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
-                road.deny(playerTown);
+            List<Town> acceptableTowns = RoadPermissionHandler.getAcceptableTowns(player, road);
+            if (!acceptableTowns.isEmpty()) {
+                acceptableTowns.forEach(road::deny);
                 Messaging.sendDeny(commandSender, Component.translatable("denied_road_join",
                         Argument.component("road", Component.text(road.getName()))));
             }

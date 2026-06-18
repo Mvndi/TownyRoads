@@ -1,9 +1,14 @@
 package net.mvndicraft.townyroads.permissions;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.permissions.TownyPermissionSource;
+import java.util.List;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
+import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import org.bukkit.entity.Player;
 
 public class RoadPermissionHandler {
@@ -41,5 +46,37 @@ public class RoadPermissionHandler {
         }
         // player not on the road have a cooldown
         return TownyRoadsPlugin.getInstance().getPlayerCooldownManager().canActThenIncreaseCooldown(player);
+    }
+
+    public static boolean canAcceptRoadForTown(Player player, Town town) {
+        Town playerTown = TownyAPI.getInstance().getTown(player);
+        if (playerTown == null) {
+            return false;
+        }
+        // have mayor permission
+        if (town.equals(playerTown) && TownyUniverse.getInstance().getPermissionSource().testPermission(player,
+                TownyRoadsPermissionNodes.TOWNYROADS_ACCEPT.getNode())) {
+            return true;
+        }
+        Nation playerNation = playerTown.getNationOrNull();
+        Nation townNation = town.getNationOrNull();
+        // have king permission & is king/coking of the same nation.
+        return playerNation != null && townNation != null && playerNation.equals(townNation)
+                && TownyRoadsSettings.getRoadsPermissionNationLeadersCanAccept()
+                && TownyUniverse.getInstance().getPermissionSource().testPermission(player,
+                        TownyRoadsPermissionNodes.TOWNYROADS_NATION_ACCEPT.getNode());
+    }
+
+    public static List<Town> getAcceptableTowns(Player player, Road road) {
+        return road.getToConfirmTownsView().stream().filter(town -> canAcceptRoadForTown(player, town)).toList();
+    }
+
+    public static boolean canAcceptTheRoad(Player player, Road road) {
+        for (Town townInRoad : road.getToConfirmTownsView()) {
+            if (canAcceptRoadForTown(player, townInRoad)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

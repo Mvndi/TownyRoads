@@ -90,4 +90,8 @@ public class TownyRoadsSettings {
     public static String getRoadsPermissionAutoAccept() {
         return Settings.getString(ConfigNodes.ROADS_PERMISSION_AUTO_ACCEPT).toLowerCase();
     }
+
+    public static boolean getRoadsPermissionNationLeadersCanAccept() {
+        return Settings.getBoolean(ConfigNodes.ROADS_PERMISSION_NATION_LEADERS_CAN_ACCEPT);
+    }
 }
