@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.Messaging;
 import org.bukkit.Bukkit;
@@ -59,10 +60,17 @@ public class RoadManager {
     }
 
     public boolean claimRoad(Road road, Player player) {
+        if (road.isValid()) {
+            Messaging.sendMessage(player, Component.translatable("info_road_need_to_be_revalidated",
+                    Argument.component("road", Component.text(road.getName()))));
+        }
         return claimRoad(road, ChunkCoord.from(player.getLocation()));
     }
 
     public boolean claimRoad(Road road, ChunkCoord chunkCoordToClaim) {
+        if (road.isValid()) {
+            road.unvalidate();
+        }
         ChunkCoord chunkCoord = road.claim(chunkCoordToClaim);
 
         if (chunkCoord != null) {
@@ -113,7 +121,16 @@ public class RoadManager {
     }
 
     public void unclaimRoad(Road road, Player player) {
-        ChunkCoord chunkCoord = ChunkCoord.from(player.getLocation());
+        if (road.isValid()) {
+            Messaging.sendMessage(player, Component.translatable("info_road_need_to_be_revalidated",
+                    Argument.component("road", Component.text(road.getName()))));
+        }
+        unclaimRoad(road, ChunkCoord.from(player.getLocation()));
+    }
+    public void unclaimRoad(Road road, ChunkCoord chunkCoord) {
+        if (road.isValid()) {
+            road.unvalidate();
+        }
         road.unclaim(chunkCoord);
         removeFromFastAccess(chunkCoord);
     }

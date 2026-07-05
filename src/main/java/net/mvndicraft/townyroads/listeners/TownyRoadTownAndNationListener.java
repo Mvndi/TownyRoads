@@ -5,11 +5,13 @@ import com.palmergames.bukkit.towny.event.DeleteTownEvent;
 import com.palmergames.bukkit.towny.event.NationUpkeepCalculationEvent;
 import com.palmergames.bukkit.towny.event.NewDayEvent;
 import com.palmergames.bukkit.towny.event.RenameTownEvent;
+import com.palmergames.bukkit.towny.event.TownClaimEvent;
 import com.palmergames.bukkit.towny.event.TownUpkeepCalculationEvent;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.Collection;
 import java.util.Set;
+import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
@@ -23,6 +25,16 @@ public class TownyRoadTownAndNationListener implements Listener {
         Town town = TownyAPI.getInstance().getTown(event.getTownUUID());
         for (Road road : TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(town)) {
             road.removeTown(town);
+        }
+    }
+
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onTownClaimEvent(TownClaimEvent event) {
+        ChunkCoord chunkCoord = ChunkCoord.from(event.getTownBlock().getWorldCoord());
+        Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(chunkCoord);
+        if (road != null) {
+            TownyRoadsPlugin.getInstance().getRoadManager().unclaimRoad(road, chunkCoord);
         }
     }
 

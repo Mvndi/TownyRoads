@@ -263,11 +263,6 @@ public class TownyRoadsCommand extends BaseCommand {
                         Component.translatable("success_road_claim",
                                 Argument.component("number_of_claim", Component.text(1)),
                                 Argument.component("road", Component.text(roadName))));
-                if (road.isValid()) {
-                    road.unvalidate();
-                    Messaging.sendMessage(commandSender, Component.translatable("info_road_need_to_be_revalidated",
-                            Argument.component("road", Component.text(roadName))));
-                }
             } else {
                 Messaging.sendError(commandSender, Component.translatable("err_road_claim_failed",
                         Argument.component("road", Component.text(roadName))));
