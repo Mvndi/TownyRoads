@@ -13,11 +13,11 @@ plugins {
 }
 
 group = "net.mvndicraft.townyroads"
-version = "0.7.0"
+version = "0.7.1"
 description = "Add roads to Towny"
 var mainMinecraftVersion = "1.21.11"
 val supportedMinecraftVersions = "1.20 - 1.21.11"
-val townyVersion = "0.103.0.0"
+val townyVersion = "0.103.0.5"
 val mapTownyVersion = "2.2.0" // "v3.0.0-alpha-4"
 val coreprotectVersion = "23.1"
 val squaremapVersion = "1.3.12"
