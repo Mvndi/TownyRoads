@@ -258,6 +258,10 @@ public class TownyRoadsCommand extends BaseCommand {
                 Messaging.sendError(commandSender, "err_road_cant_claim_here");
                 return;
             }
+            if (TownyAPI.getInstance().getTown(player.getLocation()) != null) {
+                Messaging.sendError(commandSender, "err_no_road_in_town");
+                return;
+            }
             if (TownyRoadsPlugin.getInstance().getRoadManager().claimRoad(road, player)) {
                 Messaging.sendSuccess(commandSender,
                         Component.translatable("success_road_claim",
