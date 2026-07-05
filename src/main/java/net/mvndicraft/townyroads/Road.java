@@ -62,6 +62,9 @@ public class Road extends TownyObject {
         this.chunksCoords = new HashSet<>(chunksCoords);
         this.chunksCoordsView = Collections.unmodifiableSet(this.chunksCoords);
         this.valid = valid;
+        if (valid) {
+            validate();
+        }
     }
 
     public UUID getId() {
