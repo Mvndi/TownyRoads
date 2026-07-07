@@ -186,4 +186,10 @@ public class TownyRoadsAdminCommand extends BaseCommand {
     public static void onListCooldowns(CommandSender commandSender) {
         commandSender.sendMessage(TownyRoadsPlugin.getInstance().getPlayerCooldownManager().toString());
     }
+
+    @Subcommand("revalidateAllValidatedRoads")
+    @Description("Revalidate all validated roads")
+    public static void onRevalidateAllValidatedRoads(CommandSender commandSender) {
+        TownyRoadsPlugin.getInstance().getRoadManager().revalidateAllValidatedRoads();
+    }
 }
