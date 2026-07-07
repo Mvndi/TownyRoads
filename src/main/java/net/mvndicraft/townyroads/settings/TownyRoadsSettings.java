@@ -62,6 +62,9 @@ public class TownyRoadsSettings {
     public static String getDynmapRoadColor() {
         return Settings.getString(ConfigNodes.ROADS_DYNMAP_ROAD_COLOR);
     }
+    public static String getDynmapBlockedRoadColor() {
+        return Settings.getString(ConfigNodes.ROADS_DYNMAP_BLOCKED_ROAD_COLOR);
+    }
 
     public static int getDynmapRefreshFrequency() {
         return Settings.getInt(ConfigNodes.ROADS_DYNMAP_REFRESH_FREQUENCY);

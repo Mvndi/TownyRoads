@@ -170,6 +170,10 @@ public class TownyRoadsCommand extends BaseCommand {
                 roadNotFound(commandSender, roadName);
                 return;
             }
+            if (road.isBlocked()) {
+                Messaging.sendError(commandSender, "err_road_blocked");
+                return;
+            }
 
             List<Town> acceptableTowns = RoadPermissionHandler.getAcceptableTowns(player, road);
             if (!acceptableTowns.isEmpty()) {
@@ -229,6 +233,10 @@ public class TownyRoadsCommand extends BaseCommand {
                 Messaging.sendError(commandSender, "err_not_in_road_towns");
                 return;
             }
+            if (road.isBlocked()) {
+                Messaging.sendError(commandSender, "err_road_blocked");
+                return;
+            }
             road.removeTown(playerTown);
             Messaging.sendSuccess(player,
                     Component.translatable("success_leave_road", Argument.component("road", Component.text(roadName))));
@@ -248,6 +256,10 @@ public class TownyRoadsCommand extends BaseCommand {
             }
             if (!road.isAPlayerOfTheRoad(player)) {
                 Messaging.sendError(commandSender, "err_not_in_road_towns");
+                return;
+            }
+            if (road.isBlocked()) {
+                Messaging.sendError(commandSender, "err_road_blocked");
                 return;
             }
             if (!road.canClaimMore()) {
@@ -289,6 +301,10 @@ public class TownyRoadsCommand extends BaseCommand {
                 Messaging.sendError(commandSender, "err_not_in_road_towns");
                 return;
             }
+            if (road.isBlocked()) {
+                Messaging.sendError(commandSender, "err_road_blocked");
+                return;
+            }
             if (!road.canUnclaimHere(ChunkCoord.from(player.getLocation()))) {
                 Messaging.sendError(commandSender, Component.translatable("err_road_unclaim_failed_because_split",
                         Argument.component("road", (Component.text(road.getName())))));
@@ -316,6 +332,10 @@ public class TownyRoadsCommand extends BaseCommand {
         if (!TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
                 TownyRoadsPermissionNodes.TOWNYROADS_VALIDATE.getNode())) {
             Messaging.sendError(commandSender, "err_no_permission_to_validate_road");
+            return;
+        }
+        if (road.isBlocked()) {
+            Messaging.sendError(commandSender, "err_road_blocked");
             return;
         }
         Optional<Component> error = road.validate();

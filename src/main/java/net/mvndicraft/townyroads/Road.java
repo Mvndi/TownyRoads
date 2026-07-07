@@ -38,6 +38,7 @@ public class Road extends TownyObject {
     private final Set<ChunkCoord> chunksCoords;
     private final Set<ChunkCoord> chunksCoordsView;
     private boolean valid;
+    private boolean blocked;
 
     public Road(List<Town> towns, List<Town> toConfirmTowns) {
         super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
@@ -49,10 +50,12 @@ public class Road extends TownyObject {
         this.chunksCoords = new HashSet<>();
         this.chunksCoordsView = Collections.unmodifiableSet(this.chunksCoords);
         valid = false;
+        blocked = false;
     }
 
     // Used to load from file.
-    private Road(UUID id, List<Town> towns, List<Town> toConfirmTowns, Set<ChunkCoord> chunksCoords, boolean valid) {
+    private Road(UUID id, List<Town> towns, List<Town> toConfirmTowns, Set<ChunkCoord> chunksCoords, boolean valid,
+            boolean blocked) {
         super(towns.stream().map(Town::getName).collect(Collectors.joining(",")));
         this.id = id;
         this.towns = new ArrayList<>(towns);
@@ -62,6 +65,7 @@ public class Road extends TownyObject {
         this.chunksCoords = new HashSet<>(chunksCoords);
         this.chunksCoordsView = Collections.unmodifiableSet(this.chunksCoords);
         this.valid = valid;
+        this.blocked = blocked;
         if (valid) {
             validate();
         }
@@ -126,6 +130,9 @@ public class Road extends TownyObject {
         } else {
             description = description.append(Component.text("\u2718"));
         }
+        if (isBlocked()) {
+            description = description.appendSpace().append(Component.text("\uD83D\uDEAB"));
+        }
         if (isAdmin) {
             description = description.appendSpace().append(Component.text(id.toString())).appendSpace();
         }
@@ -184,7 +191,16 @@ public class Road extends TownyObject {
         if (!force) {
             // Need this road to be valid.
             if (!isValid()) {
-                return Optional.of(Component.text(getName() + " is not valid. Use `/tr validate` first."));
+                return Optional.of(Component
+                        .translatable("err_road_invalid", Argument.component("road", Component.text(getName())))
+                        .appendSpace().append(Component.text("`/tr validate`")));
+            }
+            if (road.isBlocked()) {
+                return Optional.of(Component.translatable("err_road_blocked",
+                        Argument.component("road", Component.text(road.getName()))));
+            } else if (isBlocked()) {
+                return Optional.of(Component.translatable("err_road_blocked",
+                        Argument.component("road", Component.text(getName()))));
             }
             // At least 1 town need to be common
             if (towns.stream().noneMatch(road.towns::contains)) {
@@ -304,6 +320,15 @@ public class Road extends TownyObject {
 
     public void unvalidate() {
         valid = false;
+        TownyRoadsPlugin.getInstance().getRoadManager().updateTownBonusBlock(this);
+        TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
         TownyRoadsPlugin.getInstance().getRoadManager().updateTownBonusBlock(this);
         TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
     }
@@ -531,7 +556,7 @@ public class Road extends TownyObject {
                             .map(uuid -> TownyAPI.getInstance().getTown(uuid)).filter(t -> t != null).toList(),
                     config.getStringList("chunksCoords").stream().map(ChunkCoord::fromString)
                             .collect(Collectors.toSet()),
-                    config.getBoolean("valid"));
+                    config.getBoolean("valid", false), config.getBoolean("blocked", false));
         } catch (Exception e) {
             TownyRoadsPlugin.error("Error while loading road " + file.getName(), e);
             return null;
@@ -545,6 +570,7 @@ public class Road extends TownyObject {
         config.set("toConfirmTowns", this.toConfirmTowns.stream().map(Town::getUUID).map(UUID::toString).toList());
         config.set("chunksCoords", this.chunksCoords.stream().sorted().map(ChunkCoord::toString).toList());
         config.set("valid", this.valid);
+        config.set("blocked", this.blocked);
 
         try {
             config.save(file);

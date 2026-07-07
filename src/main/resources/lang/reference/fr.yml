@@ -27,6 +27,7 @@ err_road_exists: "Une route existe déjà connectant les deux villes."
 err_not_in_both_roads: "Vous devez être dans une des villes des deux routes."
 err_merge_failed: "Fusion échouée."
 err_road_invalid: "La route <road> est invalide."
+err_road_blocked: "La route <road> est bloquée."
 err_road_not_found: "La route <road> n'a pas été trouvée."
 err_not_in_road_towns: "Vous devez être dans une des villes de la route."
 err_road_can_t_claim_more: "Vous ne pouvez pas revendiquer plus de chunks sur cette route."
@@ -56,3 +57,6 @@ success_road_unclaim: "<number_of_unclaim> chunk(s) de plus dérevendiqué sur l
 
 info_road_need_to_be_revalidated: "<road> doit être validée à nouveau."
 info_invite_to_road: "Vous avez été invité à la route <road>."
+
+info_road_unblocked: "La route <road> a été débloquée."
+info_road_blocked: "La route <road> a été bloquée."

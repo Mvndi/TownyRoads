@@ -27,6 +27,7 @@ err_road_exists: "A road already exists connecting both towns."
 err_not_in_both_roads: "You must be in one of the towns of both roads."
 err_merge_failed: "Merge failed."
 err_road_invalid: "Road <road> is invalid."
+err_road_blocked: "Road <road> is blocked."
 err_road_not_found: "Road <road> not found."
 err_not_in_road_towns: "You must be in one of the towns of the road."
 err_road_can_t_claim_more: "You can't claim more chunks on this road."
@@ -56,3 +57,6 @@ success_road_unclaim: "Unclaimed <number_of_unclaim> more chunk(s) on the road <
 
 info_road_need_to_be_revalidated: "<road> need to be validated again."
 info_invite_to_road: "You have been invited to the road <road>."
+
+info_road_unblocked: "Route <road> have been unblocked."
+info_road_blocked: "Road <road> have been blocked."

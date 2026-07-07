@@ -146,6 +146,12 @@ public enum ConfigNodes {
             "",
             "# The color of the road in the dynmap.",
             "# Need to be a hex code."),
+    ROADS_DYNMAP_BLOCKED_ROAD_COLOR(
+            "roads.dynmap.road_color",
+            "D60F0D",
+            "",
+            "# The color of the road in the dynmap.",
+            "# Need to be a hex code."),
     ROADS_DYNMAP_REFRESH_FREQUENCY(
             "roads.dynmap.refresh_frequency",
             "60",

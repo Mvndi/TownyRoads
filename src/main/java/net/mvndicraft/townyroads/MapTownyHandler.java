@@ -81,7 +81,8 @@ public class MapTownyHandler {
     }
 
     private MarkerOptions roadMarkerOptions(Road road) {
-        Color color = new Color(Integer.parseInt(TownyRoadsSettings.getDynmapRoadColor(), 16));
+        Color color = new Color(Integer.parseInt(road.isBlocked() ? TownyRoadsSettings.getDynmapBlockedRoadColor()
+                : TownyRoadsSettings.getDynmapRoadColor(), 16));
         String description = plainText(road.getDescription());
         return MarkerOptions.builder().name(road.getName()).stroke(true).strokeColor(color)
                 .strokeWeight(TownyRoadsSettings.getDynmapRoadStrokeWeight()).strokeOpacity(1.0).fill(true)

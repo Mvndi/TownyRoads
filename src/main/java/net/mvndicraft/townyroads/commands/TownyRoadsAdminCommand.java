@@ -12,6 +12,7 @@ import com.palmergames.bukkit.towny.object.Town;
 import java.util.List;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
 import net.mvndicraft.townyroads.util.Messaging;
@@ -191,5 +192,25 @@ public class TownyRoadsAdminCommand extends BaseCommand {
     @Description("Revalidate all validated roads")
     public static void onRevalidateAllValidatedRoads(CommandSender commandSender) {
         TownyRoadsPlugin.getInstance().getRoadManager().revalidateAllValidatedRoads();
+    }
+
+    @Subcommand("switchBlocked")
+    @Description("Block or unblock a road")
+    @CommandCompletion("@road @empty")
+    public static void onSwitchBlocked(CommandSender commandSender, String roadName) {
+        Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+        if (road == null)
+            return;
+
+        if (road.isBlocked()) {
+            road.setBlocked(false);
+            commandSender.sendMessage(Component.translatable("info_road_unblocked",
+                    Argument.component("road", Component.text(road.getName()))));
+        } else {
+            road.setBlocked(true);
+            commandSender.sendMessage(Component.translatable("info_road_blocked",
+                    Argument.component("road", Component.text(road.getName()))));
+        }
+
     }
 }
