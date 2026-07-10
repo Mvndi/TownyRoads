@@ -1,3 +1,9 @@
+# 1.0.0
+- Events priority fix 
+
+# 0.8.0
+- Allow to block roads.
+
 # 0.7.0
 - Make road acceptable by nation leader.
 - Auto accept roads in the same nation (configurable).

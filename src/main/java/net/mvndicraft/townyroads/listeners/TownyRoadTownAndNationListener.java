@@ -20,7 +20,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 public class TownyRoadTownAndNationListener implements Listener {
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onTownDeleted(DeleteTownEvent event) {
         Town town = TownyAPI.getInstance().getTown(event.getTownUUID());
         for (Road road : TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(town)) {
@@ -43,7 +43,7 @@ public class TownyRoadTownAndNationListener implements Listener {
         TownyRoadsPlugin.getInstance().getRoadManager().revalidateAllValidatedRoads();
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onTownNameChange(RenameTownEvent event) {
         TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(event.getTown()).forEach(Road::updateRoadName);
     }

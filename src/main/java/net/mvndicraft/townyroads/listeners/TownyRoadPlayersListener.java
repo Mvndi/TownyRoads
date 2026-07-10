@@ -51,7 +51,7 @@ public class TownyRoadPlayersListener implements Listener {
     }
 
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBuild(BlockPlaceEvent event) {
         if (!TownyAPI.getInstance().isTownyWorld(event.getPlayer().getWorld()))
             return;
@@ -63,7 +63,7 @@ public class TownyRoadPlayersListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onDestroy(BlockBreakEvent event) {
         if (!TownyAPI.getInstance().isTownyWorld(event.getPlayer().getWorld()))
             return;
@@ -75,7 +75,7 @@ public class TownyRoadPlayersListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onItemUse(PlayerInteractEvent event) {
         if (!TownyAPI.getInstance().isTownyWorld(event.getPlayer().getWorld()))
             return;
