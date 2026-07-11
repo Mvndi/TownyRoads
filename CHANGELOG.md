@@ -1,3 +1,6 @@
+# 1.0.1
+- fix `/tra kick`
+
 # 1.0.0
 - Events priority fix 
 
