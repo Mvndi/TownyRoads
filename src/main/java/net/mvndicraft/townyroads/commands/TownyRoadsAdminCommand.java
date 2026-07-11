@@ -127,8 +127,11 @@ public class TownyRoadsAdminCommand extends BaseCommand {
         Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
         if (road == null)
             return;
-        TownyRoadsPlugin.getInstance().getRoadManager().deleteRoad(road);
-        commandSender.sendMessage("Deleted road " + roadName);
+        Town town = TownyUtil.getTownFromNameOrNull(commandSender, townName);
+        if (town == null)
+            return;
+        road.removeTown(town);
+        commandSender.sendMessage("Kick road " + roadName);
     }
 
     @Subcommand("validate")
