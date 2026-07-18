@@ -1,0 +1,62 @@
+name: TownyRoads
+language: turkish
+author: Aleg_06
+website: 'https://mvndicraft.net/'
+description: >
+  Language file for all game messages.  Do not alter this file. If you wish to change any of the entries, make a copy named something else. Alternate language files can be enabled by altering the [language] entry in config.yml
+#You MUST retain spacing in the texts.
+#If a text begins or ends with a space, it must remain that way.
+
+townyroads_plugin_prefix: "[TownyRoads]"
+
+":": ":"
+roads_list: "Yol Listesi"
+chunks: "chunks"
+to_confirm: "onay bekleniyor"
+
+err_command_sender_not_a_player: "Bu komutu yalnızca bir oyuncu kullanabilir."
+err_player_not_in_road: "Bir yol üzerinde değilsiniz."
+err_player_not_in_town: "Bir kasabada değilsiniz."
+err_same_town: "Kasabalar farklı olmalıdır."
+err_same_road: "Yollar farklı olmalıdır."
+err_no_permission_to_create_road: "Yol oluşturma izniniz yok."
+err_no_permission_to_delete_road: "Yoldan ayrılma izniniz yok."
+err_no_permission_to_merge_road: "Yolları birleştirme izniniz yok."
+err_no_permission_to_validate_road: "Yolu doğrulama izniniz yok."
+err_road_exists: "Bu iki kasabayı birbirine bağlayan bir yol zaten mevcut."
+err_not_in_both_roads: "Her iki yolun da bağlı olduğu kasabalardan birinde bulunmalısınız."
+err_merge_failed: "Yollar birleştirilemedi."
+err_road_invalid: "Yol <road> geçersiz."
+err_road_blocked: "Yol <road> engellenmiş."
+err_road_not_found: "Yol <road> bulunamadı."
+err_not_in_road_towns: "Yolun bağlı olduğu kasabalardan birinde bulunmalısınız."
+err_road_can_t_claim_more: "Bu yol için daha fazla chunk sahiplenemezsiniz."
+err_road_cant_claim_here: "Burada chunk sahiplenemezsiniz. Bu chunk zaten sahiplenilmiş veya yoldan çok uzakta."
+err_no_road_in_town: "Burada chunk sahiplenemezsiniz. Bu chunk bir kasabanın içinde."
+err_road_claim_failed: "Yol <road> için yeni bir chunk sahiplenilemedi."
+err_road_unclaim_failed_because_split: "Buradaki chunk bırakılamaz. Aksi halde <road> yolu ikiye bölünür."
+err_town_does_not_exist: "Kasaba <town> mevcut değil."
+err_town_is_ruined: "Kasaba <town> harabe durumunda."
+err_road_does_not_exist: "Yol <road> mevcut değil."
+
+validate_not_confirmed: "<road> yolunda henüz onay vermemiş kasabalar var: <to_confirm_towns>."
+validate_at_least_2_towns: "<road> en az 2 kasabadan oluşmalıdır."
+validate_connected_chunks: "<road> üzerindeki tüm yol chunk'ları birbirine bağlı olmalıdır."
+validate_to_many_chunks: "<road> çok fazla chunk içeriyor: <current_chunks>/<max_chunks>."
+validate_connected_towns: "<road> üzerindeki tüm kasabalar, <town> dahil, birbirine bağlı olmalıdır."
+
+success_road_merge: "<road2> yolu <road1> yoluyla birleştirildi."
+success_road_create_auto_accepted: "<road> yolu oluşturuldu (otomatik olarak kabul edildi)."
+success_road_create_need_confirm: "<road> yolu oluşturuldu (<town> kasabasının onayı bekleniyor)."
+success_road_validate: "<road> doğrulandı."
+success_road_join: "<road> yoluna katıldınız."
+denied_road_join: "<road> yolu reddedildi."
+success_leave_road: "<road> yolundan ayrıldınız."
+success_road_claim: "<road> yolu için <number_of_claim> adet ek chunk sahiplenildi."
+success_road_unclaim: "<road> yolu için <number_of_unclaim> adet chunk sahiplenmesi kaldırıldı."
+
+info_road_need_to_be_revalidated: "<road> yolunun yeniden doğrulanması gerekiyor."
+info_invite_to_road: "<road> yoluna davet edildiniz."
+
+info_road_unblocked: "<road> yolunun engeli kaldırıldı."
+info_road_blocked: "<road> yolu engellendi."
