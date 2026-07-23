@@ -1,3 +1,6 @@
+# 1.0.2
+- Add turkish translation
+
 # 1.0.1
 - fix `/tra kick`
 
