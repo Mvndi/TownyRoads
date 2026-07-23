@@ -1,4 +1,5 @@
 # 1.0.2
+- Allow to run command with road id instead of road name
 - Add turkish translation
 
 # 1.0.1

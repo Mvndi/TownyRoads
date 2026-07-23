@@ -41,7 +41,7 @@ public class TownyRoadsCommand extends BaseCommand {
     @CommandCompletion("@road @empty")
     @Syntax("<road>")
     public static void onTownyRoads(CommandSender commandSender, String roadName) {
-        Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+        Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
         if (road != null) {
             Messaging.sendMessage(commandSender, road.getDescription(isAdmin(commandSender)));
         }
@@ -165,7 +165,7 @@ public class TownyRoadsCommand extends BaseCommand {
                 notInTown(commandSender);
                 return;
             }
-            Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+            Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
             if (road == null) {
                 roadNotFound(commandSender, roadName);
                 return;
@@ -195,7 +195,7 @@ public class TownyRoadsCommand extends BaseCommand {
                 notInTown(commandSender);
                 return;
             }
-            Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+            Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
             if (road == null) {
                 roadNotFound(commandSender, roadName);
                 return;
@@ -215,7 +215,7 @@ public class TownyRoadsCommand extends BaseCommand {
     @CommandCompletion("@road_player_town_is_in @empty")
     @Syntax("<road>")
     public static void onLeave(CommandSender commandSender, String roadName) {
-        Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+        Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
         if (road == null)
             return;
         if (!TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
@@ -249,7 +249,7 @@ public class TownyRoadsCommand extends BaseCommand {
     @Syntax("<road>")
     public static void onClaim(CommandSender commandSender, String roadName) {
         if (commandSender instanceof Player player) {
-            Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+            Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
             if (road == null) {
                 roadNotFound(commandSender, roadName);
                 return;
@@ -326,7 +326,7 @@ public class TownyRoadsCommand extends BaseCommand {
     @CommandCompletion("@road_player_town_is_in @empty")
     @Syntax("<road>")
     public static void onValidate(CommandSender commandSender, String roadName) {
-        Road road = TownyUtil.getRoadFromNameOrNull(commandSender, roadName);
+        Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
         if (road == null)
             return;
         if (!TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
@@ -355,10 +355,10 @@ public class TownyRoadsCommand extends BaseCommand {
     @Syntax("<road> <road>")
     public static void onMerge(CommandSender commandSender, String roadName1, String roadName2) {
         if (commandSender instanceof Player player) {
-            Road road1 = TownyUtil.getRoadFromNameOrNull(commandSender, roadName1);
+            Road road1 = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName1);
             if (road1 == null)
                 return;
-            Road road2 = TownyUtil.getRoadFromNameOrNull(commandSender, roadName2);
+            Road road2 = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName2);
             if (road2 == null)
                 return;
 

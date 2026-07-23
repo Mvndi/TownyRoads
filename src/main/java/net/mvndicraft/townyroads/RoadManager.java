@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import net.kyori.adventure.text.Component;
@@ -45,6 +46,15 @@ public class RoadManager {
     public @Nullable Road getRoadByName(String roadName) {
         for (Road road : roads) {
             if (road.getName().equals(roadName)) {
+                return road;
+            }
+        }
+        return null;
+    }
+
+    public @Nullable Road getRoadByUUID(UUID roadUUID) {
+        for (Road road : roads) {
+            if (road.getId().equals(roadUUID)) {
                 return road;
             }
         }
