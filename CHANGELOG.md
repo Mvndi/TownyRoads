@@ -1,3 +1,6 @@
+# 1.0.3
+- Unvalidated roads can be overclaim
+
 # 1.0.2
 - Allow to run command with road id instead of road name
 - Add turkish translation

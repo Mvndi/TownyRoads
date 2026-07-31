@@ -110,7 +110,13 @@ public class Road extends TownyObject {
 
 
     public ChunkCoord claim(ChunkCoord chunkCoord) {
-        if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(chunkCoord) == null) {
+        Road here = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(chunkCoord);
+        // Unvalid road can be overclaim.
+        if (here != null && !here.isValid()) {
+            here.unclaim(chunkCoord);
+            here = null;
+        }
+        if (here == null) {
             chunksCoords.add(chunkCoord);
             TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
             return chunkCoord;
