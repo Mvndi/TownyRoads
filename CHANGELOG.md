@@ -1,3 +1,6 @@
+# 1.0.5
+Support from 1.20 to 26.2.
+
 # 1.0.4
 - Towns that fall into ruins are removed from any road
 

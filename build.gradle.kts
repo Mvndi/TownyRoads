@@ -13,10 +13,10 @@ plugins {
 }
 
 group = "net.mvndicraft.townyroads"
-version = "1.0.4"
+version = "1.0.5"
 description = "Add roads to Towny"
 var mainMinecraftVersion = "1.21.11"
-val supportedMinecraftVersions = "1.20 - 26.1.2"
+val supportedMinecraftVersions = "1.20 - 26.2"
 val townyVersion = "0.103.0.0"
 val mapTownyVersion = "2.2.0" // "v3.0.0-alpha-4"
 val coreprotectVersion = "23.1"
@@ -266,7 +266,8 @@ fun expandMinecraftVersions(range: String): List<String> {
     val latestPatches = linkedMapOf(
         "1.20" to 6,
         "1.21" to 11,
-        "26.1" to 2
+        "26.1" to 2,
+        "26.2" to 0
     )
 
     data class Version(
