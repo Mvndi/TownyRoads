@@ -7,6 +7,7 @@ import com.palmergames.bukkit.towny.event.NewDayEvent;
 import com.palmergames.bukkit.towny.event.RenameTownEvent;
 import com.palmergames.bukkit.towny.event.TownClaimEvent;
 import com.palmergames.bukkit.towny.event.TownUpkeepCalculationEvent;
+import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.Collection;
@@ -22,7 +23,15 @@ import org.bukkit.event.Listener;
 public class TownyRoadTownAndNationListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onTownDeleted(DeleteTownEvent event) {
-        Town town = TownyAPI.getInstance().getTown(event.getTownUUID());
+        removeTownFromAllRoads(TownyAPI.getInstance().getTown(event.getTownUUID()));
+
+    }
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onTownRuined(TownRuinedEvent event) {
+        removeTownFromAllRoads(event.getTown());
+    }
+
+    private void removeTownFromAllRoads(Town town) {
         for (Road road : TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(town)) {
             road.removeTown(town);
         }

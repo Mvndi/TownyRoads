@@ -1,3 +1,6 @@
+# 1.0.4
+- Towns that fall into ruins are removed from any road
+
 # 1.0.3
 - Unvalidated roads can be overclaim
 
