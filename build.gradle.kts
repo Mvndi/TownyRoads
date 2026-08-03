@@ -38,6 +38,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mainMinecraftVersion-R0.1-SNAPSHOT")
+    // compileOnly("io.papermc.paper:paper-api:$mainMinecraftVersion.build.+")
     // paperweight.paperDevBundle("$mainMinecraftVersion-R0.1-SNAPSHOT")
     // compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0") // TODO to remove when paper weight latest version will be fixed. It's supposed to be in paperweight.
     
