@@ -25,6 +25,12 @@ public class RoadStorageFile implements RoadStorage {
         for (File file : roadDataDir.listFiles()) {
             if (file.getName().endsWith(".yml")) {
                 Road road = load(file);
+                if (road.getTownsView().size() < 2) { // uncorrect roads can be deleted here
+                    TownyRoadsPlugin.warning("Deleting uncorrect road with less than 2 towns" + road.getId() + " "
+                            + road.getTownsView());
+                    delete(road);
+                    road = null;
+                }
                 if (road != null) {
                     roads.add(road);
                 }
