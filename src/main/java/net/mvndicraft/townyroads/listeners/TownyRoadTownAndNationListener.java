@@ -4,7 +4,6 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.DeleteTownEvent;
 import com.palmergames.bukkit.towny.event.NationUpkeepCalculationEvent;
 import com.palmergames.bukkit.towny.event.NewDayEvent;
-import com.palmergames.bukkit.towny.event.RenameTownEvent;
 import com.palmergames.bukkit.towny.event.TownClaimEvent;
 import com.palmergames.bukkit.towny.event.TownUpkeepCalculationEvent;
 import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
@@ -32,8 +31,10 @@ public class TownyRoadTownAndNationListener implements Listener {
     }
 
     private void removeTownFromAllRoads(Town town) {
+        TownyRoadsPlugin.debug("Removing " + town.getName() + " from all roads");
         for (Road road : TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(town)) {
             road.removeTown(town);
+            TownyRoadsPlugin.debug("Removed " + town.getName() + " from road " + road.getName() + " " + road.getId());
         }
     }
 
@@ -50,11 +51,6 @@ public class TownyRoadTownAndNationListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onNewDay(NewDayEvent event) {
         TownyRoadsPlugin.getInstance().getRoadManager().revalidateAllValidatedRoads();
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onTownNameChange(RenameTownEvent event) {
-        TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(event.getTown()).forEach(Road::updateRoadName);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
