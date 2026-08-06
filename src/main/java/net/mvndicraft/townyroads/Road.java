@@ -302,6 +302,7 @@ public class Road extends TownyObject {
         return valid;
     }
     public Optional<Component> validate(boolean force) {
+        removeDeletedAndRuinedTowns();
         removeChunksInTowns();
 
         if (!force) {
@@ -486,6 +487,18 @@ public class Road extends TownyObject {
         chunksCoords.removeAll(toRemove);
         TownyRoadsPlugin.getInstance().getRoadManager().removeFromFastAccess(toRemove);
         TownyRoadsPlugin.getInstance().getRoadStorage().saveSoon(this);
+    }
+
+    public void removeDeletedAndRuinedTowns() {
+        Set<Town> townsToRemove = new HashSet<>();
+        for (Town town : towns) {
+            if (town.isRuined() || TownyAPI.getInstance().getTown(town.getName()) == null) {
+                townsToRemove.add(town);
+            }
+        }
+        for (Town town : townsToRemove) {
+            removeTown(town);
+        }
     }
 
 
