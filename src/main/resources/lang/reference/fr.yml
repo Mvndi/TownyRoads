@@ -43,7 +43,7 @@ validate_not_confirmed: "<road> a des villes qui n'ont pas encore confirmé: <to
 validate_at_least_2_towns: "<road> doit avoir au moins 2 villes."
 validate_connected_chunks: "Tout les chunks de <road> doivent être connectés."
 validate_to_many_chunks: "<road> a trop de chunks: <current_chunks>/<max_chunks>."
-validate_connected_towns: "Toutes les villes de <road> doivent être connectées."
+validate_connected_towns: "Toutes les villes de <road> doivent être connectées, y compris <town>."
 
 success_road_merge: "La route <road2> a été fusionnée dans la route <road1>."
 success_road_create_auto_accepted: "La route <road> a été créée (acceptée automatiquement)."
