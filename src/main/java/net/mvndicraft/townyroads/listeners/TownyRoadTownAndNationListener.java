@@ -1,9 +1,9 @@
 package net.mvndicraft.townyroads.listeners;
 
-import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.DeleteTownEvent;
 import com.palmergames.bukkit.towny.event.NationUpkeepCalculationEvent;
 import com.palmergames.bukkit.towny.event.NewDayEvent;
+import com.palmergames.bukkit.towny.event.PreDeleteTownEvent;
 import com.palmergames.bukkit.towny.event.TownClaimEvent;
 import com.palmergames.bukkit.towny.event.TownUpkeepCalculationEvent;
 import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
@@ -11,6 +11,7 @@ import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
@@ -22,19 +23,27 @@ import org.bukkit.event.Listener;
 public class TownyRoadTownAndNationListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onTownDeleted(DeleteTownEvent event) {
-        removeTownFromAllRoads(TownyAPI.getInstance().getTown(event.getTownUUID()));
-
+        removeTownFromAllRoads(event.getTownUUID());
     }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onTownPreDeleted(PreDeleteTownEvent event) {
+        removeTownFromAllRoads(event.getTown());
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onTownRuined(TownRuinedEvent event) {
         removeTownFromAllRoads(event.getTown());
     }
 
     private void removeTownFromAllRoads(Town town) {
-        TownyRoadsPlugin.debug("Removing " + town.getName() + " from all roads");
         for (Road road : TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTown(town)) {
             road.removeTown(town);
-            TownyRoadsPlugin.debug("Removed " + town.getName() + " from road " + road.getName() + " " + road.getId());
+        }
+    }
+    private void removeTownFromAllRoads(UUID townUUID) {
+        for (Road road : TownyRoadsPlugin.getInstance().getRoadManager().getRoadsByTownUUID(townUUID)) {
+            road.removeDeletedAndRuinedTowns();
         }
     }
 

@@ -1,7 +1,8 @@
 # 1.0.6
 - Make sure road name is aways right.
-- Remove ruined or deleted towns before validating
-- fix 1 line in french translation
+- Remove ruined or deleted towns before validating.
+- Fix town not being removed from road when the town was deleted.
+- Fix 1 line in french translation.
 
 # 1.0.5
 - Support from 1.20 to 26.2.

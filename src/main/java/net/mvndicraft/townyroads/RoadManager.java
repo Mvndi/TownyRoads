@@ -156,6 +156,10 @@ public class RoadManager {
     public List<Road> getRoadsByTown(Town town) {
         return roads.stream().filter(r -> r.getTownsView().contains(town)).toList();
     }
+    public List<Road> getRoadsByTownUUID(UUID townUUID) {
+        return roads.stream().filter(r -> r.getTownsView().stream().anyMatch(t -> t.getUUID().equals(townUUID)))
+                .toList();
+    }
     public List<Road> getValidRoadsByTown(Town town) {
         return roads.stream().filter(r -> r.getTownsView().contains(town) && r.isValid()).toList();
     }
