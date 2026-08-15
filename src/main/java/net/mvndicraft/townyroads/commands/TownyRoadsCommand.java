@@ -171,7 +171,8 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             }
             if (road.isBlocked()) {
-                Messaging.sendError(commandSender, "err_road_blocked");
+                Messaging.sendError(commandSender, Component.translatable("err_road_blocked",
+                        Argument.component("road", Component.text(road.getName()))));
                 return;
             }
 
@@ -234,7 +235,8 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             }
             if (road.isBlocked()) {
-                Messaging.sendError(commandSender, "err_road_blocked");
+                Messaging.sendError(commandSender, Component.translatable("err_road_blocked",
+                        Argument.component("road", Component.text(road.getName()))));
                 return;
             }
             road.removeTown(playerTown);
@@ -259,7 +261,8 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             }
             if (road.isBlocked()) {
-                Messaging.sendError(commandSender, "err_road_blocked");
+                Messaging.sendError(commandSender, Component.translatable("err_road_blocked",
+                        Argument.component("road", Component.text(road.getName()))));
                 return;
             }
             if (!road.canClaimMore()) {
@@ -302,7 +305,8 @@ public class TownyRoadsCommand extends BaseCommand {
                 return;
             }
             if (road.isBlocked()) {
-                Messaging.sendError(commandSender, "err_road_blocked");
+                Messaging.sendError(commandSender, Component.translatable("err_road_blocked",
+                        Argument.component("road", Component.text(road.getName()))));
                 return;
             }
             if (!road.canUnclaimHere(ChunkCoord.from(player.getLocation()))) {
@@ -335,7 +339,8 @@ public class TownyRoadsCommand extends BaseCommand {
             return;
         }
         if (road.isBlocked()) {
-            Messaging.sendError(commandSender, "err_road_blocked");
+            Messaging.sendError(commandSender, Component.translatable("err_road_blocked",
+                    Argument.component("road", Component.text(road.getName()))));
             return;
         }
         Optional<Component> error = road.validate();
