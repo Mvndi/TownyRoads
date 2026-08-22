@@ -9,6 +9,7 @@ import java.util.List;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class RoadPermissionHandler {
@@ -38,6 +39,10 @@ public class RoadPermissionHandler {
         TownyPermissionSource permissionSource = TownyUniverse.getInstance().getPermissionSource();
         // admin can build everywhere
         if (permissionSource.isTownyAdmin(player)) {
+            return true;
+        }
+        Location location = player.getLocation(); // players can always mine under roads if they are low enough
+        if (location != null && location.getY() < TownyRoadsSettings.getMinY()) {
             return true;
         }
         if (road.isAPlayerOfTheRoad(player)) {

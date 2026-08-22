@@ -276,7 +276,23 @@ public enum ConfigNodes {
         "true",
         "",
         "# If enabled, kings and co-kings can accept roads for towns in their nation.",
-        "# Disabled with value of false"
+        "# Disabled with value of false"),
+    ROADS_OTHER(
+            "roads.other",
+            "",
+            "",
+            "############################################################",
+            "# +------------------------------------------------------+ #",
+            "# |                        Other                        | #",
+            "# +------------------------------------------------------+ #",
+            "############################################################",
+            ""),
+    ROADS_OTHER_MIN_Y(
+            "roads.other.min_y",
+            "50",
+            "",
+            "# The minimum height (y levels) for roads.",
+            "# Below this height, the road won't be concidered to be a road and so any player will be able to build."
     );
     // @formatter:on
 
