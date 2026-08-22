@@ -1,7 +1,7 @@
 # 1.1.0
-- Add different color for valid, blocked & invalid roads #7
-- improve can't build in road message
-- fix circle roads not beeing display as hollow #3
+- Add different color for valid, blocked & invalid roads on the dynmap #7
+- Improve can't build in road message
+- Fix circle roads not beeing display as hollow #3
 - Allow players to build/break in roads below y=50 #8
 
 # 1.0.6
