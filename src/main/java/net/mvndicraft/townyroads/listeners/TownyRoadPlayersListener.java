@@ -13,6 +13,8 @@ import com.palmergames.bukkit.towny.object.notification.TitleNotification;
 import com.palmergames.bukkit.util.BukkitTools;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
@@ -58,7 +60,7 @@ public class TownyRoadPlayersListener implements Listener {
         Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(event.getBlock().getChunk());
         // Player is not part of the road or does not have perms
         if (road != null && !RoadPermissionHandler.canBuild(event.getPlayer(), road)) {
-            playNoSound(event.getPlayer());
+            playNoSound(event.getPlayer(), road);
             event.setCancelled(true);
         }
     }
@@ -70,7 +72,7 @@ public class TownyRoadPlayersListener implements Listener {
         Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(event.getBlock().getChunk());
         // Player is not part of the road or does not have perms
         if (road != null && !RoadPermissionHandler.canDestroy(event.getPlayer(), road)) {
-            playNoSound(event.getPlayer());
+            playNoSound(event.getPlayer(), road);
             event.setCancelled(true);
         }
     }
@@ -97,7 +99,7 @@ public class TownyRoadPlayersListener implements Listener {
             Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(loc.getChunk());
             // Player is not part of the road or does not have perms
             if (road != null && !RoadPermissionHandler.canItemUse(event.getPlayer(), road)) {
-                playNoSound(player);
+                playNoSound(player, road);
                 event.setCancelled(true);
             }
         }
@@ -179,9 +181,13 @@ public class TownyRoadPlayersListener implements Listener {
     }
 
 
-    private void playNoSound(Player player) {
-        player.getLocation().getWorld().playSound(player.getLocation(), org.bukkit.Sound.ENTITY_VILLAGER_NO, 1, 1);
-        player.sendMessage("NO");
+    private void playNoSound(Player player, Road road) {
+        Location location = player.getLocation();
+        if (location != null) {
+            location.getWorld().playSound(location, org.bukkit.Sound.ENTITY_VILLAGER_NO, 1, 1);
+        }
+        Messaging.sendError(player, Component.translatable("err_not_part_of_road_cooldown",
+                Argument.component("road", Component.text(road.getName()))));
     }
 
 

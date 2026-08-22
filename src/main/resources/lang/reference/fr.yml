@@ -38,6 +38,7 @@ err_road_unclaim_failed_because_split: "Impossible de dérevendiquer ici. La rou
 err_town_does_not_exist: "La ville <town> n'existe pas."
 err_town_is_ruined: "La ville <town> est en ruine."
 err_road_does_not_exist: "La route <road> n'existe pas."
+err_not_part_of_road_cooldown: "Vous êtes sur la route <road> à laquelle vous n'appartenez pas, et vous devez attendre avant de casser/placer plus de blocs."
 
 validate_not_confirmed: "<road> a des villes qui n'ont pas encore confirmé: <to_confirm_towns>."
 validate_at_least_2_towns: "<road> doit avoir au moins 2 villes."

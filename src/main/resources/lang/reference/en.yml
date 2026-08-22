@@ -38,6 +38,7 @@ err_road_unclaim_failed_because_split: "Can't unclaim here. The road <road> woul
 err_town_does_not_exist: "Town <town> does not exist."
 err_town_is_ruined: "Town <town> is ruined."
 err_road_does_not_exist: "Road <road> does not exist."
+err_not_part_of_road_cooldown: "You are in the road <road> which you are not part of, and you need to wait before breaking/placing more blocks."
 
 validate_not_confirmed: "<road> have towns that haven't confirmed yet: <to_confirm_towns>."
 validate_at_least_2_towns: "<road> must have at least 2 towns."
