@@ -59,11 +59,42 @@ public class TownyRoadsSettings {
         return Settings.getDouble(ConfigNodes.ROADS_BONUS_BLOCK_MAX_MULTIPLY_VALUE);
     }
 
-    public static String getDynmapRoadColor() {
-        return Settings.getString(ConfigNodes.ROADS_DYNMAP_ROAD_COLOR);
+    public static boolean isDynmapValidRoadDisplayed() {
+        return Settings.getBoolean(ConfigNodes.ROADS_DYNMAP_VALID_ROAD_DISPLAYED);
+    }
+    public static boolean isDynmapBlockedRoadDisplayed() {
+        return Settings.getBoolean(ConfigNodes.ROADS_DYNMAP_BLOCKED_ROAD_DISPLAYED);
+    }
+    public static boolean isDynmapInvalidRoadDisplayed() {
+        return Settings.getBoolean(ConfigNodes.ROADS_DYNMAP_INVALID_ROAD_DISPLAYED);
+    }
+
+    public static String getDynmapValidRoadColor() {
+        return Settings.getString(ConfigNodes.ROADS_DYNMAP_VALID_ROAD_COLOR);
     }
     public static String getDynmapBlockedRoadColor() {
         return Settings.getString(ConfigNodes.ROADS_DYNMAP_BLOCKED_ROAD_COLOR);
+    }
+    public static String getDynmapInvalidRoadColor() {
+        return Settings.getString(ConfigNodes.ROADS_DYNMAP_INVALID_ROAD_COLOR);
+    }
+    public static double getDynmapValidRoadStrokeOpacity() {
+        return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_VALID_ROAD_STROKE_OPACITY);
+    }
+    public static double getDynmapBlockedRoadStrokeOpacity() {
+        return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_BLOCKED_ROAD_STROKE_OPACITY);
+    }
+    public static double getDynmapInvalidRoadStrokeOpacity() {
+        return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_INVALID_ROAD_STROKE_OPACITY);
+    }
+    public static double getDynmapValidRoadFillOpacity() {
+        return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_VALID_ROAD_FILL_OPACITY);
+    }
+    public static double getDynmapBlockedRoadFillOpacity() {
+        return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_BLOCKED_ROAD_FILL_OPACITY);
+    }
+    public static double getDynmapInvalidRoadFillOpacity() {
+        return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_INVALID_ROAD_FILL_OPACITY);
     }
 
     public static int getDynmapRefreshFrequency() {
@@ -72,10 +103,6 @@ public class TownyRoadsSettings {
 
     public static int getDynmapRoadStrokeWeight() {
         return Settings.getInt(ConfigNodes.ROADS_DYNMAP_ROAD_STROKE_WEIGHT);
-    }
-
-    public static double getDynmapRoadFillOpacity() {
-        return Settings.getDouble(ConfigNodes.ROADS_DYNMAP_ROAD_FILL_OPACITY);
     }
 
     public static boolean getUpkeepEnabled() {

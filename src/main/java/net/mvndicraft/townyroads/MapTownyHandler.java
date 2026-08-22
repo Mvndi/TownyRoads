@@ -69,7 +69,7 @@ public class MapTownyHandler {
             MapLayer layer = mapWorld.registerLayer(ROAD_LAYER_KEY,
                     new LayerOptions("Towny Roads", true, false, 90, 90));
 
-            Collection<Road> roadsFiltered = roads.stream().filter(Road::isValid).filter(road -> road
+            Collection<Road> roadsFiltered = roads.stream().filter(this::shouldRoadBeDisplayed).filter(road -> road
                     .getChunksCoordsView().stream().anyMatch(chunk -> chunk.worldUuid().equals(world.getUID())))
                     .toList();
             roadsFiltered.forEach(road -> layer.addMultiPolyMarker(ROAD_MARKER_PREFIX + road.getId(),
@@ -79,15 +79,39 @@ public class MapTownyHandler {
                     () -> "Display " + roadsFiltered.size() + " roads into the dynmap for world " + world.getName());
         }
     }
+    private boolean shouldRoadBeDisplayed(Road road) {
+        return (
+        // valid road & valid road displayed
+        (road.isValid() && TownyRoadsSettings.isDynmapValidRoadDisplayed())
+                // or invalid road & invalid road displayed
+                || (!road.isValid() && TownyRoadsSettings.isDynmapInvalidRoadDisplayed()))
+                // AND road not blocked or should be displayed even if blocked.
+                && (!road.isBlocked() || TownyRoadsSettings.isDynmapBlockedRoadDisplayed());
+    }
 
     private MarkerOptions roadMarkerOptions(Road road) {
-        Color color = new Color(Integer.parseInt(road.isBlocked() ? TownyRoadsSettings.getDynmapBlockedRoadColor()
-                : TownyRoadsSettings.getDynmapRoadColor(), 16));
+        String roadColor;
+        double strokeOpacity;
+        double fillOpacity;
+        if (road.isBlocked()) {
+            roadColor = TownyRoadsSettings.getDynmapBlockedRoadColor();
+            strokeOpacity = TownyRoadsSettings.getDynmapBlockedRoadStrokeOpacity();
+            fillOpacity = TownyRoadsSettings.getDynmapBlockedRoadFillOpacity();
+        } else if (road.isValid()) {
+            roadColor = TownyRoadsSettings.getDynmapValidRoadColor();
+            strokeOpacity = TownyRoadsSettings.getDynmapValidRoadStrokeOpacity();
+            fillOpacity = TownyRoadsSettings.getDynmapValidRoadFillOpacity();
+        } else {
+            roadColor = TownyRoadsSettings.getDynmapInvalidRoadColor();
+            strokeOpacity = TownyRoadsSettings.getDynmapInvalidRoadStrokeOpacity();
+            fillOpacity = TownyRoadsSettings.getDynmapInvalidRoadFillOpacity();
+        }
+        Color color = new Color(Integer.parseInt(roadColor, 16));
         String description = plainText(road.getDescription());
         return MarkerOptions.builder().name(road.getName()).stroke(true).strokeColor(color)
-                .strokeWeight(TownyRoadsSettings.getDynmapRoadStrokeWeight()).strokeOpacity(1.0).fill(true)
-                .fillColor(color).fillOpacity(TownyRoadsSettings.getDynmapRoadFillOpacity())
-                .fillRule(MarkerOptions.FillRule.EVENODD).clickTooltip(description).hoverTooltip(description).build();
+                .strokeWeight(TownyRoadsSettings.getDynmapRoadStrokeWeight()).strokeOpacity(strokeOpacity).fill(true)
+                .fillColor(color).fillOpacity(fillOpacity).fillRule(MarkerOptions.FillRule.EVENODD)
+                .clickTooltip(description).hoverTooltip(description).build();
     }
 
     private String plainText(Component component) {

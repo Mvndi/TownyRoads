@@ -140,18 +140,76 @@ public enum ConfigNodes {
             "# +------------------------------------------------------+ #",
             "############################################################",
             ""),
-    ROADS_DYNMAP_ROAD_COLOR(
-            "roads.dynmap.road_color",
+    ROADS_DYNMAP_VALID_ROAD_DISPLAYED(
+            "roads.dynmap.valid_road_displayed",
+            "true",
+            "",
+            "# If enabled, the valid road will be displayed in the dynmap.",
+            "# Disabled with value of false"),
+    ROADS_DYNMAP_BLOCKED_ROAD_DISPLAYED(
+            "roads.dynmap.blocked_road_displayed",
+            "true",
+            "",
+            "# If enabled, the blocked road will be displayed in the dynmap.",
+            "# Disabled with value of false"),
+    ROADS_DYNMAP_INVALID_ROAD_DISPLAYED(
+            "roads.dynmap.invalid_road_displayed",
+            "true",
+            "",
+            "# If enabled, the unvalid road will be displayed in the dynmap.",
+            "# Disabled with value of false"),
+    ROADS_DYNMAP_VALID_ROAD_COLOR(
+            "roads.dynmap.valid_road_color",
             "4B4B4B",
             "",
-            "# The color of the road in the dynmap.",
+            "# The color of the valid roads in the dynmap.",
             "# Need to be a hex code."),
     ROADS_DYNMAP_BLOCKED_ROAD_COLOR(
-            "roads.dynmap.road_color",
+            "roads.dynmap.blocked_road_color",
             "D60F0D",
             "",
-            "# The color of the road in the dynmap.",
+            "# The color of the blocked roads in the dynmap.",
             "# Need to be a hex code."),
+    ROADS_DYNMAP_INVALID_ROAD_COLOR(
+            "roads.dynmap.invalid_road_color",
+            "FFFFFF",
+            "",
+            "# The color of the invalid roads in the dynmap.",
+            "# Need to be a hex code."),
+    ROADS_DYNMAP_VALID_ROAD_STROKE_OPACITY(
+            "roads.dynmap.valid_road_stroke_opacity",
+            "1.0",
+            "",
+            "# The %age of the stroke opacity used to draw valid roads on Dynmap."),
+    ROADS_DYNMAP_BLOCKED_ROAD_STROKE_OPACITY(
+            "roads.dynmap.blocked_road_stroke_opacity",
+            "0.3",
+            "",
+            "# The %age of the stroke opacity used to draw blocked roads on Dynmap."),
+    ROADS_DYNMAP_INVALID_ROAD_STROKE_OPACITY(
+            "roads.dynmap.invalid_road_stroke_opacity",
+            "0.2",
+            "",
+            "# The %age of the stroke opacity used to draw invalid roads on Dynmap."),
+    ROADS_DYNMAP_VALID_ROAD_FILL_OPACITY(
+            "roads.dynmap.valid_road_fill_opacity",
+            "0.22",
+            "",
+            "# The %age of the fill opacity used to draw valid roads on Dynmap.",
+            "# Value should be between 0.0 and 1.0."),
+    ROADS_DYNMAP_BLOCKED_ROAD_FILL_OPACITY(
+            "roads.dynmap.blocked_road_fill_opacity",
+            "0.11",
+            "",
+            "# The %age of the fill opacity used to draw blocked roads on Dynmap.",
+            "# Value should be between 0.0 and 1.0."),
+    ROADS_DYNMAP_INVALID_ROAD_FILL_OPACITY(
+            "roads.dynmap.invalid_road_fill_opacity",
+            "0.05",
+            "",
+            "# The %age of the fill opacity used to draw invalid roads on Dynmap.",
+            "# Value should be between 0.0 and 1.0."),
+
     ROADS_DYNMAP_REFRESH_FREQUENCY(
             "roads.dynmap.refresh_frequency",
             "60",
@@ -165,12 +223,6 @@ public enum ConfigNodes {
             "",
             "# The stroke weight used to draw roads on Dynmap.",
             "# Lower values make the road thinner."),
-    ROADS_DYNMAP_ROAD_FILL_OPACITY(
-            "roads.dynmap.road_fill_opacity",
-            "0.22",
-            "",
-            "# The fill opacity used to draw roads on Dynmap.",
-            "# Value should be between 0.0 and 1.0."),
     ROADS_UPKEEP(
             "roads.upkeep",
             "",
