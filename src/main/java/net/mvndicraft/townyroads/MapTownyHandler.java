@@ -123,6 +123,6 @@ public class MapTownyHandler {
         return townyUtil.coordsToPolys(
                 road.getChunksCoordsView().stream().filter(chunk -> chunk.worldUuid().equals(world.getUID()))
                         .map(chunk -> new Coord(chunk.x(), chunk.z())).toList(),
-                false, 16);
+                true, 16);
     }
 }

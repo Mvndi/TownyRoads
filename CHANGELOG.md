@@ -1,3 +1,8 @@
+# 1.1.0
+- Add different color for valid, blocked & invalid roads #7
+- improve can't build in road message
+- fix circle roads not beeing display as hollow #3
+
 # 1.0.6
 - Make sure road name is aways right.
 - Remove ruined or deleted towns before validating.
