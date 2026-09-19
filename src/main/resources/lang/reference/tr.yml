@@ -55,6 +55,13 @@ success_leave_road: "<road> yolundan ayrıldınız."
 success_road_claim: "<road> yolu için <number_of_claim> adet ek chunk sahiplenildi."
 success_road_unclaim: "<road> yolu için <number_of_unclaim> adet chunk sahiplenmesi kaldırıldı."
 
+success_claim_switch_enabled: "<road> yolu için otomatik sahiplenme etkin. Sahiplenmek için yeni chunk'lara yürüyün."
+success_claim_switch_disabled: "Otomatik sahiplenme devre dışı."
+success_auto_claim: "<road> yolu için chunk otomatik sahiplenildi (<current>/<max>)."
+
+err_claim_switch_maxed: "<road> yolu maksimum chunk sayısına ulaştı. Otomatik sahiplenme devre dışı."
+err_claim_switch_not_near_road: "Otomatik sahiplenmeyi etkinleştirmek için <road> yolunda veya yakınında olmalısınız."
+
 info_road_need_to_be_revalidated: "<road> yolunun yeniden doğrulanması gerekiyor."
 info_invite_to_road: "<road> yoluna davet edildiniz."
 

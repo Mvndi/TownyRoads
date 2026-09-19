@@ -57,6 +57,13 @@ success_leave_road: "<road> quittée."
 success_road_claim: "<number_of_claim> chunk(s) de plus revendiqué sur la route <road>."
 success_road_unclaim: "<number_of_unclaim> chunk(s) de plus dérevendiqué sur la route <road>."
 
+success_claim_switch_enabled: "Revendication automatique activée pour la route <road>. Marchez dans de nouveaux chunks pour les revendiquer."
+success_claim_switch_disabled: "Revendication automatique désactivée."
+success_auto_claim: "Chunk revendiqué automatiquement pour la route <road> (<current>/<max>)."
+
+err_claim_switch_maxed: "La route <road> a atteint son maximum de chunks. Revendication automatique désactivée."
+err_claim_switch_not_near_road: "Vous devez être sur ou près de la route <road> pour activer la revendication automatique."
+
 info_road_need_to_be_revalidated: "<road> doit être validée à nouveau."
 info_invite_to_road: "Vous avez été invité à la route <road>."
 

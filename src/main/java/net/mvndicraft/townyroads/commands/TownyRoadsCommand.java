@@ -308,6 +308,53 @@ public class TownyRoadsCommand extends BaseCommand {
         }
     }
 
+    @Subcommand("claimswitch")
+    @Description("Toggle auto-claim mode for a road while walking")
+    @CommandCompletion("@road_player_town_is_in @empty")
+    @Syntax("<road>")
+    public static void onClaimSwitch(CommandSender commandSender, String roadName) {
+        if (commandSender instanceof Player player) {
+            Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
+            if (road == null) {
+                roadNotFound(commandSender, roadName);
+                return;
+            }
+            if (TownyUtil.ruinedOrOccupiedTown(commandSender)) {
+                return;
+            }
+            if (!road.isAPlayerOfTheRoad(player)) {
+                Messaging.sendError(commandSender, "err_not_in_road_towns");
+                return;
+            }
+            if (road.isBlocked()) {
+                Messaging.sendError(commandSender, Component.translatable("err_road_blocked",
+                        Argument.component("road", Component.text(road.getName()))));
+                return;
+            }
+            if (!road.canClaimMore()) {
+                Messaging.sendError(commandSender, "err_road_can_t_claim_more");
+                return;
+            }
+            ChunkCoord here = ChunkCoord.from(player.getLocation());
+            boolean nearRoad = road.getChunksCoordsView().contains(here)
+                    || here.getNearby(1).stream().anyMatch(road.getChunksCoordsView()::contains);
+            if (!nearRoad && !road.getChunksCoordsView().isEmpty()) {
+                Messaging.sendError(commandSender, Component.translatable("err_claim_switch_not_near_road",
+                        Argument.component("road", Component.text(road.getName()))));
+                return;
+            }
+            boolean enabled = TownyRoadsPlugin.getInstance().getClaimSwitchManager().toggle(player.getUniqueId());
+            if (enabled) {
+                Messaging.sendSuccess(commandSender, Component.translatable("success_claim_switch_enabled",
+                        Argument.component("road", Component.text(road.getName()))));
+            } else {
+                Messaging.sendSuccess(commandSender, Component.translatable("success_claim_switch_disabled"));
+            }
+        } else {
+            notAPlayer(commandSender);
+        }
+    }
+
     @Subcommand("unclaim")
     @Description("Unclaim a chunk of a road")
     public static void onunclaim(CommandSender commandSender) {

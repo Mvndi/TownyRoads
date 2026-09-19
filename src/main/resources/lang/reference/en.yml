@@ -57,6 +57,13 @@ success_leave_road: "Left <road>."
 success_road_claim: "Claimed <number_of_claim> more chunk(s) on the road <road>."
 success_road_unclaim: "Unclaimed <number_of_unclaim> more chunk(s) on the road <road>."
 
+success_claim_switch_enabled: "Auto-claim enabled for road <road>. Walk into new chunks to claim them."
+success_claim_switch_disabled: "Auto-claim disabled."
+success_auto_claim: "Auto-claimed chunk for road <road> (<current>/<max>)."
+
+err_claim_switch_maxed: "Road <road> has maxed out its chunks. Auto-claim disabled."
+err_claim_switch_not_near_road: "You must be standing in or near the road <road> to enable auto-claim."
+
 info_road_need_to_be_revalidated: "<road> need to be validated again."
 info_invite_to_road: "You have been invited to the road <road>."
 
