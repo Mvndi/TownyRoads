@@ -281,7 +281,10 @@ public class RoadManager {
     }
 
     public boolean areConnected(Town town, Road road) {
-        return road.isValid() && !road.isBlocked() && areConnected(town, road.getTownsView().getFirst());
+        if (!road.isValid() || road.isBlocked() || road.getTownsView().isEmpty()) {
+            return false;
+        }
+        return road.getTownsView().contains(town) || areConnected(town, road.getTownsView().getFirst());
     }
 
     public int countConnected(Town town, Collection<Town> towns) {
