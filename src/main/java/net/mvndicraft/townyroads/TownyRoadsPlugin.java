@@ -10,8 +10,10 @@ import net.mvndicraft.townyroads.commands.TownyRoadsAdminCommand;
 import net.mvndicraft.townyroads.commands.TownyRoadsCommand;
 import net.mvndicraft.townyroads.data.RoadStorage;
 import net.mvndicraft.townyroads.data.RoadStorageFile;
+import net.mvndicraft.townyroads.listeners.ClaimSwitchListener;
 import net.mvndicraft.townyroads.listeners.TownyRoadPlayersListener;
 import net.mvndicraft.townyroads.listeners.TownyRoadTownAndNationListener;
+import net.mvndicraft.townyroads.listeners.TownyMapListener;
 import net.mvndicraft.townyroads.settings.Settings;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.Translations;
@@ -26,9 +28,13 @@ public class TownyRoadsPlugin extends JavaPlugin {
     public static final String ADMIN_PERMISSION = "townyroads.admin";
     private RoadManager roadManager;
     private PlayerCooldownManager playerCooldownManager;
+    private ClaimSwitchManager claimSwitchManager;
     private RoadStorage roadStorage;
     private Translations translations;
     private static boolean mapTownyInstalled;
+    public static String VALID_SYMBOL = "\u2714";
+    public static String INVALID_SYMBOL = "\u2718";
+    public static String BLOCKED_SYMBOL = "\uD83D\uDEAB";
 
 
     @Override
@@ -44,10 +50,14 @@ public class TownyRoadsPlugin extends JavaPlugin {
         roadStorage = new RoadStorageFile();
         roadManager = new RoadManager();
         playerCooldownManager = new PlayerCooldownManager();
+        claimSwitchManager = new ClaimSwitchManager();
         roadManager.addRoads(roadStorage.loadAll());
 
         getServer().getPluginManager().registerEvents(new TownyRoadPlayersListener(), this);
         getServer().getPluginManager().registerEvents(new TownyRoadTownAndNationListener(), this);
+        getServer().getPluginManager().registerEvents(new TownyMapListener(), this);
+        getServer().getPluginManager().registerEvents(claimSwitchManager, this);
+        getServer().getPluginManager().registerEvents(new ClaimSwitchListener(), this);
 
         PaperCommandManager manager = new PaperCommandManager(this);
         manager.registerCommand(new TownyRoadsCommand());
@@ -70,6 +80,9 @@ public class TownyRoadsPlugin extends JavaPlugin {
     }
     public PlayerCooldownManager getPlayerCooldownManager() {
         return playerCooldownManager;
+    }
+    public ClaimSwitchManager getClaimSwitchManager() {
+        return claimSwitchManager;
     }
     public RoadStorage getRoadStorage() {
         return roadStorage;

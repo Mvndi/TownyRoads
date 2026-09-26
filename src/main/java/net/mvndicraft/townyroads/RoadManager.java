@@ -75,19 +75,32 @@ public class RoadManager {
             Messaging.sendMessage(player, Component.translatable("info_road_need_to_be_revalidated",
                     Argument.component("road", Component.text(road.getName()))));
         }
-        return claimRoad(road, ChunkCoord.from(player.getLocation()));
+        return claimRoad(road, ChunkCoord.from(player.getLocation()), player);
     }
-
     public boolean claimRoad(Road road, ChunkCoord chunkCoordToClaim) {
+        return claimRoad(road, chunkCoordToClaim, null);
+    }
+    public boolean claimRoad(Road road, ChunkCoord chunkCoordToClaim, Player player) {
+        TownyRoadsPlugin.debug("claimRoad(3-arg): road=" + road.getName()
+            + " chunk=" + chunkCoordToClaim + " player=" + (player != null ? player.getName() : "null"));
         if (road.isValid()) {
             road.unvalidate();
         }
         ChunkCoord chunkCoord = road.claim(chunkCoordToClaim);
+        TownyRoadsPlugin.debug("claimRoad: road.claim returned " + chunkCoord);
 
         if (chunkCoord != null) {
             fastAccessRoads.put(chunkCoord, road);
+            if (player != null) {
+                TownyRoadsPlugin.debug("claimRoad: calling RoadClaimEffect");
+                net.mvndicraft.townyroads.util.RoadClaimEffect.playClaimEffect(player,
+                    chunkCoord.toWorldCoord(), road);
+            } else {
+                TownyRoadsPlugin.debug("claimRoad: player is null, skipping effect");
+            }
             return true;
         }
+        TownyRoadsPlugin.debug("claimRoad: chunkCoord is null, claim failed");
         return false;
     }
 

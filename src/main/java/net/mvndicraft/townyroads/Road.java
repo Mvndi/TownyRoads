@@ -134,12 +134,12 @@ public class Road extends TownyObject {
     public Component getDescription(boolean isAdmin) {
         Component description = Component.text(getTownsNames(towns)).appendSpace();
         if (isValid()) {
-            description = description.append(Component.text("\u2714"));
+            description = description.append(Component.text(TownyRoadsPlugin.VALID_SYMBOL));
         } else {
-            description = description.append(Component.text("\u2718"));
+            description = description.append(Component.text(TownyRoadsPlugin.INVALID_SYMBOL));
         }
         if (isBlocked()) {
-            description = description.appendSpace().append(Component.text("\uD83D\uDEAB"));
+            description = description.appendSpace().append(Component.text(TownyRoadsPlugin.BLOCKED_SYMBOL));
         }
         if (isAdmin) {
             description = description.appendSpace().append(Component.text(id.toString())).appendSpace();
