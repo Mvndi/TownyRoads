@@ -32,6 +32,9 @@ public class TownyRoadsPlugin extends JavaPlugin {
     private RoadStorage roadStorage;
     private Translations translations;
     private static boolean mapTownyInstalled;
+    public static String VALID_SYMBOL = "\u2714";
+    public static String INVALID_SYMBOL = "\u2718";
+    public static String BLOCKED_SYMBOL = "\uD83D\uDEAB";
 
 
     @Override

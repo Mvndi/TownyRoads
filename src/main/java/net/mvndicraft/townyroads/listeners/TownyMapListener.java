@@ -26,15 +26,15 @@ public class TownyMapListener implements Listener {
         String status;
 
         if (road.isBlocked()) {
-            symbol = "X";
+            symbol = TownyRoadsPlugin.BLOCKED_SYMBOL;
             color = NamedTextColor.DARK_PURPLE;
             status = "blocked";
         } else if (road.isValid()) {
-            symbol = "=";
+            symbol = TownyRoadsPlugin.VALID_SYMBOL;
             color = NamedTextColor.GOLD;
             status = "validated";
         } else {
-            symbol = "~";
+            symbol = TownyRoadsPlugin.INVALID_SYMBOL;
             color = NamedTextColor.DARK_RED;
             status = "un-validated";
         }
