@@ -1,3 +1,6 @@
+# 1.3.1
+- Fix road particle with Folia.
+
 # 1.3.0
 - Add particle effect when a road is claimed
 - Add `/tr claimswitch <road>` command to auto claim when moving
