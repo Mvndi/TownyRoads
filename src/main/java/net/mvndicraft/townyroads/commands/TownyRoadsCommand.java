@@ -286,8 +286,13 @@ public class TownyRoadsCommand extends BaseCommand {
                 Messaging.sendError(commandSender, "err_road_can_t_claim_more");
                 return;
             }
-            if (!road.canClaimHere(ChunkCoord.from(player.getLocation()))) {
-                Messaging.sendError(commandSender, "err_road_cant_claim_here");
+            ChunkCoord chunkCoord = ChunkCoord.from(player.getLocation());
+            if (road.alreadyClaimed(chunkCoord)) {
+                Messaging.sendError(commandSender, "err_road_cant_claim_here_already_claimed");
+                return;
+            }
+            if (!road.isRoadBorderingOrRoadEmpty(chunkCoord)) {
+                Messaging.sendError(commandSender, "err_road_cant_claim_here_to_far");
                 return;
             }
             if (TownyAPI.getInstance().getTown(player.getLocation()) != null) {
@@ -349,12 +354,14 @@ public class TownyRoadsCommand extends BaseCommand {
                         Argument.component("road", Component.text(road.getName()))));
                 ChunkCoord currentChunk = ChunkCoord.from(player.getLocation());
                 if (TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(currentChunk) == null
-                        && com.palmergames.bukkit.towny.TownyAPI.getInstance().getTown(currentChunk.toLocation()) == null) {
+                        && com.palmergames.bukkit.towny.TownyAPI.getInstance()
+                                .getTown(currentChunk.toLocation()) == null) {
                     if (TownyRoadsPlugin.getInstance().getRoadManager().claimRoad(road, currentChunk, player)) {
-                        Messaging.sendSuccess(commandSender, Component.translatable("success_auto_claim",
-                                Argument.component("road", Component.text(road.getName())),
-                                Argument.component("current", Component.text(road.chunksCoordsSize())),
-                                Argument.component("max", Component.text(road.maxChunksCoordsSize()))));
+                        Messaging.sendSuccess(commandSender,
+                                Component.translatable("success_auto_claim",
+                                        Argument.component("road", Component.text(road.getName())),
+                                        Argument.component("current", Component.text(road.chunksCoordsSize())),
+                                        Argument.component("max", Component.text(road.maxChunksCoordsSize()))));
                     }
                     if (!road.canClaimMore()) {
                         TownyRoadsPlugin.getInstance().getClaimSwitchManager().disable(player.getUniqueId());

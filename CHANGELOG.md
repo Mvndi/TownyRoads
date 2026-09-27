@@ -1,5 +1,6 @@
 # 1.3.1
 - Fix road particle with Folia.
+- Split a reason for road claiming not working in 2 to make it clearer
 
 # 1.3.0
 - Add particle effect when a road is claimed

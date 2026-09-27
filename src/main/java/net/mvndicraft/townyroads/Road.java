@@ -398,8 +398,17 @@ public class Road extends TownyObject {
      * @return true if not already claimed and at least one chunk is nearby or it's the first chunk of the road
      */
     public boolean canClaimHere(ChunkCoord chunkCoord) {
-        return chunksCoords.isEmpty() || (!chunksCoords.contains(chunkCoord)
-                && chunkCoord.getNearby(1).stream().anyMatch(chunksCoords::contains));
+        return !alreadyClaimed(chunkCoord) && isRoadBorderingOrRoadEmpty(chunkCoord);
+    }
+    public boolean alreadyClaimed(ChunkCoord chunkCoord) {
+        return chunksCoords.contains(chunkCoord);
+    }
+
+    public boolean isRoadBordering(ChunkCoord chunkCoord) {
+        return chunkCoord.getNearby(1).stream().anyMatch(chunksCoords::contains);
+    }
+    public boolean isRoadBorderingOrRoadEmpty(ChunkCoord chunkCoord) {
+        return chunksCoords.isEmpty() || isRoadBordering(chunkCoord);
     }
     /**
      * @return true if the chunks are still connected each other without this chunk.
