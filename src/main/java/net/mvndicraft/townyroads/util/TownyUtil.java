@@ -59,7 +59,7 @@ public class TownyUtil {
             return true;
         }
         if (playerTown.isRuined()) {
-            Messaging.sendError(commandSender, "err_town_is_ruined");
+            Messaging.sendError(commandSender, Component.translatable("err_town_is_ruined", Argument.component("town", Component.text(playerTown.getName()))));
             return true;
         }
         if (!TownyRoadsSettings.getRoadsPermissionOccupiedTownCanInteractWithRoad() && playerTown.isConquered()) {
