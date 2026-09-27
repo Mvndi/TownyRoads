@@ -81,8 +81,8 @@ public class RoadManager {
         return claimRoad(road, chunkCoordToClaim, null);
     }
     public boolean claimRoad(Road road, ChunkCoord chunkCoordToClaim, Player player) {
-        TownyRoadsPlugin.debug("claimRoad(3-arg): road=" + road.getName()
-            + " chunk=" + chunkCoordToClaim + " player=" + (player != null ? player.getName() : "null"));
+        TownyRoadsPlugin.debug("claimRoad(3-arg): road=" + road.getName() + " chunk=" + chunkCoordToClaim + " player="
+                + (player != null ? player.getName() : "null"));
         if (road.isValid()) {
             road.unvalidate();
         }
@@ -93,8 +93,7 @@ public class RoadManager {
             fastAccessRoads.put(chunkCoord, road);
             if (player != null) {
                 TownyRoadsPlugin.debug("claimRoad: calling RoadClaimEffect");
-                net.mvndicraft.townyroads.util.RoadClaimEffect.playClaimEffect(player,
-                    chunkCoord.toWorldCoord(), road);
+                net.mvndicraft.townyroads.util.RoadClaimEffect.playClaimEffect(player, chunkCoord.toWorldCoord(), road);
             } else {
                 TownyRoadsPlugin.debug("claimRoad: player is null, skipping effect");
             }
@@ -289,16 +288,32 @@ public class RoadManager {
         return distances;
     }
 
-    public boolean areConnected(Town town1, Town town2) {
-        return countConnected(town1, List.of(town2)) > 0;
+    /**
+     * Are the two towns connected
+     * 
+     * @param town1 1st Town to check. A null town will return false
+     * @param town2 2nd Town to check. A null town will return false
+     * @return true if the two towns are connected
+     */
+    public boolean areConnected(@Nullable Town town1, @Nullable Town town2) {
+        return town1 != null && town2 != null && countConnected(town1, List.of(town2)) > 0;
+    }
+    /**
+     * Is the town and the road connected. Only valid and not blocked roads can be conciered as connected.
+     * 
+     * @param town Town to check. A null town will return false
+     * @param road Road to check. A null road will return false
+     * @return true if road is valid, not blocked and connected to the town
+     */
+    public boolean areConnected(@Nullable Town town, @Nullable Road road) {
+        // road.getTownsView().contains(town) is just a shortcut,
+        // areConnected(town1, town2) already know if they are connected
+        return town != null && road != null && road.isValid() && !road.isBlocked()
+                && (road.getTownsView().contains(town) || areConnected(town, road.getTownsView().getFirst()));
     }
 
-    public boolean areConnected(Town town, Road road) {
-        return road.isValid() && !road.isBlocked() && areConnected(town, road.getTownsView().getFirst());
-    }
-
-    public int countConnected(Town town, Collection<Town> towns) {
-        if (towns.isEmpty()) {
+    public int countConnected(@Nullable Town town, Collection<Town> towns) {
+        if (town == null || towns.isEmpty()) {
             return 0;
         }
         Collection<Town> connectedTowns = getTownConnectedByRoads(town, Integer.MAX_VALUE).keySet();
