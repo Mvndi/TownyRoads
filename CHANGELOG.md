@@ -1,3 +1,9 @@
+# 1.3.0
+- Add particle effect when a road is claimed
+- Add `/tr claimswitch <road>` command to auto claim when moving
+- Display roads in `/towny map`
+- Add API null safety on areConnected(...) functions
+
 # 1.2.1
 - Add a convenient function to test if a road and a town are connected to the API
 
