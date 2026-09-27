@@ -41,6 +41,7 @@ err_town_is_ruined: "Town <town> is ruined."
 err_road_does_not_exist: "Road <road> does not exist."
 err_not_part_of_road_cooldown: "You are in the road <road> which you are not part of, and you need to wait before breaking/placing more blocks."
 err_town_is_conquered_town: "Town <town> is conquered and is not free to create/extend/leave roads."
+err_no_nation_to_leavenation: "Town <town> is not part of a nation and so can not make his nation leave the road <road>."
 
 validate_not_confirmed: "<road> have towns that haven't confirmed yet: <to_confirm_towns>."
 validate_at_least_2_towns: "<road> must have at least 2 towns."
@@ -54,7 +55,7 @@ success_road_create_need_confirm: "Created road <road> (<town> needs to confirm)
 success_road_validate: "<road> have been validated."
 success_road_join: "Joined <road>."
 denied_road_join: "Denied <road>."
-success_leave_road: "Left <road>."
+success_leave_road: "Town <town> left <road>."
 success_road_claim: "Claimed <number_of_claim> more chunk(s) on the road <road>."
 success_road_unclaim: "Unclaimed <number_of_unclaim> more chunk(s) on the road <road>."
 

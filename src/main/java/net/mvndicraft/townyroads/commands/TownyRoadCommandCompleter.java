@@ -76,7 +76,7 @@ public class TownyRoadCommandCompleter {
             }
         });
 
-        manager.getCommandCompletions().registerAsyncCompletion("road_player_town_is_in", c -> {
+        manager.getCommandCompletions().registerAsyncCompletion("road_player_is_part_off", c -> {
             CommandSender commandSender = c.getContextValue(CommandSender.class, 0);
             if (commandSender instanceof Player player) {
                 return TownyRoadsPlugin.getInstance().getRoadManager().getRoads().stream()

@@ -1,3 +1,6 @@
+# 1.4.0
+- Allow to leave a road as a nation
+
 # 1.3.1
 - Fix road particle with Folia.
 - Split a reason for road claiming not working in 2 to make it clearer

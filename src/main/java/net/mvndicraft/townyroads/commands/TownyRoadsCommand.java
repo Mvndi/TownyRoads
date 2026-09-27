@@ -13,6 +13,8 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.mvndicraft.townyroads.ChunkCoord;
@@ -228,7 +230,7 @@ public class TownyRoadsCommand extends BaseCommand {
 
     @Subcommand("leave")
     @Description("Leave a road")
-    @CommandCompletion("@road_player_town_is_in @empty")
+    @CommandCompletion("@road_player_is_part_off @empty")
     @Syntax("<road>")
     public static void onLeave(CommandSender commandSender, String roadName) {
         Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
@@ -253,10 +255,59 @@ public class TownyRoadsCommand extends BaseCommand {
                         Argument.component("road", Component.text(road.getName()))));
                 return;
             }
-            road.removeTown(playerTown);
-            Messaging.sendSuccess(player,
-                    Component.translatable("success_leave_road", Argument.component("road", Component.text(roadName))));
+            townLeaveRoadAndSendSuccess(player, road, playerTown, roadName);
         }
+    }
+
+    @Subcommand("leavenation")
+    @Description("Leave a road for all the towns of your nation")
+    @CommandCompletion("@road_player_is_part_off @empty")
+    @Syntax("<road>")
+    public static void onLeaveNation(CommandSender commandSender, String roadName) {
+        Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
+        if (road == null)
+            return;
+        if (!TownyUniverse.getInstance().getPermissionSource().testPermission(commandSender,
+                TownyRoadsPermissionNodes.TOWNYROADS_LEAVE.getNode())) {
+            Messaging.sendError(commandSender, "err_no_permission_to_delete_road");
+            return;
+        }
+        if (commandSender instanceof Player player) {
+            Town playerTown = TownyAPI.getInstance().getTown(player);
+            if (TownyUtil.ruinedOrOccupiedTown(commandSender, playerTown)) {
+                return;
+            }
+            if (!road.isAPlayerOfTheRoad(player)) {
+                Messaging.sendError(commandSender, "err_not_in_road_towns");
+                return;
+            }
+            if (road.isBlocked()) {
+                Messaging.sendError(commandSender, Component.translatable("err_road_blocked",
+                        Argument.component("road", Component.text(road.getName()))));
+                return;
+            }
+            Nation playerNation = playerTown.getNationOrNull();
+            if (playerNation == null) {
+                Messaging.sendError(commandSender,
+                        Component.translatable("err_no_nation_to_leavenation",
+                                Argument.component("town", Component.text(playerTown.getName())),
+                                Argument.component("road", Component.text(road.getName()))));
+                return;
+            }
+            Set<Town> nationTowns = road.getTownsView().stream().filter(t -> playerNation.equals(t.getNationOrNull()))
+                    .collect(Collectors.toSet());
+            for (Town nationTown : nationTowns) {
+                townLeaveRoadAndSendSuccess(player, road, nationTown, road.getName());
+            }
+
+        }
+    }
+
+    private static void townLeaveRoadAndSendSuccess(Player player, Road road, Town town, String roadName) {
+        road.removeTown(town);
+        Messaging.sendSuccess(player,
+                Component.translatable("success_leave_road", Argument.component("town", Component.text(town.getName())),
+                        Argument.component("road", Component.text(roadName))));
     }
 
     @Subcommand("claim")
@@ -315,7 +366,7 @@ public class TownyRoadsCommand extends BaseCommand {
 
     @Subcommand("claimswitch")
     @Description("Toggle auto-claim mode for a road while walking")
-    @CommandCompletion("@road_player_town_is_in @empty")
+    @CommandCompletion("@road_player_is_part_off @empty")
     @Syntax("<road>")
     public static void onClaimSwitch(CommandSender commandSender, String roadName) {
         if (commandSender instanceof Player player) {
@@ -416,7 +467,7 @@ public class TownyRoadsCommand extends BaseCommand {
 
     @Subcommand("validate")
     @Description("Validate a road")
-    @CommandCompletion("@road_player_town_is_in @empty")
+    @CommandCompletion("@road_player_is_part_off @empty")
     @Syntax("<road>")
     public static void onValidate(CommandSender commandSender, String roadName) {
         Road road = TownyUtil.getRoadFromNameOrUUIDOrNull(commandSender, roadName);
@@ -458,7 +509,7 @@ public class TownyRoadsCommand extends BaseCommand {
 
     @Subcommand("merge")
     @Description("Merge 2 roads")
-    @CommandCompletion("@road_player_town_is_in @road_player_town_is_in @empty")
+    @CommandCompletion("@road_player_is_part_off @road_player_is_part_off @empty")
     @Syntax("<road> <road>")
     public static void onMerge(CommandSender commandSender, String roadName1, String roadName2) {
         if (commandSender instanceof Player player) {

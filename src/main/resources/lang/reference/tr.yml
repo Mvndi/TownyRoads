@@ -50,7 +50,6 @@ success_road_create_need_confirm: "<road> yolu oluşturuldu (<town> kasabasını
 success_road_validate: "<road> doğrulandı."
 success_road_join: "<road> yoluna katıldınız."
 denied_road_join: "<road> yolu reddedildi."
-success_leave_road: "<road> yolundan ayrıldınız."
 success_road_claim: "<road> yolu için <number_of_claim> adet ek chunk sahiplenildi."
 success_road_unclaim: "<road> yolu için <number_of_unclaim> adet chunk sahiplenmesi kaldırıldı."
 

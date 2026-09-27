@@ -41,6 +41,7 @@ err_town_is_ruined: "La ville <town> est en ruine."
 err_road_does_not_exist: "La route <road> n'existe pas."
 err_not_part_of_road_cooldown: "Vous êtes sur la route <road> à laquelle vous n'appartenez pas, et vous devez attendre avant de casser/placer plus de blocs."
 err_town_is_conquered_town: "La ville <town> est conquise et n'est pas libre de créer/étendre/quitter des routes."
+err_no_nation_to_leavenation: "La ville <town> ne fait pas partie d'une nation et ne peut donc pas faire quitter sa nation de la route <road>."
 
 validate_not_confirmed: "<road> a des villes qui n'ont pas encore confirmé: <to_confirm_towns>."
 validate_at_least_2_towns: "<road> doit avoir au moins 2 villes."
@@ -54,7 +55,7 @@ success_road_create_need_confirm: "La route <road> a été créée (<town> doit 
 success_road_validate: "<road> a été validée."
 success_road_join: "<road> rejoin."
 denied_road_join: "<road> déclinée."
-success_leave_road: "<road> quittée."
+success_leave_road: "La ville <town> a quitté <road>."
 success_road_claim: "<number_of_claim> chunk(s) de plus revendiqué sur la route <road>."
 success_road_unclaim: "<number_of_unclaim> chunk(s) de plus dérevendiqué sur la route <road>."
 

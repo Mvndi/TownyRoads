@@ -6,6 +6,7 @@ public enum TownyRoadsPermissionNodes {
     TOWNYROADS_ADMIN(TownyRoadsPlugin.ADMIN_PERMISSION), TOWNYROADS_CLAIM("townyroads.command.townyroads.claim"),
     TOWNYROADS_UNCLAIM("townyroads.command.townyroads.unclaim"),
     TOWNYROADS_CREATE("townyroads.command.townyroads.create"), TOWNYROADS_LEAVE("townyroads.command.townyroads.leave"),
+    TOWNYROADS_LEAVENATION("townyroads.command.townyroads.leavenation"),
     TOWNYROADS_ACCEPT("townyroads.command.townyroads.accept"),
     TOWNYROADS_NATION_ACCEPT("townyroads.command.townyroads.nation.accept"),
     TOWNYROADS_VALIDATE("townyroads.command.townyroads.validate"),
