@@ -5,7 +5,7 @@ plugins {
     signing // Add ./gradlew signArchives
     // checkstyle // Ensures correctly formatted code
     // pmd // Code quality checks
-    id("xyz.jpenilla.run-paper") version "3.0.2" // Paper server for testing/hotloading JVM
+    id("xyz.jpenilla.run-paper") version "3.1.0" // Paper server for testing/hotloading JVM
     id("org.sonarqube") version "7.3.0.8198" // Advanced code quality checks
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
     id("com.modrinth.minotaur") version "2.+" // cf https://github.com/modrinth/minotaur
