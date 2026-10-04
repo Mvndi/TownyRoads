@@ -40,6 +40,7 @@ err_town_does_not_exist: "La ville <town> n'existe pas."
 err_town_is_ruined: "La ville <town> est en ruine."
 err_road_does_not_exist: "La route <road> n'existe pas."
 err_not_part_of_road_cooldown: "Vous êtes sur la route <road> à laquelle vous n'appartenez pas, et vous devez attendre avant de casser/placer plus de blocs."
+err_biome_require_town_or_road: "Le biome <biome> nécessite d'être dans une ville ou sur une route pour construire."
 err_town_is_conquered_town: "La ville <town> est conquise et n'est pas libre de créer/étendre/quitter des routes."
 err_no_nation_to_leavenation: "La ville <town> ne fait pas partie d'une nation et ne peut donc pas faire quitter sa nation de la route <road>."
 

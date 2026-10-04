@@ -11,9 +11,13 @@ import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.WorldCoord;
 import com.palmergames.bukkit.towny.object.notification.TitleNotification;
 import com.palmergames.bukkit.util.BukkitTools;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
@@ -22,10 +26,14 @@ import net.mvndicraft.townyroads.events.PlayerEntersIntoRoadBorderEvent;
 import net.mvndicraft.townyroads.events.PlayerExitsFromRoadBorderEvent;
 import net.mvndicraft.townyroads.events.TitleNotificationRoad;
 import net.mvndicraft.townyroads.permissions.RoadPermissionHandler;
+import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.Messaging;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -57,10 +65,19 @@ public class TownyRoadPlayersListener implements Listener {
     public void onBuild(BlockPlaceEvent event) {
         if (!TownyAPI.getInstance().isTownyWorld(event.getPlayer().getWorld()))
             return;
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
+            return;
         Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(event.getBlock().getChunk());
         // Player is not part of the road or does not have perms
         if (road != null && !RoadPermissionHandler.canBuild(event.getPlayer(), road)) {
-            playNoSound(event.getPlayer(), road);
+            playNoSoundCooldown(event.getPlayer(), road);
+            event.setCancelled(true);
+        }
+        Biome biome = event.getBlock().getBiome();
+        // No road, no town and in a wilderness forbidden biome => cancel
+        if (road == null && TownyAPI.getInstance().getTown(event.getBlock().getLocation()) == null
+                && isInWildernessForbidenBuildBiome(event.getBlock())) {
+            playNoSoundBiome(event.getPlayer(), biome);
             event.setCancelled(true);
         }
     }
@@ -69,10 +86,12 @@ public class TownyRoadPlayersListener implements Listener {
     public void onDestroy(BlockBreakEvent event) {
         if (!TownyAPI.getInstance().isTownyWorld(event.getPlayer().getWorld()))
             return;
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
+            return;
         Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(event.getBlock().getChunk());
         // Player is not part of the road or does not have perms
         if (road != null && !RoadPermissionHandler.canDestroy(event.getPlayer(), road)) {
-            playNoSound(event.getPlayer(), road);
+            playNoSoundCooldown(event.getPlayer(), road);
             event.setCancelled(true);
         }
     }
@@ -80,6 +99,8 @@ public class TownyRoadPlayersListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onItemUse(PlayerInteractEvent event) {
         if (!TownyAPI.getInstance().isTownyWorld(event.getPlayer().getWorld()))
+            return;
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
 
         Action action = event.getAction();
@@ -99,7 +120,7 @@ public class TownyRoadPlayersListener implements Listener {
             Road road = TownyRoadsPlugin.getInstance().getRoadManager().getRoadAt(loc.getChunk());
             // Player is not part of the road or does not have perms
             if (road != null && !RoadPermissionHandler.canItemUse(event.getPlayer(), road)) {
-                playNoSound(player, road);
+                playNoSoundCooldown(player, road);
                 event.setCancelled(true);
             }
         }
@@ -181,13 +202,44 @@ public class TownyRoadPlayersListener implements Listener {
     }
 
 
-    private void playNoSound(Player player, Road road) {
+    private void playNoSound(Player player, TranslatableComponent message) {
         Location location = player.getLocation();
         if (location != null) {
             location.getWorld().playSound(location, org.bukkit.Sound.ENTITY_VILLAGER_NO, 1, 1);
         }
-        Messaging.sendError(player, Component.translatable("err_not_part_of_road_cooldown",
+        Messaging.sendError(player, message);
+    }
+    private void playNoSoundCooldown(Player player, Road road) {
+        playNoSound(player, Component.translatable("err_not_part_of_road_cooldown",
                 Argument.component("road", Component.text(road.getName()))));
+    }
+    private void playNoSoundBiome(Player player, Biome biome) {
+        playNoSound(player, Component.translatable("err_biome_require_town_or_road",
+                Argument.component("biome", Component.text(biome.key().asString()))));
+    }
+
+    /**
+     * Do a check of the block biome and the close by biomes in a cross shape for
+     * getBiomesNoBuildInWildernessPermissiveness near by biomes.
+     */
+    private boolean isInWildernessForbidenBuildBiome(Block block) {
+        Location location = block.getLocation(); // players can always mine under roads if they are low enough
+        if (location.getY() < TownyRoadsSettings.getMinY()) {
+            return false;
+        }
+
+        Set<Biome> biomeToTest = new HashSet<>();
+        biomeToTest.add(block.getBiome());
+        int nearByTest = TownyRoadsSettings.getBiomesNoBuildInWildernessPermissiveness();
+        for (int i = 1; i <= nearByTest; i++) {
+            biomeToTest.add(block.getRelative(BlockFace.EAST, i * 4).getBiome());
+            biomeToTest.add(block.getRelative(BlockFace.WEST, i * 4).getBiome());
+            biomeToTest.add(block.getRelative(BlockFace.NORTH, i * 4).getBiome());
+            biomeToTest.add(block.getRelative(BlockFace.SOUTH, i * 4).getBiome());
+        }
+        TownyRoadsPlugin.debug(() -> "biomeToTest: "
+                + biomeToTest.stream().map(biome -> biome.key().asString()).collect(Collectors.joining(",")));
+        return biomeToTest.stream().allMatch(biome -> TownyRoadsSettings.isBiomeNoBuildInWilderness(biome));
     }
 
 

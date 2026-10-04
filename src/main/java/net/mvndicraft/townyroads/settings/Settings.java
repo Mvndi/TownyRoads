@@ -1,10 +1,21 @@
 package net.mvndicraft.townyroads.settings;
 
 import com.palmergames.bukkit.config.CommentedConfiguration;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
+import io.papermc.paper.registry.tag.TagKey;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.block.Biome;
 
 public class Settings {
     private static CommentedConfiguration config, newConfig;
@@ -104,5 +115,51 @@ public class Settings {
 
     public static String getString(ConfigNodes node) {
         return config.getString(node.getRoot().toLowerCase(), node.getDefault());
+    }
+
+    public static Set<Biome> getBiomes(ConfigNodes node) {
+        return getBiomes(getString(node));
+    }
+
+    public static Set<Biome> getBiomes(String input) {
+        Set<Biome> biomes = new HashSet<>();
+        input = input.trim();
+        if (input == null || input.isBlank()) {
+            return biomes;
+        }
+        for (String biomeOrTag : input.split(",")) {
+            biomeOrTag = biomeOrTag.trim();
+            try {
+                if (biomeOrTag.startsWith("#")) {
+                    String tag = normalizePattern(biomeOrTag.substring(1));
+                    biomes.addAll(getAllBiomesOfTag(tag));
+                } else {
+                    biomes.add(getBiomeRegistryAccess().get(toKey(normalizePattern(biomeOrTag))));
+                }
+            } catch (Exception e) {
+                TownyRoadsPlugin.warning("Failed to read " + biomeOrTag + " as a biome from config.yml");
+            }
+        }
+        TownyRoadsPlugin
+                .debug(() -> "Read " + biomes.stream().map(b -> b.getKey().toString()).collect(Collectors.joining(","))
+                        + " from config.yml");
+        return biomes;
+    }
+
+
+    private static String normalizePattern(String pattern) {
+        String normalized = pattern.toLowerCase(Locale.ROOT);
+        return normalized.contains(":") ? normalized : "minecraft:" + normalized;
+    }
+
+    public static Registry<Biome> getBiomeRegistryAccess() {
+        return RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME);
+    }
+    public static Collection<Biome> getAllBiomesOfTag(String tag) {
+        return getBiomeRegistryAccess().getTagValues(TagKey.create(RegistryKey.BIOME, tag));
+    }
+
+    public static NamespacedKey toKey(String key) {
+        return NamespacedKey.fromString(key);
     }
 }

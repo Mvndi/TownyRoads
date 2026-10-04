@@ -1,7 +1,15 @@
 package net.mvndicraft.townyroads.settings;
 
+import java.util.Set;
+import org.bukkit.block.Biome;
+
 public class TownyRoadsSettings {
+    private static Set<Biome> biomesNoBuildInWilderness = null;
     private TownyRoadsSettings() {}
+
+    public static void reload() {
+        biomesNoBuildInWilderness = null;
+    }
 
     public static boolean getDebug() {
         return Settings.getBoolean(ConfigNodes.DEBUG);
@@ -130,5 +138,19 @@ public class TownyRoadsSettings {
 
     public static int getMinY() {
         return Settings.getInt(ConfigNodes.ROADS_OTHER_MIN_Y);
+    }
+
+    public static Set<Biome> getBiomesNoBuildInWilderness() {
+        if (biomesNoBuildInWilderness == null) {
+            biomesNoBuildInWilderness = Settings.getBiomes(ConfigNodes.ROAD_BIOMES_NO_BUILD_IN_WILDERNESS);
+        }
+        return biomesNoBuildInWilderness;
+    }
+    public static boolean isBiomeNoBuildInWilderness(Biome biome) {
+        return getBiomesNoBuildInWilderness().contains(biome);
+    }
+
+    public static int getBiomesNoBuildInWildernessPermissiveness() {
+        return Settings.getInt(ConfigNodes.ROAD_BIOMES_NO_BUILD_IN_WILDERNESS_PERMISSIVENESS);
     }
 }

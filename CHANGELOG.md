@@ -1,3 +1,7 @@
+# 1.5.0
+- Some biomes can be define to be forbidden to build in outside of roads & towns
+- Creative players bypass build requirements for roads
+
 # 1.4.0
 - Allow to leave a road as a nation
 

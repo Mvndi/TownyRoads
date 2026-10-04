@@ -57,6 +57,7 @@ public class TownyRoadTownAndNationListener implements Listener {
             boolean wasValid = road.isValid();
             TownyRoadsPlugin.getInstance().getRoadManager().unclaimRoad(road, chunkCoord);
             if (wasValid) {
+                // TODO try to reconnect the road https://github.com/Mvndi/TownyRoads/issues/13
                 road.validate();
             }
         }

@@ -11,9 +11,9 @@ import net.mvndicraft.townyroads.commands.TownyRoadsCommand;
 import net.mvndicraft.townyroads.data.RoadStorage;
 import net.mvndicraft.townyroads.data.RoadStorageFile;
 import net.mvndicraft.townyroads.listeners.ClaimSwitchListener;
+import net.mvndicraft.townyroads.listeners.TownyMapListener;
 import net.mvndicraft.townyroads.listeners.TownyRoadPlayersListener;
 import net.mvndicraft.townyroads.listeners.TownyRoadTownAndNationListener;
-import net.mvndicraft.townyroads.listeners.TownyMapListener;
 import net.mvndicraft.townyroads.settings.Settings;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
 import net.mvndicraft.townyroads.util.Translations;
@@ -92,6 +92,7 @@ public class TownyRoadsPlugin extends JavaPlugin {
     public void reloadConfig() {
         super.reloadConfig();
         Settings.loadConfig();
+        TownyRoadsSettings.reload();
         translations.reload();
         getPlayerCooldownManager().reload();
     }
