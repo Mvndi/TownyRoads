@@ -5,6 +5,7 @@ import com.palmergames.bukkit.towny.object.Town;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.translation.Argument;
+import net.mvndicraft.townyroads.ChunkCoord;
 import net.mvndicraft.townyroads.Road;
 import net.mvndicraft.townyroads.TownyRoadsPlugin;
 import net.mvndicraft.townyroads.settings.TownyRoadsSettings;
@@ -59,7 +60,8 @@ public class TownyUtil {
             return true;
         }
         if (playerTown.isRuined()) {
-            Messaging.sendError(commandSender, Component.translatable("err_town_is_ruined", Argument.component("town", Component.text(playerTown.getName()))));
+            Messaging.sendError(commandSender, Component.translatable("err_town_is_ruined",
+                    Argument.component("town", Component.text(playerTown.getName()))));
             return true;
         }
         if (!TownyRoadsSettings.getRoadsPermissionOccupiedTownCanInteractWithRoad() && playerTown.isConquered()) {
@@ -89,6 +91,14 @@ public class TownyUtil {
         } else {
             return true;
         }
+    }
+
+    public static Town getTown(ChunkCoord chunkCoord) {
+        return TownyAPI.getInstance().getTown(chunkCoord.toLocation());
+    }
+
+    public static boolean hasTown(ChunkCoord chunkCoord) {
+        return getTown(chunkCoord) != null;
     }
 
 }
