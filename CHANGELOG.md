@@ -1,3 +1,6 @@
+# 1.6.0
+- Valid roads can fix themselves when overclaim by a town and stay valid in most cases
+
 # 1.5.0
 - Some biomes can be define to be forbidden to build in outside of roads & towns
 - Creative players bypass build requirements for roads

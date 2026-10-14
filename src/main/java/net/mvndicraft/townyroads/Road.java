@@ -582,6 +582,21 @@ public class Road extends TownyObject {
         return getTownsNames(towns);
     }
 
+    public boolean reconnect(int maxChunksToClaim) {
+        Optional<Set<ChunkCoord>> chunksToClaimToReconnect = ChunkCoordUtil.findChunksToConnect(chunksCoords,
+                maxChunksToClaim);
+        if (chunksToClaimToReconnect.isEmpty()) {
+            return false;
+        } else {
+            for (ChunkCoord chunkCoord : chunksToClaimToReconnect.get()) {
+                TownyRoadsPlugin.getInstance().getRoadManager().claimRoad(this, chunkCoord);
+            }
+            TownyRoadsPlugin.info(() -> "Reconnected road " + getName() + " with "
+                    + chunksToClaimToReconnect.get().size() + " chunks: " + chunksToClaimToReconnect.get());
+            return true;
+        }
+    }
+
 
     public static Road fromYml(File file) {
         Configuration config = YamlConfiguration.loadConfiguration(file);
